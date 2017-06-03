@@ -5,7 +5,8 @@
   import static java.lang.Math.PI;
   或者
   import static java.lang.Math.*;
-  这样如果想使用Math中的静态成员，就不需要通过Math进行限定，而直接使用其静态成员，如
+  
+  如果想使用Math中的静态成员，就不需要通过Math进行限定，而直接使用其静态成员，如
   double r = cos(PI * theta);
   ```
   * 引入规范版本：Java 5
