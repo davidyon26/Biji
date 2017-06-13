@@ -1,0 +1,64 @@
+
+== List ==
+=== unordered lists ===
+* Lists are easy to do:
+** start every line
+* with a star
+** more stars mean
+*** deeper levels
+=== ordered lists ===
+# Numbered lists are good
+## very organized
+## easy to follow
+=== Definition lists ===
+; Definition lists
+; item : definition
+; semicolon plus term
+: colon plus definition
+=== Mixed definition lists ===
+; Mixed definition lists
+; item 1 : definition
+:; sub-item 1 plus term
+:: two colons plus definition
+:; sub-item 2 : colon plus definition
+; item 2 
+: back to the main list
+* Or create mixed lists
+*# and nest them
+*#* like this
+*#*; definitions
+*#*: work:
+*#*; apple
+*#*; banana
+*#*: fruits
+=== Multi-column lists ===
+''' this kind of list is not supported by github '''
+<div style="column-count:2;-moz-column-count:2;-webkit-column-count:2">
+* apple
+* carpet
+* geography
+* mountain
+* nowhere
+* postage
+* ragged
+* toast
+</div>
+<div style="column-count:3;-moz-column-count:3;-webkit-column-count:3">
+#apple
+#carpet
+#geography
+#mountain
+#nowhere
+#postage
+#ragged
+#toast
+</div>
+== table ==
+== reference ==
+[https://www.mediawiki.org/wiki/Help:Formatting 1.Help on Formatting]
+
+[https://www.mediawiki.org/wiki/Help:Links 2.Help on Links]
+
+[https://www.mediawiki.org/wiki/Help:Lists 3.Help on Lists]
+
+[https://www.mediawiki.org/wiki/Help:Tables 4.help on Tables]
