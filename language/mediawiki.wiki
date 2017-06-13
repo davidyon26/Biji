@@ -54,6 +54,91 @@
 #toast
 </div>
 == table ==
+{|
+! style="text-align:left;"| <translate><!--T:66--> Item</translate>
+! <translate><!--T:67--> Amount</translate>
+! <translate><!--T:68--> Cost</translate>
+|-
+|<translate><!--T:69--> Orange</translate>
+|10
+|7.00
+|-
+|<translate><!--T:70--> Bread</translate>
+|4
+|3.00
+|-
+|<translate><!--T:71--> Butter</translate>
+|1
+|5.00
+|-
+!<translate><!--T:72--> Total</translate>
+|
+|15.00
+|}
+
+{| class="wikitable"
+!colspan="6"|<translate><!--T:120--> Shopping List</translate>
+|-
+|rowspan="2"|<translate><!--T:121--> Bread & Butter</translate>
+|<translate><!--T:122--> Pie</translate>
+|<translate><!--T:123--> Buns</translate>
+|<translate><!--T:124--> Danish</translate>
+|colspan="2"|<translate><!--T:125--> Croissant</translate>
+|-
+|<translate><!--T:126--> Cheese</translate>
+|colspan="2"|<translate><!--T:127--> Ice cream</translate>
+|<translate><!--T:128--> Butter</translate>
+|<translate><!--T:129--> Yogurt</translate>
+|}
+
+{| class="wikitable" style="text-align: center; color: green;"
+|<translate><!--T:147--> Orange</translate>
+|<translate><!--T:148--> Apple</translate>
+|12,333.00
+|-
+|<translate><!--T:149--> Bread</translate>
+|<translate><!--T:150--> Pie</translate>
+|500.00
+|-
+|<translate><!--T:151--> Butter</translate>
+|<translate><!--T:152--> Ice cream</translate>
+|1.00
+|}
+
+{| class="wikitable" style="margin-left: auto; margin-right: 0px;"
+| <translate><!--T:305--> Orange</translate>
+| <translate><!--T:306--> Apple</translate>
+|-
+| <translate><!--T:307--> Bread</translate>
+| <translate><!--T:308--> Pie</translate>
+|-
+| <translate><!--T:309--> Butter</translate>
+| <translate><!--T:310--> Ice cream</translate> 
+|}
+
+{| class="wikitable" style="float:right; margin-left: 10px;"
+| <translate><!--T:339--> Orange</translate>
+| <translate><!--T:340--> Apple</translate>
+|-
+| <translate><!--T:341--> Bread</translate>
+| <translate><!--T:342--> Pie</translate>
+|-
+| <translate><!--T:343--> Butter</translate>
+| <translate><!--T:344--> Ice cream</translate> 
+|}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing 
+elit, sed diam nonummy nibh euismod tincidunt ut 
+laoreet dolore magna aliquam erat volutpat. Ut wisi 
+enim ad minim veniam, quis nostrud exerci tation 
+ullamcorper suscipit lobortis nisl ut aliquip ex ea 
+commodo consequat. Duis autem vel eum iriure dolor 
+in hendrerit in vulputate velit esse molestie consequat, 
+vel illum dolore eu feugiat nulla facilisis at vero 
+eros et accumsan et iusto odio dignissim qui blandit 
+praesent luptatum zzril delenit augue duis dolore te 
+feugait nulla facilisi.
+
 == reference ==
 [https://www.mediawiki.org/wiki/Help:Formatting 1.Help on Formatting]
 
