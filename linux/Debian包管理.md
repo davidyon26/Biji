@@ -57,6 +57,12 @@
                {-h | --help}}
   ```
   * apt-get install _package-name_
+    安装_package-name_软件包
+    
+  * apt-get clean
+  
+    删除/var/cache/apt/archives/ 和 /var/cache/apt/archives/partial/目录下除了锁文件的任何文件.
+    这个目录存放安装包文件，通常会随着安装文件的增多不断增多
 
 ## apt-file
 基于命令行的工具，用于查询软件包中的文件，不同于`dpkg -S`和`dpkg -L`，它查询apt管理库中所有的包而不局限于已经下载安装的包
