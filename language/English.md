@@ -9,3 +9,5 @@
 | _   | underline | 下划线 |
 | ^   | carets | 插入符号 |
 | ~   | tildes | 波浪号  |
+| :  | colons | 冒号 |
+| ;  | semi-colons | 分号 |
