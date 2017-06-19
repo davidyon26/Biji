@@ -6,7 +6,7 @@
 | `   | backtick| 反引号 |
 | '   | single quotation mark<br> | 单引号 |
 | *   | asterisk| 星号 |
-| _   | underline | 下划线 |
+| _   | underline <br> underscore | 下划线 |
 | ^   | carets | 插入符号 |
 | ~   | tildes | 波浪号  |
 | :  | colons | 冒号 |
