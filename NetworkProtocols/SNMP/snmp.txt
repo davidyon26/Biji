@@ -10,6 +10,13 @@ v1.0, 2017-07-28
 == 协议操作
 SNMP的协议操作定义在<<2,RFC SNMP Protocol Operation V2>>中。
 
+== 基于用户的安全模型（USM）
+关于USM的内容定义在<<3, RFC User-based Security Model>>中。
+该规范定义了USM的符号系统定义。定义了关于USM的操作流程。
+
+- 第5章：关于USM的MIB定义，模块SNMP-USER-BASE-SM-MIB
+- 第4章：定义了SNMP client 应用如何发现授权SNMP agent应用的信息，以及交互过程。
+
 == 参考资料
 [bibliography]
 - [[[1]]] https://tools.ietf.org/html/rfc2578[Structure of Management 
@@ -17,3 +24,7 @@ SNMP的协议操作定义在<<2,RFC SNMP Protocol Operation V2>>中。
 
 - [[[2]]] https://tools.ietf.org/html/rfc3416[Version 2 of the
    Protocol Operation for the Simple Network Management Protocol (SNMP)]
+
+- [[[3]]] https://tools.ietf.org/html/rfc3414[User-based Security Model (USM)
+  for version 3 of the Simple Network Management Protocol (SNMPv3)]
+
