@@ -1,0 +1,124 @@
+= Linux 在线手册
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-06-15
+:toc: right
+:numbered:
+:icons: font
+
+== 简介
+用过Unix的人，可能没有人没用过大名鼎鼎的man在线帮助系统（manual page）。当我们
+想知道某个命令的功能和用法时，我们习惯地在终端敲下 `man _command_`，这似乎成为
+使用Unix或者类Unix系统的一个习惯。然而可能格式和篇幅的限制，通常需要格式更丰富
+的文档对某些工具进行说明。本文介绍Linux下这类文档的管理工具。
+
+== Debian doc-base
+用过Debian的人可能没有不知道dpkg，apt等软件包管理工具。在Debian同样存在在线文档
+的管理工具 `doc-base`。`doc-base` 是个软件包，它包括用于注册和注销文档的工具。
+
+在Debian的mailing lists曾经进行过激烈的讨论使用什么样的文档格式。但是意见不能统
+一，每个人有不同的喜好。这需要一种灵活的系统能兼容不同格式。`doc-base` 包就是这
+中策略的产物。每个包通过 `install-docs` 脚本在安装的时候将在线文档注册到 
+`doc-base`, 在卸载的时候将其注销。
+
+=== 主要结构
+每个在线手册包括一个 `doc-base` 控制文件，它主要包括系统内唯一的 _document ID_ 
+，作者，分类（Section），文件格式和文件位置。自从0.8.6以后，允许多个包包括相同
+的 _document ID_, install-docs 脚本在安装的过程中会将ID相同的进行合并。一个包
+可以包括多种不同格式的在线手册文件。
+
+=== 支持的格式
+可以识别下面的文件格式：
+
+- HTML
+- Text
+- PDF
+- PostScript
+- Info
+- DVI
+- DebianDoc-SGML
+
+=== 注册过程
+注册到doc-base的在线文档的控制文件存放到 `/usr/share/doc-base/_document-id_` 
+目录下。在使用dpkg安装时，doc-base的触发器会调用 `install-docs` 产生 
+`/var/lib/doc-base/_<document-id>_` 文件，并将在线文档注册到doc-base的客户端
+软件。
+
+=== 客户端
+有多种客户端软件可以读取被doc-base注册的在线文档。包括
+- doc-central
+- dwww
+- dhelp
+
+这三个软件都基于web浏览器，对文档进行索引分类，但是dwww提供方便命令行接口。
+
+另外doc-base也使用scrollkeeper（已被rarian取代）注册在线文档，从而可以使用yelp
+或者khelpcenter进行阅读。
+
+==== dwww
+可以使用apt命令安装dwww命令，它需要安装web server，并且要求web server支持cgi
+接口。
+
+如果使用apache2, 使用下面的命令装载cgi模块
+
+    a2enmod cgi
+
+=== 注册本地文档
+自从0.8.7, doc-base允许用户注册本地文档。步骤如下：
+
+a. 创建自己的控制文件。关于如何创建控制文件见<<1,doc-base>>的在线文档
+b. 将控制文件存放到 `/etc/doc-base/documents` 目录下
+c. 使用下面的命令注册
++
+    install-docs -i /etc/doc-base/documents/<document-id>
+
+如果想注销，在删除控制文件或者可能的其它文件前，可以使用如下的命令
+
+    install-docs -r /etc/doc-base/documents/<document-id>
+
+自从0.8.12, 可以使用下面的命令进行注册或者注销，而不同使用两个命令
+    install-docs --install-changed
+
+=== 控制文件工具
+可以使用 `install-docs` 来检查控制文件和在线文档完整性的问题。
+
+[source,bash]
+------
+# 使用 --check (-c) 选项，可以检查控制文件 
+
+ $ install-docs --check /usr/share/doc-base/doc-base
+     /usr/share/doc-base/doc-base: No problems found
+
+ $ install-docs -c /usr/share/doc-base/xlogmaster
+ Error in `/usr/share/doc-base/xlogmaster', line 15: `Index' value missing for format info
+ /usr/share/doc-base/xlogmaster: Fatal error found, the file won't be registered
+
+ $ install-docs -c /usr/share/doc-base/MC-FAQ /usr/share/doc-base/gnu-privacy-handbook
+ /usr/share/doc-base/MC-FAQ: 1 warning(s) or non-fatal error(s) found
+ /usr/share/doc-base/gnu-privacy-handbook: 1 warning(s) or non-fatal error(s) found
+
+# 使用--verbose (-v) 选项，可以检查警告等非致命错误
+
+ $ install-docs -v -c /usr/share/doc-base/MC-FAQ /usr/share/doc-base/gnu-privacy-handbook
+ Warning in `/usr/share/doc-base/MC-FAQ', line 1: invalid value of `Document' field
+ /usr/share/doc-base/MC-FAQ: 1 warning(s) or non-fatal error(s) found
+ Warning in `/usr/share/doc-base/gnu-privacy-handbook', line 12: file `/usr/share/doc/gnupg-doc/GNU_Privacy_Handbook/html/book1.html' does not exist
+ /usr/share/doc-base/gnu-privacy-handbook: 1 warning(s) or non-fatal error(s) found
+
+# 使用--rootdir 选项，可以检查未安装的包
+
+ $ dpkg-deb -x autoclass_3.3.4-6_i386.deb AUTOCLASS_UNPACKED
+ $ install-docs --rootdir AUTOCLASS_UNPACKED -vc AUTOCLASS_UNPACKED/usr/share/doc-base/*
+ AUTOCLASS_UNPACKED/usr/share/doc-base/autoclass-results: No problems found
+ AUTOCLASS_UNPACKED/usr/share/doc-base/autoclass-theory: No problems found
+
+# 如果不使用 --rootdir 选项，将会产生警告错误
+
+ Warning in `AUTOCLASS_UNPACKED/usr/share/doc-base/autoclass-results', line 20: file mask `/usr/share/doc/autoclass/kdd-95.pdf' does not match any files
+ Warning in `AUTOCLASS_UNPACKED/usr/share/doc-base/autoclass-theory', line 20: file mask `/usr/share/doc/autoclass/tr-fia-90-12-7-01.pdf' does not match any files
+------
+
+== 参考文献
+[bibligraph]
+- [[[1]]] file:///usr/share/doc/doc-base/doc-base.html/ch-interface.html#s-control-files[doc-base在线手册]
+
+// vim:set syntax=asciidoc:
