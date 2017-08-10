@@ -1,0 +1,34 @@
+= Linux上必备软件
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-08-10
+:toc: right
+:numbered:
+:icons: font
+
+
+== Debian软件包库
+=== 绘图软件
+graphviz::
+    Graphviz(Graph visualization)是一款绘制关系图的软件，1991年前出自AT&T实验室
+    ，它最大的特点是能够对图形节点自动进行布局。
+libreCAD::
+    这是一款计算机辅助设计工具，也能够支持简单的3D设计，可以最为AutoCAD在Linux
+    下的替代版。
+Inkscape::
+    矢量图绘制工具，支持SVG等多种格式，并能进行转换输出不同的格式。
+
+=== 文档
+doc-base，dwww::
+    doc-base是Linux下在线手册管理工具，dwww可以看作是其前端，对文档进行编排，
+    方便查看软件的在线文档。
+
+== 非Debian官方的软件
+=== SDKMAN
+  * 开源软件多版本管理软件
+  * 网址： http://sdkman.io/install.html
+  * 可安装的包
+    * java, grail, gradle, groovy etc.
+    * 命令 `sdk list`可以列出所有可下载安装的软件
+  * 目录结构
+    * 所有安装的软件包括自身软件存放在HOME目录的.sdkman目录下
+    
