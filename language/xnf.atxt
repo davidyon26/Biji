@@ -1,0 +1,246 @@
+= BNF及其变种
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-08-21
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+
+== 简介
+
+== 符号对比
+
+=== 符号对比：Part1
+
+.BNF及其扩展1
+|===
+| Style | Name | Rule | Terminal | Non Terminal | Concat (default space) | Choice | Optional | Group
+
+| BNF 
+| http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#BNF[BNF](Algol 60) 
+| <name>::=... | ... | <...> | | \| | <<note1,note1>> | 
+
+.2+.^|Intermediate
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ANSI C]
+|name: +
+ ...
+| *bold* | _italics_ | 
+|indented line one of | ...opt |
+|http://www.w3.org/hypertext/WWW/Addressing/URL/5_BNF.html[BNF-like URL描述]
+| name +
+  ... 
+| ... |  [underline]#...# | | \| | [...] |
+
+.6+.^| Wirth
+|http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#EBNF[Wirth]
+|name=... . | "..." | ... | | \| | [...] | (...)
+|http://s2k-ftp.cs.berkeley.edu:8000/sequoia/schema/html/saif/section4.9.html[
+ SAIF] and
+ http://www.bungisoft.com/html/products/visualizer/faq.html[Bungisoft]
+|<name>::... | "..." | <...> | | \| | [...] | (...)
+|http://www.cs.man.ac.uk/~pjj/farrell/comp2.html#EBNF[EBNF] from 
+ http://www.cs.man.ac.uk/~pjj/farrell/compmain.html[Compiler Basics by J.A.Farrell]
+|name:==...|'...'|...| |\| or [...,...] | [...] | 
+|http://www.cs.qub.ac.uk/~S.Fitzpatrick/Teaching/Pascal/EBNF.html[
+ Pascal EBNF Definition]
+|name +
+ ...
+|"..." +
+ *bold*
+| <...> | |\| | [...] | (...)
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Extended Pascal]
+|name=... . +
+ name>... .
+|`...' | ... | | \| | [...] | (...)
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO EBNF] or
+ https://www.iso.org/standard/26153.html[ISO/IEC 14977]
+|name=...;
+|'...' +
+ "..."
+| ... |, | \| | [...] | (...)
+
+.2+.^| ABNF
+|http://www.cs.man.ac.uk/~pjj/bnf/ebnf_rfc822.txt[EBNF] from
+ http://www.ietf.org/rfc/rfc822.txt[RFC822] (superceded by ABNF)
+|name=...
+|integer +
+ "..."
+| ... +
+ <...> | |/ 
+| [...] +
+  *1...
+| (...)
+|https://tools.ietf.org/html/rfc5234[ABNF] (RFC5234)
+|name=...
+|integer +
+ "..."
+|... +
+ <...> | | /
+| [...] +
+  *1...
+| (...)
+
+|XBNF
+|http://www.csci.csusb.edu/dick/samples/comp.text.Meta.html[XBNF]
+|name::=... . | "..." | ... | | \| | O(...) | (...)
+
+.2+.^| Regular expression
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Minimal BASIC]
+|__name__=... |__ITALICS__|__italics__| |/ | ...? |
+|http://www.w3.org/TR/2004/REC-xml-20040204/#sec-notation[EBNF for XML]
+|name::=...
+|"..." +
+ '...' |... | | \| | ...? | (...)
+|===
+
+[[note1]]
+.Notes:
+. BNF can express an optional part by e.g.: +
+  optionalb ::= a b c d | a c d
+
+=== 符号对比: Repetition
+.BNF及其扩展2
+|===
+| Style | Name | 0 or more | 1 or more | n | n to m | Other 
+
+| BNF 
+| http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#BNF[BNF](Algol 60) 
+| <<note2,note1>> | <<note2,note2>> | | |
+
+.2+.^|Intermediate
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ANSI C]
+| <<note2,note1>> | <<note2,note2>> | | |
+|http://www.w3.org/hypertext/WWW/Addressing/URL/5_BNF.html[BNF-like URL描述]
+| <<note2,note1>> | <<note2,note2>> | | |
+
+.6+.^| Wirth
+|http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#EBNF[Wirth]
+| {...} | <<note2,note3>> | | | 
+|http://s2k-ftp.cs.berkeley.edu:8000/sequoia/schema/html/saif/section4.9.html[
+ SAIF] and
+ http://www.bungisoft.com/html/products/visualizer/faq.html[Bungisoft]
+| {...} | <<note2,note3>> | | | 
+|http://www.cs.man.ac.uk/~pjj/farrell/comp2.html#EBNF[EBNF] from 
+ http://www.cs.man.ac.uk/~pjj/farrell/compmain.html[Compiler Basics by J.A.Farrell]
+| {...}* | {...} | | | 
+|http://www.cs.qub.ac.uk/~S.Fitzpatrick/Teaching/Pascal/EBNF.html[
+ Pascal EBNF Definition]
+| {...} | <<note2,note3>> | | | 
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Extended Pascal]
+| {...} | <<note2,note3>> | | | 
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO EBNF] or
+ https://www.iso.org/standard/26153.html[ISO/IEC 14977]
+| {...} | {...}- | n*... | | 
+
+.2+.^| ABNF
+|http://www.cs.man.ac.uk/~pjj/bnf/ebnf_rfc822.txt[EBNF] from
+ http://www.ietf.org/rfc/rfc822.txt[RFC822] (superceded by ABNF)
+| *... | 1*... | n*n... | n*m... | n#m...
+|https://tools.ietf.org/html/rfc5234[ABNF] (RFC5234)
+| *... | 1*... | n*n... | n*m... |
+
+|XBNF
+|http://www.csci.csusb.edu/dick/samples/comp.text.Meta.html[XBNF]
+| #(...) | N(...) | | | L(...,...)
+
+.2+.^| Regular expression
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Minimal BASIC]
+| ...* | <<note2,note3>> | | | 
+|http://www.w3.org/TR/2004/REC-xml-20040204/#sec-notation[EBNF for XML]
+| ...* | ...+ | | | |
+|===
+
+[[note2]]
+.Notes:
+. BNF can express 0 or more repetitions by e.g.: +
+  list ::= | listitem list
+. BNF can express 1 or more repetitions by e.g.: +
+  list ::= listitem | listitem list
+. Notations that provide 0 or more repetitions but not 1 or more repetions
+  can simulate the latter. e.g. Wirth's EBNF can express 1 or more 
+  repetitions by e.g.: +
+  list : listitem { listitem}
+
+== EBNF
+本章主要列举EBNF的主要文法结构，其最为BNF的主要一种扩展，
+被已经被ISO 14977标准化。
+
+=== 文法
+
+.EBNF 文法结构
+[cols="1,1,5m"]
+|===
+2+.^| Usage  | Notation
+
+2+.^| Rule  | name=... ; 
+
+2+.^| Termination | ;
+
+.2+.^| Items 
+| Terminal 
+| "..." +
+  '...'
+| Non Terminal
+| ...
+
+.3+.^| Repetition
+| 0 or more | {...}  
+| 1 or more | {...}- 
+| n | n*... 
+
+2+.^| Concat | , 
+
+2+.^| Choice | \| 
+
+2+.^| Optional | [...] 
+
+2+.^| Grouping | (...) 
+
+2+.^| Comment | (\*...*) 
+
+2+.^| exception | ...-...
+
+2+.^| special sequence | ? ... ? 
+|===
+
+=== 例子
+EBNF的文法可以使用自己进行如下定义
+
+[source,EBNF]
+------------------
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+       | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+       | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+       | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+       | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+       | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+       | "x" | "y" | "z" ;
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+symbol = "[" | "]" | "{" | "}" | "(" | ")" | "<" | ">"
+       | "'" | '"' | "=" | "|" | "." | "," | ";" ;
+character = letter | digit | symbol | "_" ;
+ 
+identifier = letter , { letter | digit | "_" } ;
+terminal = "'" , character , { character } , "'" 
+         | '"' , character , { character } , '"' ;
+ 
+lhs = identifier ;
+rhs = identifier
+     | terminal
+     | "[" , rhs , "]"
+     | "{" , rhs , "}"
+     | "(" , rhs , ")"
+     | rhs , "|" , rhs
+     | rhs , "," , rhs ;
+
+rule = lhs , "=" , rhs , ";" ;
+grammar = { rule } ;
+------------------
+
+== 参考文献
+[bibliograph]
+- [[[1]]]http://www.cs.man.ac.uk/~pjj/bnf/ebnf.html?[BNF/EBNF variants]
+
+
