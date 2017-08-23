@@ -162,9 +162,41 @@ v1.0, 2017-08-21
   repetitions by e.g.: +
   list : listitem { listitem}
 
+== BNF的缺点
+BNF（Backus-Naur Form）（应用于ALGO 60）的主要缺点在于：
+. 当一个语言包括其元符号 `<` `>` `|` `::=` 时，BNF不能描述这类语言
+. 不能自然的描述常见的范式结构，如注释
+. 需要引入多个规则描述常见的范式结构，如repetition
+
 == EBNF
-本章主要列举EBNF的主要文法结构，其最为BNF的主要一种扩展，
-被已经被ISO 14977标准化。
+EBNF(Extended BNF)是基于Niklaus Wirth（Wirth，1997）的建议（此建议基于BNF），并
+吸取其他BNF扩展的基础上，由ISO（the International Organization of Standardization）和IEC（the International Electrotechnical Commission）推出的国际标准元语言。
+其已经被ISO/IEF 14977标准化。
+
+=== 主要特点
+其区别于BNF的主要特性如下：
+
+a. 被定义语言的终止符号使用单引号或者双引号引用起来，这样任何字符包括EBNF自己
+   的元符号也可以作为被定义语言的终止符号(terminal symbol)
+b. [] 用于表示可选项
+c. {} 用于表示重复
+d. 每条规则有明确的结束符合（；），这样可以避免引起一条规则终止在哪的歧义
+e. 使用数学使用的()将一些元素组织在一起。
+
+其更主要的特色在于将实践中经常遇到的情况进行形式化：
+
+a. 精确定义元素的数目。比如Fortran语言的label精确包括4个字符；COBOL的标识符最多
+   包括32个字符。这样的规则单独使用BNF描述比较困难，通常需要附加非形式的自然语言
+   描述。
+b. 定义一些特例。如Algol的 *end*-注释终止与第一个 *end*, *else* 或者分号。这种
+   情况同样使用BNF难以精确表达，需要特殊非形式自然语言说明。
+c. 注释。有些语言的复杂语法通常需要多个规则进行定义。注释可以使用自然语言给出解
+   释，或提供上下文，交叉引用等，而不影响形式化的定义
+d. 元标识符。一个元标识符（非终止符号的名）不限于单个字或者使用尖括号括起来。
+   因为EBNF提供明确的连接符号（，）。
+e. 扩展。special-sequence机制可以允许用户对ENBF进行扩展。另外在标准的EBNF中元
+   标识符不能紧跟着左括号。可以利用这个特征定义元标识符紧跟着一些参数被括号括
+   起来的语法结构。
 
 === 文法
 
@@ -239,8 +271,79 @@ rule = lhs , "=" , rhs , ";" ;
 grammar = { rule } ;
 ------------------
 
-== 参考文献
-[bibliograph]
-- [[[1]]]http://www.cs.man.ac.uk/~pjj/bnf/ebnf.html?[BNF/EBNF variants]
+下面是摘录于<<2,ISO 14977>>的正式ENF形式定义。
 
+[source, EBNF】
+------------------------
+(*
+  The syntax of Extended BNF can be defined using itself.  There are four parts
+  in this example, the first part names the characters, the second part defines
+  the removal of unnecessary non-printing characters, the third part defines the
+  removal of textual comments, and the final part defines the structure of 
+  Extended BNF itself.
+  
+  Each syntax rule in this example starts with a comment that identifies the 
+  corresponding clause in the standard.
+
+  The meaning of special-sequences is not defined in the standard.  In this
+  example (see the reference to 7.6) they represent control functions defined
+  by ISO/IEC 6429:1992.  Another special-sequence defines a syntactic-exception
+  (see the reference to 4.7).
+*)
+
+
+
+(*
+  The first part of the lexical syntax defines the characters in the 7-bit
+  character set (ISO/IEC 646:1991) that represent each terminal-character
+  and gap-separator in Extended BNF.
+*)
+letter 
+  = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h'
+  | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p'
+  | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x'
+  | 'y' | 'z'
+  | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H'
+  | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P'
+  | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X'
+  | 'Y' | 'Z';
+
+decimal digit
+  = '0' | '|' | '2' | '3' | '4' | '5' | '6' | '8' | '9'; 
+
+concatenate symbol = ',';
+defining symbol = '=';
+definition separator symbol = '|' | '/' | '!';
+end comment symbol = '*)';
+end group symbol = ')';
+end option symbol = ']' | '/)';
+end repeat symbol = '}' | ':)';
+except symbol = '-';
+first quote symbol = "'";
+repetition symbol = '*';'
+second quote symbol = '"';
+special sequence symbol = '?';
+start comment symbol = '(*';
+start group symbol = '(';
+start option symbol = '[' | '(/';
+start repeat symbol = '{' | '(:';
+terminator symbol = ';' | '.';
+
+(* see 7.5 *) other character
+  = ' ' | ':' | '+' | '_' | '%' | '@'
+  | '&' | '#' | '$' | '<' | '>' | '\'
+  | '^' | '`' | '~';
+
+(* see 7.6 *) space character = ' ';
+horizontal tabulation character
+  = ? IS0 6429 character Horizontal Tabulation ?;
+new line
+  = { ? ISO 6429 character Carriage Return ? },
+------------------------
+
+== 参考文献
+[bibliography]
+- [[[1]]]http://www.cs.man.ac.uk/~pjj/bnf/ebnf.html?[BNF/EBNF variants]
+- [[[2]]]https://www.iso.org/standard/26153.html[ISO/IEC 14977:1996] 
+  'Information technology -- Syntactic metalanguage -- Extended BNF'
 
