@@ -201,39 +201,42 @@ e. 扩展。special-sequence机制可以允许用户对ENBF进行扩展。另外
 === 文法
 
 .EBNF 文法结构
-[cols="1,1,5m"]
+[cols="1,1,1m,4"]
 |===
-2+.^| Usage  | Notation
+2+.^| Usage  | Notation | comment
 
-2+.^| Rule  | name=... ; 
+2+.^| Rule  | name=... ;| 一条规则：name被定义为...以；作为规则结束符 
 
-2+.^| Termination | ;
+2+.^| Termination | ; | 分号是一条规则结束的标志
 
-.2+.^| Items 
+.2+.^| Items  
 | Terminal 
 | "..." +
   '...'
+| 终结符使用单引号或者双引号进行引用
 | Non Terminal
 | ...
-
+| 非终结符一个标识符
 .3+.^| Repetition
-| 0 or more | {...}  
-| 1 or more | {...}- 
-| n | n*... 
+| 0 or more | {...} | 重复0或多次  
+| 1 or more | {...}- | 重复1至多次，这里的-是异常操作符，排除了空
+| n | n*... | 重复...n次，当...是可选项是，其含义是0-n次 
 
 2+.^| Concat | , 
+| 规则定义元素的连接符号，表示一个规则的name由多个由其分隔的序列部分组成 
 
 2+.^| Choice | \| 
+| 选项符号，表示一个规则的name由其分隔的多个部分的之一组成
 
-2+.^| Optional | [...] 
+2+.^| Optional | [...] | 表示...是可选的
 
-2+.^| Grouping | (...) 
+2+.^| Grouping | (...) | 将...中的多个部分作为一组处理，从而改变优先级 
 
-2+.^| Comment | (\*...*) 
+2+.^| Comment | (\*...*) | 注释 
 
-2+.^| exception | ...-...
+2+.^| exception | ...-... | 表示前面的...中的内容移除后面...的内容
 
-2+.^| special sequence | ? ... ? 
+2+.^| special sequence | ? ... ? | 用于扩展 
 |===
 
 === 例子
@@ -517,6 +520,35 @@ terminal character
 (* see 4.21 *) empty sequence
   = ;
 ------------------------
+
+== ABNF
+ABNF（Augmented BNF）主要用于描述Internat技术的语法，比如email规范，各种网络
+协议等等。它是对BNF的扩充和增强。与BNF的不同体现在命名规则，重复，选择，顺序
+无关以及取值范围。
+
+== 文法
+
+.ABNF文法
+[cols="1,2m,6a"]
+|===
+| grammer component | definition | comment
+
+| rule | name = elements crlf
+| 
+* name 由字母，数字，连接符（alphabetics, digits 和 hyphens）组成，
+  第一个字符必须是字母
+* name不需要使用<>引用，且不区分大小写
+* 等号分隔规则的名和定义
+* <crlf>是换行符（carriage return followed by line feed）
+* <element>由一序列规则名，值以及各种操作符组成。
+* 规则是左对其的，如果一个规则需要多行，后面的行要相对于第一行进行缩进
+
+| terminal +
+  value
+| 
+|
+|===
+
 
 == 参考文献
 [bibliography]
