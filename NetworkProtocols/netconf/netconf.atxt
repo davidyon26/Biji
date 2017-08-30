@@ -1,0 +1,15 @@
+= netconf 简介
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-08-30
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+
+== 参考文献
+- [[[1]]] https://en.wikipedia.org/wiki/NETCONF[NETCONF in wikipedia]
+- [[[2]]] https://tools.ietf.org/html/rfc6241[RFC6241 
+          Network Configuration Protocol (NETCONF)]
+- [[[3]]] https://tools.ietf.org/html/rfc5277[RFC5277
+          NETCONF Event Notifications]
