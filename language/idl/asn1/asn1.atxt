@@ -4,6 +4,8 @@ v1.0, 2017-06-15
 :toc: right
 :numbered:
 :icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
 
 == 前言
 
