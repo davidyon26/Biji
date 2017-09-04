@@ -214,7 +214,7 @@ $ vim -O one.txt two.txt three.txt
 
 === 窗口创建相关事项
 
-==== s前缀和CTRL-W
+==== s前缀
 很多编辑另一个文件的命令有相应的变种命令，用来在新窗口编辑这个文件。这个变种
 命令有共同的特征是在相应命令前面加上s。例如
 
@@ -225,6 +225,7 @@ $ vim -O one.txt two.txt three.txt
 :find  --->  :sfind
 ------
 
+==== CTRL-W
 在noremal模式下，如果某些命令打开一个文件，那么在这个命令前增加 `CTRL-W` 将创建
 一个新的窗口来打开相应的文件。
 
@@ -255,18 +256,31 @@ $ vim -O one.txt two.txt three.txt
 ----------
 |===
 
+[[WindowsModifier]]
 ==== 位置修饰符
-当创建一个新的窗口时，可以在前面增加一个位置修饰符来明确指定新窗口的位置。
+当创建一个新的窗口时，可以在前面增加一个位置修饰符来明确指定新窗口的位置。在
+下面的例子中，如果 `cmd` 是一个分割窗口的命令，将按照修饰符指定的方式分割。
 其格式为：
 
 [source, vim]
-:leftabove {cmd}    当前窗口的左面或者上面 
-:aboveleft {cmd}    同上 
-:rightbelow {cmd}   当前窗口的右面或者下面 
-:belowright {cmd}   同上 
-:topleft    {cmd}   窗口的最上面或者最左面，占用整个vim的宽度或者高度 
-:botright   {cmd}   窗口的最下面或者最右面，占用这个vim的宽度或者高度
+:lefta[bove] {cmd}    当前窗口的左面或者上面 
+:abo[veleft] {cmd}    同上 
+:rightb[elow] {cmd}   当前窗口的右面或者下面 
+:bel[owright] {cmd}   同上 
+:to[pleft]    {cmd}   窗口的最上面或者最左面，占用整个vim的宽度或者高度 
+:bo[tright]   {cmd}   窗口的最下面或者最右面，占用这个vim的宽度或者高度
+:vert[tical]  {cmd}   垂直创建一个窗口
 
+[NOTE]
+======
+上面的修饰符可以进行组合，用来垂直分割分割窗口，并占用这个vim窗口的高度。例如
+
+[source,vim]
+------
+:vertical topleft split tags  <1>
+------
+<1> 在vim窗口最左面垂直分割全高度的窗口，并显示tags文件
+======
 
 === 窗口间切换
 
@@ -421,10 +435,233 @@ set noequalalways
 * 如果存在计数，当前窗口和指定的第N个窗口交换。光标在交换的窗口。当存在水平和
   垂直混合的情况，仅仅和那些与当前窗口等长或者等高的窗口交换。
 
-| CTRL-W K
+| CTRL-W K 
 | 
-| 
+| 将当前窗口移动到顶部，并且占用整个vim窗口的宽度。窗口的位置类似于位置修饰符
+  <<WindowsModifier,:topleft>>
+
+| CTRL-W J
+|
+| 将当前窗口移动到底部，并且占用整个vim窗口的宽度。窗口的位置类似于位置修饰符
+  <<WindowsModifier,:botright>>
+
+| CTRL-W H
+|
+| 将当前窗口移动到最左面，占用整个vim窗口的高度。窗口的位置相当于
+  <<WindowsModifier,:vert topleft split>>
+
+| CTRL-W L
+|
+| 将当前窗口移动到最右面，占用整个vim窗口的高度。窗口的位置相当于
+  <<WindowsMofifier,:vert botright split>>
+
+| CTRL-W T
+| *
+| 将当前窗口移动到一个新的tab 页。
 |===
+
+[[TabPage]]
+=== Tab 页
+一个vim窗口的空间有限，不能分割太多窗口，或者分割的窗口空间很小，难于操作。为了
+解决这个问题，vim支持tab页的概念。每个tab页具有vim的维度空间，每个tab可以分割
+多个窗口。
+
+[[TabOpenClose]]
+=== Tab页的创建/关闭
+在启动vim时，可以使用 -p 选项，打开多个文件，每个文件使用不同的tab页。tab页的
+数目由选项 `tabpagemax` 控制。
+
+==== Tab页的创建
+下表列出关于tab页创建的命令。
+
+[cols="2m,1,7a"]
+|===
+| 命令 | 计数 | 含义
+
+| :tabe[dit] +
+  :tabnew +
+  :tabe[dit] _file_ +
+  :tabnew _file_
+| *
+| 打开一个新的tab页。如果没有计数，新的tab页在当前页的后面。如果指定计数，新的
+  tab也在计数指定的页后面。如果未指定文件新的tab页显示空，否者显示指定的文件。
+
+[source,vim]
+------
+:tabnew     " opens tabpage after the current one
+:.tabnew    " as above
+:+tabnew    " opens tabpage after the next tab page
+            " note: it is one further than :tabnew
+:-tabnew    " opens tabpage before the current one
+:0tabnew    " opens tabpage before the first one
+:$tabnew    " opens tabpage after the last one
+------
+| :tabf[ind] _file_
+| *
+| 在<<Path,path>>列表查找 _file_ 文件，并将其现在在新的tab中。计数与上同。
+
+| :tab {cmd}
+| *
+| 执行 {cmd}，如果命令打开一个新的窗口，使用新的tab页替代。计数与上同。
+
+[source, vim]
+------
+:tab split      " opens current buffer in new tab page
+:tab help gt    " opens tab page with help for gt
+:.tab help gt   " as above
+:+tab help      " opens tab page with help after the next tab page
+:-tab help      " opens tab page with help before the current one
+:0tab help      " opens tab page with help before the first one
+:$tab help      " opens tab page with help after the last one
+------
+
+| CTRL-W gf
+|
+| 打开一个新的tab页，编辑当前光标指定的文件。
+
+| CTRL-W gF
+|
+| 打开一个新的tab页，编辑当前光标指定的文件并跳转到文件名后面指定的行号。
+|===
+
+==== Tab页的关闭
+关闭tab页的最后一个窗口，也关闭了这个tab页，除非这个tab是最后一个。也可以使用
+鼠标点击tab页行的X来关闭tab页。
+
+其它关闭tab页的命令如下：
+
+[cols="2m,1,7a"]
+|===
+| 命令 | 计数 | 含义
+
+| :tabc[lose][!]
+| *
+| 关闭当前tab页。如果仅有一个tab页或者未使用hidden，未使用!,当前buffer已经
+  改变。如果指定了计数，关闭计数指定的tab页。例子如下
+
+[source,vim]
+------
+:-tabclose      " close the previous tab page
+:+tabclose      " close the next tab page
+:1tabclose      " close the first tab page
+:$tabclose      " close the last tab page
+------
+
+| :tabo[nly][!]
+| *
+| 关闭所有其它tab页。如果设置了选项 `hidden` ，被关闭窗口的所有buffer都成为了
+  hidden。如果 `hidden` 没有被设置，但是设置了 `autowrite` 选项，被修改的
+  buffer将被保存，否则包含被修改buffer的窗口不会被关闭，除非指定了!, 这时这些
+  buffer成为hidden状态，但修改的buffer不会被删除，内容不会丢失。
+  如果指定了计数，只保留计数指定的tab页，而不是当前tab页。例子如下：
+
+[source,vim]
+----
+:tabonly        " close the current tab page
+:.tabonly       " as above
+:-tabonly       " close all tab pages except the previous one
+:+tabonly       " close all tab pages except the next one
+:1tabonly       " close all tab pages except the first one
+:$tabonly       " close all tab pages except the last one
+----
+
+|===
+
+==== 切换tab页
+使用鼠标，可以通过点击tab页行，切换tab页，下面介绍使用键盘切换tab页的命令。
+
+[cols="2m,1,7a"]
+|===
+| 命令 | 计数 | 含义
+
+| gt +
+  :tabn[ext] +
+  <C-PageDown>
+| *
+| 切换到下一个tab页，如果计数被指定，切换到计数指定的tab页。<C-PageDown>
+  是CTRL-<PageDown>
+
+| gT +
+  :tabN[ext]
+  :tabp[revious]
+  <C-PageUp>
+| *
+| 切换到前一个tab页，如果计数被指定，切换到前面N个tab页，如果到达第一个，后续
+  为最后一个。
+
+| :tabr[ewind] +
+  :tabfir[st]
+|
+| 切换到第一个tab页
+
+| :tabl[ast]
+|
+| 切换到最后一个tab页
+|===
+
+
+==== 移动窗口
+下面的命令用于重新编排窗口顺序。
+
+[cols="2m,1,9a"]
+|===
+| 命令 | 计数 | 含义
+
+| :tabm[ove]
+| *
+| 如果未指定计数，将当前窗口移动到最后面。如果指定计数，将当前窗口移动到计数
+  指定tab页的后面。计数为0，移动为第一个tab页。例子如下：
+
+[source, vim]
+------
+:.tabmove   " do nothing
+:-tabmove   " move the tab page to the left
+:+tabmove   " move the tab page to the right
+:0tabmove   " move the tab page to the beginning of the tab list
+:tabmove 0  " as above
+:tabmove    " move the tab page to the last
+:$tabmove   " as above
+:tabmove $  " as above
+------
+
+| :tabm[ove] +[N] +
+  :tabm[ove] -[N]
+|
+| 将当前窗口向右（+）或者向左（-）移动N个位置，例子如下
+
+[source,vim]
+----
+:tabmove -  " move the tab page to the left
+:tabmove -1 " as above
+:tabmove +  " move the tab page to the right
+:tabmove +1 " as above
+----
+|===
+
+==== 显示所有tab页的状态
+
+使用 `:tabs` 命令列出所有tab页以及tab页包含的窗口，其中以 `>` 修饰的为当前
+窗口，以 `+` 修饰的为修改的buffer。 +
+例如：
+
+  Tab page 1
+    + tabpage.txt
+      ex_docmd.c
+  Tab page 2
+  >   main.c
+
+==== 批量执行
+下面的命令用于批量执行某个命令。
+
+[cols="2m,1,9a"]
+|===
+| 命令 | 计数 | 含义
+
+| tabd[o] {cmd}
+| *
+| 在每个tab页执行{cmd}命令。如果提供[rang]，针对[rang]指定的tab页执行命令。
+|===
+
 
 === 窗口状态行
 
@@ -435,10 +672,28 @@ set noequalalways
 1       仅当存在分割窗口的时候，默认值
 2       总是有
 
-[search]
+[[Path]]
+== 文件路径
+
+[[CmdLine]]
+== 命令行
+
+[[CmdRange]]
+=== 范围指定
+一些命令可以在其前面指定行范围。这被称为range。它包含一个或者多个行标识，
+行标识由逗号（，）或者分号（；）分隔。
+
+如果使用分号（；）分隔，在解释下一个行标识之前，会将光标位置指定为当前行标识
+的位置。如
+
+[source, vim]
+4,/这行/       "从当前行开始，直到搜索到第4行后匹配“这行”的行
+5;/这行/       "将当前光标设置为第5行，然后从第5行搜索匹配“这行”的行
+
+[[search]]
 == 查找
 
-[searchChar]
+[[searchChar]]
 === 基于字符
 [cols="2m,1,10"]
 |===
