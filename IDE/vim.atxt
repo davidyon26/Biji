@@ -660,6 +660,15 @@ set noequalalways
 | tabd[o] {cmd}
 | *
 | 在每个tab页执行{cmd}命令。如果提供[rang]，针对[rang]指定的tab页执行命令。
+
+[NOTE]
+====
+* 这个操作仅工作于每个tab页的当前窗口
+* 当一个错误发生，后续tab页不再被访问
+* 最后访问的tab页称为当前tab页
+* {cmd} 可以包含‘|’，串联几个命令
+* {cmd} 禁止打开、关闭和重新排序tab页
+====
 |===
 
 
@@ -810,7 +819,8 @@ evening是颜色主题的名称。所以预配置的颜色主题存放目录 `$V
 === 编辑另一个文件
 当编辑完一个文件后，可以不用退出vim，使用下面的命令编辑另一个文件
 
-*:edit foo.txt*
+[source,vim]
+:edit foo.txt
 
 如果当前的文件没有保存，会弹出错误信息。可以使用``:edit! foo.txt``
 放弃当前修改。或者使用``:hide edit foo.txt``隐含foo.txt到缓冲区，
