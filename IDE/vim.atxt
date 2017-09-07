@@ -1,3 +1,4 @@
+// /* VIM 参考手册 {{{1 */
 = VIM 参考手册
 David Yon <davidyon@hotmail.com>
 v1.0, 2017-08-03
@@ -7,6 +8,7 @@ v1.0, 2017-08-03
 :source-highlighter: highlightjs
 :highlightjsdir: highlight
 
+// /* 模式（mode）{{{2 */
 == 模式（mode）
 Vim是给予模式的编辑器，在不同的模式下，相同的输入会存在不同的含义。两个基本的
 模式是正常（Normal）和插入（Insert）模式。在正常模式下，输入的字符代表特定的
@@ -14,6 +16,7 @@ Vim是给予模式的编辑器，在不同的模式下，相同的输入会存�
 
 当使用Vim打开文件是，进入的是正常模式，所有的输入都作为命令处理。
 
+// /* 移动光标 {{{2 */
 == 移动光标
 
 === 左右移动
@@ -147,6 +150,7 @@ TIP: 关于基于字符查找导致光标移动参见 <<searchChar,查找字符>
 
 |===
 
+// /* 多窗口 {{{2 */
 [windows]
 == 多窗口
 vim 支持将一个窗口水平垂直分割成多个窗口，每个窗口可以显示相同或者不同的内容。本节描述关于窗口的分割，光标在多个窗口之间的转换或者控制。
@@ -409,7 +413,7 @@ set noequalalways
 ------
 |===
 
-=== 移动窗口
+=== 窗口移动
 下面的命令用于移动窗口的位置
 
 [cols="2m,1,5a"]
@@ -460,18 +464,27 @@ set noequalalways
 | 将当前窗口移动到一个新的tab 页。
 |===
 
+=== 窗口状态行
+
+使用 `laststatus` 选项可以设置什么时候最后的窗口存在状态行
+
+[source, vim]
+0       任何时候都没有
+1       仅当存在分割窗口的时候，默认值
+2       总是有
+
 [[TabPage]]
 === Tab 页
 一个vim窗口的空间有限，不能分割太多窗口，或者分割的窗口空间很小，难于操作。为了
 解决这个问题，vim支持tab页的概念。每个tab页具有vim的维度空间，每个tab可以分割
 多个窗口。
 
-[[TabOpenClose]]
-=== Tab页的创建/关闭
+[[TabOpen]]
+=== Tab页打开文件
 在启动vim时，可以使用 -p 选项，打开多个文件，每个文件使用不同的tab页。tab页的
 数目由选项 `tabpagemax` 控制。
 
-==== Tab页的创建
+=== Tab页创建
 下表列出关于tab页创建的命令。
 
 [cols="2m,1,7a"]
@@ -524,7 +537,8 @@ set noequalalways
 | 打开一个新的tab页，编辑当前光标指定的文件并跳转到文件名后面指定的行号。
 |===
 
-==== Tab页的关闭
+[[TabClose]]
+=== Tab页关闭
 关闭tab页的最后一个窗口，也关闭了这个tab页，除非这个tab是最后一个。也可以使用
 鼠标点击tab页行的X来关闭tab页。
 
@@ -567,7 +581,8 @@ set noequalalways
 
 |===
 
-==== 切换tab页
+[[TabSwitch]]
+=== Tab页切换
 使用鼠标，可以通过点击tab页行，切换tab页，下面介绍使用键盘切换tab页的命令。
 
 [cols="2m,1,7a"]
@@ -599,8 +614,8 @@ set noequalalways
 | 切换到最后一个tab页
 |===
 
-
-==== 移动窗口
+[[TabMove]]
+=== Tab页移动
 下面的命令用于重新编排窗口顺序。
 
 [cols="2m,1,9a"]
@@ -638,7 +653,8 @@ set noequalalways
 ----
 |===
 
-==== 显示所有tab页的状态
+[[TabStatus]]
+=== Tab页状态
 
 使用 `:tabs` 命令列出所有tab页以及tab页包含的窗口，其中以 `>` 修饰的为当前
 窗口，以 `+` 修饰的为修改的buffer。 +
@@ -650,7 +666,8 @@ set noequalalways
   Tab page 2
   >   main.c
 
-==== 批量执行
+[[TabBatch]]
+=== Tab页批量执行
 下面的命令用于批量执行某个命令。
 
 [cols="2m,1,9a"]
@@ -666,24 +683,16 @@ set noequalalways
 * 这个操作仅工作于每个tab页的当前窗口
 * 当一个错误发生，后续tab页不再被访问
 * 最后访问的tab页称为当前tab页
-* {cmd} 可以包含‘|’，串联几个命令
+* {cmd} 可以包含‘\|’，串联几个命令
 * {cmd} 禁止打开、关闭和重新排序tab页
 ====
 |===
 
-
-=== 窗口状态行
-
-使用 `laststatus` 选项可以设置什么时候最后的窗口存在状态行
-
-[source, vim]
-0       任何时候都没有
-1       仅当存在分割窗口的时候，默认值
-2       总是有
-
+// /* 文件路径 {{{2 */
 [[Path]]
 == 文件路径
 
+// /* 命令行 {{{2 */
 [[CmdLine]]
 == 命令行
 
@@ -699,6 +708,31 @@ set noequalalways
 4,/这行/       "从当前行开始，直到搜索到第4行后匹配“这行”的行
 5;/这行/       "将当前光标设置为第5行，然后从第5行搜索匹配“这行”的行
 
+大多数命令的默认行标识符是光标所在的行。而“:write”和“:global”默认的行标识符是
+整个文件，即(1,$)。
+
+如果行标识符的数目大于命令要求的数目，前面的将被忽略。
+
+==== 行标识符
+行标识符可以使用下面的格式
+
+[cols="1m,5"]
+|===
+| 行标识符 | 含义
+
+| {number}  | 明确指定行号
+| $         | 最后一行
+| %         | 整个文件，相当于 1,$
+| 't        | 记号t的位置
+| 'T        | 记号T的位置，当这个记号在另一个文件时，不能在range中使用
+| /{pattern}[/] | 下一个匹配{pattern}的行
+| ?{pattern}[?] | 上一个匹配{pattern}的行
+| \/            | 下一个匹配前面所使用{pattern}的行
+| \?            | 上一个匹配前面所使用{pattern}的行
+| \&            | 下一个匹配前面替代{pattern}的行
+|===
+
+// /* 查找 {{{2 */
 [[search]]
 == 查找
 
@@ -724,6 +758,7 @@ set noequalalways
 | 以相反的方向重复最后的 “f”，“F”，“t”，“T” 命令N次
 |===
 
+// /* 语法高亮 {{{2 */
 [highlight]
 == 语法高亮
 
@@ -812,9 +847,11 @@ evening是颜色主题的名称。所以预配置的颜色主题存放目录 `$V
   *：runtime syntax/colortest.vim*
 
 
+// /* 文件类型 {{{2 */
 [fileType]
 == 文件类型
 
+// /* 多文件编辑 {{{2 */
 == 多文件编辑
 === 编辑另一个文件
 当编辑完一个文件后，可以不用退出vim，使用下面的命令编辑另一个文件
@@ -905,10 +942,12 @@ data.txt~。
 . :args \**/*
 . :argdo %s/oldStr/newStr/egc \| update
 
+// /* 缓冲区 {{{2 */
 [buffer]
 == 缓冲区
 
 
+// /* 记号 {{{2 */
 [mark]
 == 记号（mark）
 记号是对文件中的一个位置的标识。通常由a-z小写字母对当前文件的位置做记号，
@@ -1039,9 +1078,238 @@ data.txt~。
 |
 |====
 
+// /* 跳转列表 {{{2 */
 [jump]
 == 跳转列表 
 
+// /* 章节缩展显示 {{{2 */
+== 章节缩展显示（fold）
+当一个文件的内容比较多时，很难看到这个文件的组织结构，vim提供了可嵌套fold机制。
+通过这种机制，可以实现在一个页面内显示文件的结构，并可递进式显示文件的内容。
+
+// /* fold概念  {{{3 */
+=== fold概念
+所谓fold是将多行正文显示成一行。fold的概念是基于window的，不会修改buffer的
+内容，这意味着同一个文件在一个窗口可是使用fold，而在另一个窗口不使用。
+
+当一个fold处于关闭状态时，vim的一些命令将其看作一行，如上下移动命令（j，k），
+这允许快速掠过被fold的内容。这个特性也适合粘贴和删除操作。这对于程序代码的调整
+是非常有用的。
+
+// /* fold定义方法 {{{3 */
+=== fold定义方法
+vim提供了六种fold的方法，fold的定义方法通过选项 `foldmethod` 来指定：
+manual::
+    手工定义方法
+indent::
+    通过文件内容的缩进自动定义fold以及fold的层次。这种方法适合程序代码。
+expr::
+    通过表达式定义fold
+syntax::
+    通过语法高亮定义fold
+diff::
+    针对只读文件定义fold
+marker::
+    通过在文件中插入记号定义fold
+
+// /* MARKER 方法 {{{3 */
+=== MARKER 方法
+Marker方法是在正文中标记fold的开始和结束。这允许你精确的指定fold，并且不会包括
+错误的行。可以通过设置 `foldtext` 选项定义fold行的显示内容。默认情况下fold记号
+前的内容会显示在folder行，通常会设置成标题。
+
+// /* Marker 选项 {{{4 */
+==== marker 选项
+可以使用选项 `foldmarker` 定义fold的记号。它的默认值是 "{{{,}}}"。其中{{{标记
+fold的开始，}}}标记fold的结束。
+
+通常为了不影响文件的内容， `foldmarker` 定义在特定文件的注释行内。选项 
+`commentstring` 定义了默认的注释行格式。默认值为 /*%s*/ 其中%s是包含了fold记号
+的注释内容。
+
+// /* Marker 范例 {{{4 */
+==== marker 范例
+可以只使用fold开始记号定义folder，记号后面加上大于0的数字表示级别。例如
+
+[source, C+vim]
+------
+    /* global variables <<<1 */
+    int varA, varB;
+
+    /* functions <<<1 */
+    /* funcA() <<<2 */
+    void funcA() {}
+
+    /* funcB() <<<2 */
+    void funcB() {}
+------
+
+也可以明确使用结束标记指定fold的结束。另外，指定fold级别的标记和未指定fold
+级别的标记可以混合使用。
+
+[source,vim]
+------
+    <<<1
+    fold level here is 1
+    <<<3
+    fold level here is 3
+    >>>3
+    fold level here is 2
+
+    <<<
+    fold level here is 1
+    <<<
+    fold level here is 2
+    >>>
+    fold level here is 1
+
+------
+
+
+上面的例子 `foldmarker` 定义为 “<<<,>>>”
+
+// /* fold 命令 {{{3 */
+=== fold 命令
+
+==== 创建和删除fold
+
+[cols="2m,1,7"]
+|===
+| 命令 | 计数 | 含义
+
+| zf{motion} +
+  {Visual}zf
+|
+| 创建fold。这个命令只有当 `foldmethod` 设置成 “mannual” 或者 “marker” 时才有
+  效。对于 “mannual” 新的fold将会关闭， `foldenable` 被设置。
+
+| zF
+| *
+| 创建一个包括计数指定行数的fold。其它类似zf
+
+| :{range}fo[ld]
+| *
+| 创建一个{range}指定行数的fold。
+
+| zd
+|
+| 删除一个光标所在的fold。当光标在fold行时，那个fold将被删除。嵌套的fold的级别
+  将提升一级。没有undo操作，只针对mannual和marker。
+
+| zD
+|
+| 递归删除光标所在的fold。只作用于mannual和marker。
+
+| zE
+|
+| 删除fold的定义。只作用于mannual和marker
+|===
+
+==== 打开和关闭fold
+
+[cols="2m,1,7"]
+|===
+| 命令 | 计数 | 含义
+| zo
+| *
+| 打开光标所在位置的1或者计数指定深度的fold
+
+| zO
+| 
+| 递归打开所有光标所在位置的fold
+
+| zc
+| *
+| 关闭1或者计数指定深度的fold
+
+| zC
+|
+| 递归关闭所有fold
+
+| za 
+| *
+| 当在关闭的fold时，打开它；当在打开的fold时，关闭它。计数可以指定打开或者
+  关闭的深度
+
+| zA
+|
+| 当在关闭的fold时，递归打开它；当在打开的fold时，递归关闭它。
+
+| zv
+|
+| 打开必要的fold来显示当前光标所在的位置
+
+| zx +
+  zX
+| 
+| update folds. 当使用foldexpr时有帮助
+
+| zm
+| 
+| fold more
+
+| zM
+|
+| 关闭所有fold。设置foldlever为0
+
+| zr
+|
+| 缩减fold层次
+
+| zR
+|
+| 打开所有fold，设置foldlevel到最大的级别
+
+|:{range}foldo[pen][!]
+| *
+| 但开{range}内的folds。如果使用!，{range}内的所有fold被打开，如果没有，打开
+  一层
+
+|:{range}foldc[lose][!]
+| *
+| 关闭{range}内的folds。如果使用!，{range}内的所有fold被关闭，如果没有，关闭
+  一层
+
+| zn
+|
+| 关闭 `foldenable` ，所有的folds被打开。
+
+| zN
+|
+| 打开 `foldenable` ，所有的folds被关闭。
+
+| zi
+|
+| 开关 `foldenable`
+|===
+
+==== fold内/间移动
+
+[cols="2m,1,7"]
+|===
+| 命令 | 计数 | 含义
+
+| [z
+| *
+| 移到当前打开fold的开始，如果已经在开始，移动包含该fold的fold的开始。
+  如果存在计数，执行这个命令计数次。
+
+| ]z
+| *
+| 移到当前打开fold的末尾，如果已经在末尾，移动包含该fold的fold的末尾。
+  如果存在计数，执行这个命令计数次。
+
+| zj
+| *
+| 移到下一个fold的开始， 如果存在计数，执行这个命令计数次。
+
+| zk
+| *
+| 移到上一个fold的末尾， 如果存在计数，执行这个命令计数次。
+|===
+
+
+// /* 参考文献 {{{2 */
 == 参考文献
 [bibliography]
 - [[[1]]] http://vimdoc.sourceforge.net/htmldoc/[Vim 参考手册]

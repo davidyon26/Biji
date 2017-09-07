@@ -387,13 +387,22 @@ SidebarBlocks) can be placed inside a sidebar.
 ### Comment Blocks
 CommentBlock包含的内容只出现在原文中，会被AsciiDoc解释器忽略，不会被输出。
 
-  //////////////////////////////////////////
-  CommentBlock contents are not processed by
-  asciidoc(1).
-  //////////////////////////////////////////
+[source,asciidoc]
+------
+//////////////////////////////////////////
+CommentBlock contents are not processed by
+asciidoc(1).
+//////////////////////////////////////////
+------
 
 NOTE: 系统的宏定义（System macros）在comment blocks中执行
 
+注释页可以针对行，以//开始的行为注释行，例如
+
+[source,asciidoc]
+------
+// 这是注释行
+------
 ### Passthrough Blocks
 PassthroughBlock仅支持属性（attributes）和宏（macros）替换。使用显示的
 _subs_属性可以进行不同的替换
