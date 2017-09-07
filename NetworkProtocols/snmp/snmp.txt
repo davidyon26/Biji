@@ -1,0 +1,34 @@
+= SNMP 参考手册
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-07-28
+:toc: right
+:numbered:
+
+== 简介
+本文主要概要介绍SNMP的基本知识，作为理解和深入研究SNMP协议的入口
+
+== 协议操作
+SNMP的协议操作定义在<<3,RFC SNMP Protocol Operation V2>>中。其中Trap PDU使用
+<<4, RFC3418>>定义中的对象
+
+== 基于用户的安全模型（USM）
+关于USM的内容定义在<<2, RFC User-based Security Model>>中。
+该规范定义了USM的符号系统定义。定义了关于USM的操作流程。
+
+- 第5章：关于USM的MIB定义，模块SNMP-USER-BASE-SM-MIB
+- 第4章：定义了SNMP client 应用如何发现授权SNMP agent应用的信息，以及交互过程。
+
+== 参考资料
+[bibliography]
+- [[[1]]] https://tools.ietf.org/html/rfc2578[RFC-2578
+          Structure of Management Information Version 2 (SMIv2)]
+- [[[2]]] https://tools.ietf.org/html/rfc3414[RFC-3414
+          User-based Security Model (USM) for version 3 of the Simple Network 
+          Management Protocol (SNMPv3)]
+- [[[3]]] https://tools.ietf.org/html/rfc3416[RFC-3416
+          Version 2 of the Protocol Operation for the Simple Network Management
+          Protocol (SNMP)]
+- [[[4]]] https://tools.ietf.org/html/rfc3418[RFC-3418
+          Management Information Base (MIB) for the 
+          Simple Network Management Protocol (SNMP)]
+

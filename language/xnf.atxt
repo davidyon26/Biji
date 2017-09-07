@@ -1,0 +1,746 @@
+= BNF及其变种
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-08-21
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+
+== 简介
+
+== 符号对比
+
+=== 符号对比：Part1
+
+.BNF及其扩展1
+|===
+| Style | Name | Rule | Terminal | Non Terminal | Concat (default space) | Choice | Optional | Group
+
+| BNF 
+| http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#BNF[BNF](Algol 60) 
+| <name>::=... | ... | <...> | | \| | <<note1,note1>> | 
+
+.2+.^|Intermediate
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ANSI C]
+|name: +
+ ...
+| *bold* | _italics_ | 
+|indented line one of | ...opt |
+|http://www.w3.org/hypertext/WWW/Addressing/URL/5_BNF.html[BNF-like URL描述]
+| name +
+  ... 
+| ... |  [underline]#...# | | \| | [...] |
+
+.6+.^| Wirth
+|http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#EBNF[Wirth]
+|name=... . | "..." | ... | | \| | [...] | (...)
+|http://s2k-ftp.cs.berkeley.edu:8000/sequoia/schema/html/saif/section4.9.html[
+ SAIF] and
+ http://www.bungisoft.com/html/products/visualizer/faq.html[Bungisoft]
+|<name>::... | "..." | <...> | | \| | [...] | (...)
+|http://www.cs.man.ac.uk/~pjj/farrell/comp2.html#EBNF[EBNF] from 
+ http://www.cs.man.ac.uk/~pjj/farrell/compmain.html[Compiler Basics by J.A.Farrell]
+|name:==...|'...'|...| |\| or [...,...] | [...] | 
+|http://www.cs.qub.ac.uk/~S.Fitzpatrick/Teaching/Pascal/EBNF.html[
+ Pascal EBNF Definition]
+|name +
+ ...
+|"..." +
+ *bold*
+| <...> | |\| | [...] | (...)
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Extended Pascal]
+|name=... . +
+ name>... .
+|`...' | ... | | \| | [...] | (...)
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO EBNF] or
+ https://www.iso.org/standard/26153.html[ISO/IEC 14977]
+|name=...;
+|'...' +
+ "..."
+| ... |, | \| | [...] | (...)
+
+.2+.^| ABNF
+|http://www.cs.man.ac.uk/~pjj/bnf/ebnf_rfc822.txt[EBNF] from
+ http://www.ietf.org/rfc/rfc822.txt[RFC822] (superceded by ABNF)
+|name=...
+|integer +
+ "..."
+| ... +
+ <...> | |/ 
+| [...] +
+  *1...
+| (...)
+|https://tools.ietf.org/html/rfc5234[ABNF] (RFC5234)
+|name=...
+|integer +
+ "..."
+|... +
+ <...> | | /
+| [...] +
+  *1...
+| (...)
+
+|XBNF
+|http://www.csci.csusb.edu/dick/samples/comp.text.Meta.html[XBNF]
+|name::=... . | "..." | ... | | \| | O(...) | (...)
+
+.2+.^| Regular expression
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Minimal BASIC]
+|__name__=... |__ITALICS__|__italics__| |/ | ...? |
+|http://www.w3.org/TR/2004/REC-xml-20040204/#sec-notation[EBNF for XML]
+|name::=...
+|"..." +
+ '...' |... | | \| | ...? | (...)
+|===
+
+[[note1]]
+.Notes:
+. BNF can express an optional part by e.g.: +
+  optionalb ::= a b c d | a c d
+
+=== 符号对比: Repetition
+.BNF及其扩展2
+|===
+| Style | Name | 0 or more | 1 or more | n | n to m | Other 
+
+| BNF 
+| http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#BNF[BNF](Algol 60) 
+| <<note2,note1>> | <<note2,note2>> | | |
+
+.2+.^|Intermediate
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ANSI C]
+| <<note2,note1>> | <<note2,note2>> | | |
+|http://www.w3.org/hypertext/WWW/Addressing/URL/5_BNF.html[BNF-like URL描述]
+| <<note2,note1>> | <<note2,note2>> | | |
+
+.6+.^| Wirth
+|http://www.cs.man.ac.uk/~pjj/bnf/bnf.html#EBNF[Wirth]
+| {...} | <<note2,note3>> | | | 
+|http://s2k-ftp.cs.berkeley.edu:8000/sequoia/schema/html/saif/section4.9.html[
+ SAIF] and
+ http://www.bungisoft.com/html/products/visualizer/faq.html[Bungisoft]
+| {...} | <<note2,note3>> | | | 
+|http://www.cs.man.ac.uk/~pjj/farrell/comp2.html#EBNF[EBNF] from 
+ http://www.cs.man.ac.uk/~pjj/farrell/compmain.html[Compiler Basics by J.A.Farrell]
+| {...}* | {...} | | | 
+|http://www.cs.qub.ac.uk/~S.Fitzpatrick/Teaching/Pascal/EBNF.html[
+ Pascal EBNF Definition]
+| {...} | <<note2,note3>> | | | 
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Extended Pascal]
+| {...} | <<note2,note3>> | | | 
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO EBNF] or
+ https://www.iso.org/standard/26153.html[ISO/IEC 14977]
+| {...} | {...}- | n*... | | 
+
+.2+.^| ABNF
+|http://www.cs.man.ac.uk/~pjj/bnf/ebnf_rfc822.txt[EBNF] from
+ http://www.ietf.org/rfc/rfc822.txt[RFC822] (superceded by ABNF)
+| *... | 1*... | n*n... | n*m... | n#m...
+|https://tools.ietf.org/html/rfc5234[ABNF] (RFC5234)
+| *... | 1*... | n*n... | n*m... |
+
+|XBNF
+|http://www.csci.csusb.edu/dick/samples/comp.text.Meta.html[XBNF]
+| #(...) | N(...) | | | L(...,...)
+
+.2+.^| Regular expression
+|http://www.cl.cam.ac.uk/~mgk25/iso-14977-paper.pdf[ISO Minimal BASIC]
+| ...* | <<note2,note3>> | | | 
+|http://www.w3.org/TR/2004/REC-xml-20040204/#sec-notation[EBNF for XML]
+| ...* | ...+ | | | |
+|===
+
+[[note2]]
+.Notes:
+. BNF can express 0 or more repetitions by e.g.: +
+  list ::= | listitem list
+. BNF can express 1 or more repetitions by e.g.: +
+  list ::= listitem | listitem list
+. Notations that provide 0 or more repetitions but not 1 or more repetions
+  can simulate the latter. e.g. Wirth's EBNF can express 1 or more 
+  repetitions by e.g.: +
+  list : listitem { listitem}
+
+== BNF的缺点
+BNF（Backus-Naur Form）（应用于ALGO 60）的主要缺点在于：
+. 当一个语言包括其元符号 `<` `>` `|` `::=` 时，BNF不能描述这类语言
+. 不能自然的描述常见的范式结构，如注释
+. 需要引入多个规则描述常见的范式结构，如repetition
+
+== EBNF
+EBNF(Extended BNF)是基于Niklaus Wirth（Wirth，1997）的建议（此建议基于BNF），并
+吸取其他BNF扩展的基础上，由ISO（the International Organization of Standardization）和IEC（the International Electrotechnical Commission）推出的国际标准元语言。
+其已经被ISO/IEF 14977标准化。
+
+=== 主要特点
+其区别于BNF的主要特性如下：
+
+a. 被定义语言的终止符号使用单引号或者双引号引用起来，这样任何字符包括EBNF自己
+   的元符号也可以作为被定义语言的终止符号(terminal symbol)
+b. [] 用于表示可选项
+c. {} 用于表示重复
+d. 每条规则有明确的结束符合（；），这样可以避免引起一条规则终止在哪的歧义
+e. 使用数学使用的()将一些元素组织在一起。
+
+其更主要的特色在于将实践中经常遇到的情况进行形式化：
+
+a. 精确定义元素的数目。比如Fortran语言的label精确包括4个字符；COBOL的标识符最多
+   包括32个字符。这样的规则单独使用BNF描述比较困难，通常需要附加非形式的自然语言
+   描述。
+b. 定义一些特例。如Algol的 *end*-注释终止与第一个 *end*, *else* 或者分号。这种
+   情况同样使用BNF难以精确表达，需要特殊非形式自然语言说明。
+c. 注释。有些语言的复杂语法通常需要多个规则进行定义。注释可以使用自然语言给出解
+   释，或提供上下文，交叉引用等，而不影响形式化的定义
+d. 元标识符。一个元标识符（非终止符号的名）不限于单个字或者使用尖括号括起来。
+   因为EBNF提供明确的连接符号（，）。
+e. 扩展。special-sequence机制可以允许用户对ENBF进行扩展。另外在标准的EBNF中元
+   标识符不能紧跟着左括号。可以利用这个特征定义元标识符紧跟着一些参数被括号括
+   起来的语法结构。
+
+=== 文法
+
+.EBNF 文法结构
+[cols="1,1,1m,4"]
+|===
+2+.^| Usage  | Notation | comment
+
+2+.^| Rule  | name=... ;| 一条规则：name被定义为...以；作为规则结束符 
+
+2+.^| Termination | ; | 分号是一条规则结束的标志
+
+.2+.^| Items  
+| Terminal 
+| "..." +
+  '...'
+| 终结符使用单引号或者双引号进行引用
+| Non Terminal
+| ...
+| 非终结符一个标识符
+.3+.^| Repetition
+| 0 or more | {...} | 重复0或多次  
+| 1 or more | {...}- | 重复1至多次，这里的-是异常操作符，排除了空
+| n | n*... | 重复...n次，当...是可选项是，其含义是0-n次 
+
+2+.^| Concat | , 
+| 规则定义元素的连接符号，表示一个规则的name由多个由其分隔的序列部分组成 
+
+2+.^| Choice | \| 
+| 选项符号，表示一个规则的name由其分隔的多个部分的之一组成
+
+2+.^| Optional | [...] | 表示...是可选的
+
+2+.^| Grouping | (...) | 将...中的多个部分作为一组处理，从而改变优先级 
+
+2+.^| Comment | (\*...*) | 注释 
+
+2+.^| exception | ...-... | 表示前面的...中的内容移除后面...的内容
+
+2+.^| special sequence | ? ... ? | 用于扩展 
+|===
+
+=== 例子
+EBNF的文法可以使用自己进行如下定义
+
+[source,EBNF]
+------------------
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+       | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+       | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+       | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+       | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+       | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+       | "x" | "y" | "z" ;
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+symbol = "[" | "]" | "{" | "}" | "(" | ")" | "<" | ">"
+       | "'" | '"' | "=" | "|" | "." | "," | ";" ;
+character = letter | digit | symbol | "_" ;
+ 
+identifier = letter , { letter | digit | "_" } ;
+terminal = "'" , character , { character } , "'" 
+         | '"' , character , { character } , '"' ;
+ 
+lhs = identifier ;
+rhs = identifier
+     | terminal
+     | "[" , rhs , "]"
+     | "{" , rhs , "}"
+     | "(" , rhs , ")"
+     | rhs , "|" , rhs
+     | rhs , "," , rhs ;
+
+rule = lhs , "=" , rhs , ";" ;
+grammar = { rule } ;
+------------------
+
+=== EBNF形式定义
+下面是摘录于<<2,ISO 14977>>的EBNF形式定义。
+
+[source, EBNF]
+------------------------
+(*
+  The syntax of Extended BNF can be defined using itself.  There are four parts
+  in this example, the first part names the characters, the second part defines
+  the removal of unnecessary non-printing characters, the third part defines the
+  removal of textual comments, and the final part defines the structure of 
+  Extended BNF itself.
+  
+  Each syntax rule in this example starts with a comment that identifies the 
+  corresponding clause in the standard.
+
+  The meaning of special-sequences is not defined in the standard.  In this
+  example (see the reference to 7.6) they represent control functions defined
+  by ISO/IEC 6429:1992.  Another special-sequence defines a syntactic-exception
+  (see the reference to 4.7).
+*)
+
+
+
+(*
+  The first part of the lexical syntax defines the characters in the 7-bit
+  character set (ISO/IEC 646:1991) that represent each terminal-character
+  and gap-separator in Extended BNF.
+*)
+letter 
+  = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h'
+  | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p'
+  | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x'
+  | 'y' | 'z'
+  | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H'
+  | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P'
+  | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X'
+  | 'Y' | 'Z';
+
+decimal digit
+  = '0' | '|' | '2' | '3' | '4' | '5' | '6' | '8' | '9'; 
+
+concatenate symbol = ',';
+defining symbol = '=';
+definition separator symbol = '|' | '/' | '!';
+end comment symbol = '*)';
+end group symbol = ')';
+end option symbol = ']' | '/)';
+end repeat symbol = '}' | ':)';
+except symbol = '-';
+first quote symbol = "'";
+repetition symbol = '*';'
+second quote symbol = '"';
+special sequence symbol = '?';
+start comment symbol = '(*';
+start group symbol = '(';
+start option symbol = '[' | '(/';
+start repeat symbol = '{' | '(:';
+terminator symbol = ';' | '.';
+
+(* see 7.5 *) other character
+  = ' ' | ':' | '+' | '_' | '%' | '@'
+  | '&' | '#' | '$' | '<' | '>' | '\\'
+  | '^' | '`' | '~';
+
+(* see 7.6 *) space character = ' ';
+
+horizontal tabulation character
+  = ? IS0 6429 character Horizontal Tabulation ?;
+new line
+  = { ? ISO 6429 character Carriage Return ? },
+    ? IS0 6429 character Line Feed ?,
+    { ? IS0 6429 character Carriage Return ? };
+vertical tabulation character
+  = ? IS0 6429 character Vertical Tabulation ? ;
+form feed
+  = ? IS0 6429 character Form Feed ? ;
+
+
+(*
+  The second part of the syntax defines the removal of unnecessary non-printing
+  characters from a syntax.
+*)
+(* see 5.2 *)
+terminal character
+  = letter
+  | decimal digit
+  | concatenate symbol
+  | defining symbol
+  | definition separator symbol
+  | end comment symbol
+  | end group symbol
+  | end option symbol
+  | end repeat symbol
+  | except symbol
+  | first quote symbol
+  | repetition symbol
+  | second quote symbol
+  | special sequence symbol
+  | start comment symbol
+  | start group symbol
+  | start option symbol
+  | start repeat symbol
+  | terminator symbol
+  | other character;
+
+(* see 6.3 *) gap free symbol
+  = terminal character
+    - (first quote symbol | second quote symbol)
+  | terminal string;
+
+(* see 4.16 *) terminal string
+  = first quote symbol, first terminal character, 
+    {first terminal character},
+    first quote symbol
+  | second quote symbol, second terminal character, 
+    {second terminal character},
+    second quote symbol;
+
+(* see 4.17 *) first terminal character
+  = terminal character - first quote symbol;
+
+(* see 4.18 *) second terminal character
+  = terminal character - second quote symbol;
+
+(* see 6.4 *) gap separator
+  = space character
+  | horizontal tabulation character
+  | new line
+  | vertical tabulation character
+  | form feed;
+
+(* see 6.5 *) syntax
+  = {gap separator},
+    gap free symbol, {gap separator},
+    {gap free symbol, {gap separator}};
+
+
+
+(*
+  The third part of the syntax defines the removal of bracketed-textual-comments
+  from gap-free-symbols that form a syntax.
+*)
+(* see 6.6 *) commentless symbol 
+  = terminal character
+    - (letter
+      | decimal digit
+      | first quote symbol
+      | second quote symbol
+      | start comment symbol
+      | end comment symbol
+      | special sequence symbol
+      | other character)
+  | meta identifier
+  | integer
+  | terminal string
+  | special sequence;
+
+(* see 4.9 *) integer
+  = decimal digit, {decimal digit};
+
+(* see 4.14 *) meta identifier
+  = letter, {meta identifier character};
+
+(* see 4.15 *) meta identifier character
+  = letter
+  | decimal digit;
+
+(* see 4.19 *) special sequence
+  = special sequence symbol,
+    {special sequence character},
+    special sequence symbol;
+
+(* see 4.20 *) special sequence character
+  = terminal character - special sequence symbol;
+
+(* see 6.7 *) comment symbol
+  = bracketed textual comment
+  | other character
+  | commentless symbol;
+
+(* see 6.8 *) bracketed textual comment
+  = start comment symbol, {comment symbol},
+    end comment symbol;
+
+(* see 6.9 *) syntax
+  = {bracketed textual comment},
+    commentless symbol,
+    {bracketed textual comment},
+    {commentless symbol, 
+      {bracketed textual comment}};
+
+
+(*
+  The final part of the syntax defines abstract syntax of Extended BNF, i.e.
+  the structure in terms of the commentless symbols.
+*)
+
+(* see 4.2 *) syntax
+  = syntax rule, {syntax rule};
+
+(* see 4.3 *) syntax rule
+  = meta identifier, defining symbol,
+    definitions list, terminator symbol;
+
+(* see 4.4 *) definitions list
+  = single definition,
+    {definition separator symbol, single definition};
+
+(* see 4.5 *) single definition
+  = syntactic term,
+    {concatenate symbol, syntactic term);
+
+(* see 4.6 *) syntactic term
+  = syntactic factor,
+    [except symbol,syntactic exception];
+
+(* see 4.7 *) syntactic exception
+  = ? a syntactic-factor that could be replaced by a syntactic-factor
+      containing no meta-identifiers
+    ? ;
+(* see 4.8 *) syntactic factor
+  = [integer, repetition symbol],
+    syntactic primary;
+
+(* see 4.10 *) syntactic primary
+  = optional sequence 
+  | repeated sequence
+  | grouped sequence
+  | meta identifier
+  | terminal string
+  | special sequence
+  | empty sequence;
+
+(* see 4.11 *) optional sequence
+  = start option symbol, definitions list,
+    end option symbol;
+
+(" see 4.12 *) repeated sequence
+  = start repeat symbol, definitions list,
+    end repeat symbol;
+(* see 4.13 *) grouped sequence
+  = start group symbol, definitions list,
+    end group symbol;
+(* see 4.21 *) empty sequence
+  = ;
+------------------------
+
+== ABNF
+ABNF（Augmented BNF）主要用于描述Internat技术的语法，比如email规范，各种网络
+协议等等。它是对BNF的扩充和增强。与BNF的不同体现在命名规则，重复，选择，顺序
+无关以及取值范围。
+
+== 文法
+
+.ABNF文法
+[cols="1,2m,6a"]
+|===
+| grammer component | definition | comment
+
+| rule | name = elements crlf
+| 
+* name 由字母，数字，连接符（alphabetics, digits 和 hyphens）组成，
+  第一个字符必须是字母
+* name不需要使用<>引用，且不区分大小写
+* 等号分隔规则的名和定义
+* <crlf>是换行符（carriage return followed by line feed）
+* <element>由一序列规则名，值以及各种操作符组成。
+* 规则是左对其的，如果一个规则需要多行，后面的行要相对于第一行进行缩进
+
+| terminal +
+  value
+| %bnn %dnn %xnn +
+  "..."
+| ABNF的终结符可以有两种表示方式。
+
+* 以二进制，十进制和十六进制表示的编码值，
+* 使用双引号引用起来的字符本身。
+
+前一种表示方式区分大小写，而后一种不区分大小写。
+
+<<3,RFC7405>>对ABNF进行了扩充，使用前缀%i表示不区分大小写，%s
+表示区分大小写。比如 `rulename = %s"abc"` 只匹配abc。为了向前兼容%i是可选的。
+
+当用第一种方式显示字符串时，为了方便书写，可以使用点号（.）连接多个字符，比如
+  
+  CRLF = %d13.10  等同于 CRLF = %d13 %d10
+
+  rulename = %d97.98.99 等同于 rulename = %d97 %98 %99 
+
+| Concatenation
+| white space 
+| white space 可以是空格或者tab, 比如下面的规则定义了字符串aba
+  foo = %x61   ;a
+  bar = %x62   ;b
+  mumble = foo bar foo
+
+| Alternatives
+| /
+| foo / bar 表示介绍<foo> 或者 <bar>
+
+| Incremental +
+  Alternatives
+| =/
+| 
+  ruleset = alt1 / alt2
+  ruleset =/ alt3
+  ruleset =/ alt4 / alt5
+  等价于
+  ruleset = alt1 / alt2 / alt3 / alt4 / alt5
+
+| Value Range
+| %cNN-MM
+| DIGIT = %x30-29 等价于
+
+  DIGIT = “0" / “1" / ”2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
+
+| Group
+| (Rule1 Rul2)
+| 使用圆括号引用的元素作为单个元素处理，例如
+
+  elem (foo /bar) blat
+
+匹配 （elem foo blat） 或者 （elem bar blat）而
+
+  elem foo / bar blat
+
+匹配 （elem foo）或者 （bar blat）
+
+| Variable +
+  Repetition
+| <a>*<b>element
+| <a>和<b>是可选的十进制值，表示element只是出现<a>次，最多出现<b>次。<a>的默认
+  值是0, 而<b>的默认是无限多。所以*<element>允许任何数目的<element>，3*3<elem>
+  允许3次<element>
+
+| Specific +
+  Repetition
+| <n>element
+| 等价于 <n>*<n>element。比如3ALPHA表示3个alphabetic字符组成的字符串
+
+| Optional +
+  Sequence
+| [rule]
+| 等价于 *1(rule)，表示0或一次rule
+
+| Comment
+| ; comment string
+| 分号是注释标识符，表示；后面的内容是注释，不做解释
+|===
+
+=== 优先级
+从高到低为
+  rule name， prose-val， Terminal value
+  Comment
+  Value range
+  Repetition
+  Grouping, Optional
+  Concatenation
+  Alternative
+
+混合使用Alternative和Concatenation可以带来混淆，为了清晰易读，建议使用grouping
+操作符
+
+=== ABNF的ABNF定义
+
+==== 基本规则
+
+[source, ABNF]
+------------------
+ALPHA   = %x41-5A / %x61-7A     ; A-z / a-z
+BIT     = "0" / "1"
+CHAR    = %x01-7F       
+                        ; any 7-bit US-ASCII character, excluding NUL
+CR      = %x0D          
+                        ; carriage return
+CRLF    = CR LF         
+                        ; Internet standard newline
+CTL     = %x00-1F /%x7F 
+                        ;controls
+DIGIT   = %x30-39       ; 0-9
+DQUOTE  = %x22          
+                        ; " (Double Quote)
+HEXDIG  = DIGIT / "A" / "B" / "C" / "D" / "E" / “F”
+HTAB    = %x09          
+                        ; horizontal tab
+LF      = %x0A          
+                        ; line feed
+LWSP    = *(WSP / CRLF WSP)
+                        ; Use of this linear-white-space rule permits lines
+                        ;  containing only white space that are no longer
+                        ;  legal in mail headers and have caused 
+                        ;  interoperability problems in other contexts.
+                        ; Do not use When defining mail headers and use with
+                        ;  caution in other contexts.
+OCTET   = %x00-FF       ; 8bits of data
+SP      = %x20          
+VCHAR   = %x21-7E       ; visible (printing) characters
+WSP     = SP / HTAB     ; white space
+------------------
+
+==== ABNF in ABNF
+
+[source,ABNF]
+-------------
+rulelist       =  1*( rule / (*c-wsp c-nl) )
+
+rule           =  rulename defined-as elements c-nl
+                        ; continues if next line starts
+                        ;  with white space
+
+rulename       =  ALPHA *(ALPHA / DIGIT / "-")
+defined-as     =  *c-wsp ("=" / "=/") *c-wsp
+                        ; basic rules definition and
+                        ;  incremental alternatives
+
+elements       =  alternation *c-wsp
+
+c-wsp          =  WSP / (c-nl WSP)
+
+c-nl           =  comment / CRLF
+                        ; comment or newline
+
+comment        =  ";" *(WSP / VCHAR) CRLF
+
+alternation    =  concatenation
+                   *(*c-wsp "/" *c-wsp concatenation)
+
+concatenation  =  repetition *(1*c-wsp repetition)
+
+repetition     =  [repeat] element
+
+repeat         =  1*DIGIT / (*DIGIT "*" *DIGIT)
+
+element        =  rulename / group / option /
+                   char-val / num-val / prose-val
+
+group          =  "(" *c-wsp alternation *c-wsp ")"
+
+option         =  "[" *c-wsp alternation *c-wsp "]"
+
+char-val       =  DQUOTE *(%x20-21 / %x23-7E) DQUOTE
+                        ; quoted string of SP and VCHAR
+                        ;  without DQUOTE
+
+num-val        =  "%" (bin-val / dec-val / hex-val)
+
+bin-val        =  "b" 1*BIT
+                  [ 1*("." 1*BIT) / ("-" 1*BIT) ]
+                    ; series of concatenated bit values
+                    ;  or single ONEOF range
+
+dec-val        =  "d" 1*DIGIT
+                  [ 1*("." 1*DIGIT) / ("-" 1*DIGIT) ]
+
+hex-val        =  "x" 1*HEXDIG
+                  [ 1*("." 1*HEXDIG) / ("-" 1*HEXDIG) ]
+prose-val      =  "<" *(%x20-3D / %x3F-7E) ">"
+                    ; bracketed string of SP and VCHAR
+                    ;  without angles
+                    ; prose description, to be used as
+                    ;  last resort
+
+-------------
+
+== 参考文献
+[bibliography]
+- [[[1]]]http://www.cs.man.ac.uk/~pjj/bnf/ebnf.html?[BNF/EBNF variants]
+- [[[2]]]https://www.iso.org/standard/26153.html[ISO/IEC 14977:1996] 
+  'Information technology -- Syntactic metalanguage -- Extended BNF'
+- [[[3]]]https://tools.ietf.org/html/rfc7405[RFC7405]

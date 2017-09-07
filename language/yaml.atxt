@@ -2,9 +2,11 @@ YAML 简介
 =======
 David Yon <davidyon@hotmail.com>
 v1.0, 2017-06-15
-:toc:
+:toc: right
 :numbered:
 :icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
 
 本文只是简单介绍什么是YAML语言，不致力于详细这个语言的语法和语义。
 YAML的详细信息请参考<<YAML_ORG,YAML官方文献>>

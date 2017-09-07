@@ -1,0 +1,1321 @@
+// /* VIM 参考手册 {{{1 */
+= VIM 参考手册
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-08-03
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+
+// /* 模式（mode）{{{2 */
+== 模式（mode）
+Vim是给予模式的编辑器，在不同的模式下，相同的输入会存在不同的含义。两个基本的
+模式是正常（Normal）和插入（Insert）模式。在正常模式下，输入的字符代表特定的
+命令。在插入模式下输入的字符是要输入的正文内容。
+
+当使用Vim打开文件是，进入的是正常模式，所有的输入都作为命令处理。
+
+// /* 移动光标 {{{2 */
+== 移动光标
+
+=== 左右移动
+
+[cols="2m,1,10"]
+|===
+| 输入 |  计数 |动作
+
+|  h  | *
+| 向左移动N个字符，默认为1。或者 `CTRL-H` `<BS>` `<Left>` 键 
+
+|  l | *
+| 向右移动N个字符，默认为1。或者 `<space>` `<Right>` 键 
+
+| 0  |   | 当前行的一个字符。或者 `<Home>` 键
+| ^  |   | 当前行的第一个非空字符
+| $  | * | 下面N-1行的最后一个字符，默认当前行。或者 `<End>` 键
+| g_ | * | 下面N-1行的最后一个非空字符，默认当前行。
+| g0 |   | 当前屏幕行的第一个字符，有软换行时不同于0
+| g^ |   | 当前屏幕行的第一个非空字符，有软换行时不同于^
+| g$ | * | 下面N-1行的最后一个字符，有软换行时不同于$
+| gm |   | 当前屏幕行的中间位置。
+| \| | * | 第N列，默认为1
+|===
+
+TIP: 关于基于字符查找导致光标移动参见 <<searchChar,查找字符>>  
+
+=== 上下移动
+
+[cols="2m,1,10"]
+|===
+| 输入 | 计数 | 动作
+
+|  k  | *
+| 向上移动N行，默认为1。或者 `CTRL-P` `<Up>` 键 
+|  j | *
+| 向下移动N行，默认为1。或者 `CTRL-J` `CTRL-N` `<NL>` `<Down>` 键 
+
+| -  | *
+| 向上移动N行，默认为1。光标位于第一个非空字符
+| +  | *
+| 向下移动N行，默认为1。光标位于第一个非空字符。或者 `CTRL-M` `<CR>`
+
+| _ | * | 向下N-1行的第一个非空字符
+
+| G  | * | 到第N行，默认最后一行第一个非空白字符
+| <C-End> | * | 同G，但是默认最后一行的最后一个字符
+| :[rang] |   | 跳转到[rang]最后的一行。[rang]可以仅包括一个行号。如“:23” 或
+                “:'m”，与G不同的是它不改变jumplist
+| gg | * | 到第N行，默认第一行。或 `<C-Home>`
+
+| N% | * | 到文件N%行，N必须提供，否则是%命令
+
+| gk | * | 上移N个屏幕行, 用于存在软换行。或 `g<Up>` 
+| gj | * | 下移N个屏幕行，用于存在软换行。或 `g<Down>`
+
+| :[range]go[to] [count] |
+| 跳到当前buffer的第{count}字节，默认[count]是1。如果指定了[range], [range]
+  最后一个数最为count。换行符是否包括依赖与 `fileformat` 的设置
+| [count]go  |
+| 同上
+
+|===
+
+=== 基于屏幕的移动
+
+[cols="2m,1,10"]
+|===
+| 输入 | 计数 | 动作
+ 
+| ctrl-d | *
+| 向下滚动半屏, 设置滚动"n"行，并最为新的半屏的默认值
+
+| ctrl-u | *
+| 向上滚动半屏, 设置滚动"n"行，并最为新的半屏的默认值
+
+| ctrl-f | *
+| 向前滚动N屏 
+
+| ctrl-b | *
+| 向后滚动N屏 
+
+| ctrl-y | *
+| 向前滚动N行 
+
+| ctrl-e | *
+| 向后滚动N行 
+
+| M     |  | 移光标到当前页面中间
+| H     |  | 移光标到当前页面的最上部
+| L     |  | 移光标到当前页面的最下部
+|===
+
+=== 基于文本的移动
+[cols="1s,5"]
+|===
+| 输入 | 动作
+
+| W +
+  w +
+  5w +
+| 向前移动一个字（空格分隔） +
+  向前移动一个字（非字母数字字符分隔） +
+  向前移动5个字
+
+| B +
+  b +
+  5b
+| 向后移动一个字（空格分隔） +
+  向后移动一个字（非字母数字字符分隔） +
+  向后移动5个字
+
+| E +
+  e +
+  5e
+| 向前移动字的尾部（空格分隔） +
+  向前移动到字的尾部（非字母数字字符分隔） +
+  向前移动到5个字的尾部
+
+| ) | 移动到下一个句的起始位置（以 `.` `,` `?` 或者 `!`做为界定符）
+| ( | 移动到当前句的起始位置，如果已经在起始位置，移动到上一句起始位置
+     （界定符同上）
+
+| } | 移动到下一段的起始位置（以空白行或者NROFF宏： `.ip` `.lp` `.pp` `.qp` 
+      `.P` `.LI` 和 `.bp`最为界定符。(paragraph)
+| { | 移动到当前段的起始位置，（界定符同上）
+
+| ]] | 移动光标到下一节(section）起始位置（以nroff宏：`.NH` `.SH` `.H` `.HU` 
+       为界定符
+| [[ | 移动光标到当前节（section）起始位置（界定符同上）
+
+|===
+
+// /* 多窗口 {{{2 */
+[windows]
+== 多窗口
+vim 支持将一个窗口水平垂直分割成多个窗口，每个窗口可以显示相同或者不同的内容。本节描述关于窗口的分割，光标在多个窗口之间的转换或者控制。
+
+=== 多窗口打开文件
+可以使用-o或者-O选项打开多个文件，每个文件占用一个窗口。前者窗口上下部局，后者
+左右部局。
+
+[source,bash]
+$ vim -o one.txt two.txt three.txt
+$ vim -O one.txt two.txt three.txt
+
+=== 窗口创建与关闭
+
+[cols="2m,1,6"]
+|===
+| 命令 | 计数 | 含义
+
+| CTRL-W s +
+  CTRL-W S +
+  CTRL-W CTRL-S +
+  :split +
+  :split _file name_
+| *
+| 将当前窗口分割成上下两个窗口，光标停留在上面的窗口。默认情况显示相同的内容，
+  你可以在两个窗口查看同一个文件不同部分的内容。如果指定计数，比如 `:3split` 
+  表示新的窗口占用3行。
+
+| CTRL-W v +
+  CTRL-W CTRL-V +
+  :vsplit +
+  :vsplit _file name_
+| *
+| 将当前窗口分割成左右两个窗口。如果指定计数，其为新窗口所占的列数
+
+| CTRL-W n +
+  CTRL-W CTRL-N +
+  :new
+| *
+| 创建一个新的窗口包含一个新的空文件。
+
+| :vnew +
+  :vertical new
+| *
+| 垂直创建一个新的窗口包含一个新的空文件。 :vertical命令可以用于任何其它分割窗
+  口的命令的前面，用于指明垂直分割窗口
+
+| CTRL-W q +
+  CTRL-W CTRL-Q +
+  CTRL-W c +
+  :close +
+  :quit +
+  ZZ
+| *
+| 关闭当前窗口。`:close` 与其它两种方式不同在于，它不会在最后一个窗口时退出vim.
+  如果指定计数，是退出第n个窗口。n是指定的计数。
+
+| CTRL-W o +
+  CTRL-W CTRL-O +
+  :only
+|
+| 关闭当前窗口以外的所有窗口
+
+|===
+
+=== 窗口创建相关事项
+
+==== s前缀
+很多编辑另一个文件的命令有相应的变种命令，用来在新窗口编辑这个文件。这个变种
+命令有共同的特征是在相应命令前面加上s。例如
+
+[source,vim]
+------
+:new   --->  :snew
+:tag   --->  :stag
+:find  --->  :sfind
+------
+
+==== CTRL-W
+在noremal模式下，如果某些命令打开一个文件，那么在这个命令前增加 `CTRL-W` 将创建
+一个新的窗口来打开相应的文件。
+
+比如 `CTRL-^` 用来打开以前编辑的文件，而 `CTRL-W CTRL-^` 将在新的窗口打开以前
+的文件。
+
+==== 位置选项
+下面的选项可以决定新窗口出现的当前窗口的位置。
+
+[cols="1m,4a"]
+|===
+| 选项 | 作用
+
+| splitbelow +
+  sb
+| 开关选项。当打开时，当水平分割一个窗口时新的窗口在当前窗口的下面。默认关闭。
+
+| splitright +
+  spr
+| 开关选项。当打开时，当垂直分割一个窗口时新的窗口在当前窗口的右面。默认关闭。
+
+| 例子
+|
+[source,vim]
+----------
+:set splitbelow
+:set nosplitright
+----------
+|===
+
+[[WindowsModifier]]
+==== 位置修饰符
+当创建一个新的窗口时，可以在前面增加一个位置修饰符来明确指定新窗口的位置。在
+下面的例子中，如果 `cmd` 是一个分割窗口的命令，将按照修饰符指定的方式分割。
+其格式为：
+
+[source, vim]
+:lefta[bove] {cmd}    当前窗口的左面或者上面 
+:abo[veleft] {cmd}    同上 
+:rightb[elow] {cmd}   当前窗口的右面或者下面 
+:bel[owright] {cmd}   同上 
+:to[pleft]    {cmd}   窗口的最上面或者最左面，占用整个vim的宽度或者高度 
+:bo[tright]   {cmd}   窗口的最下面或者最右面，占用这个vim的宽度或者高度
+:vert[tical]  {cmd}   垂直创建一个窗口
+
+[NOTE]
+======
+上面的修饰符可以进行组合，用来垂直分割分割窗口，并占用这个vim窗口的高度。例如
+
+[source,vim]
+------
+:vertical topleft split tags  <1>
+------
+<1> 在vim窗口最左面垂直分割全高度的窗口，并显示tags文件
+======
+
+=== 窗口间切换
+
+[cols="2m,1,6"]
+|===
+| 命令 | 计数 | 含义
+
+| CTRL-W w +
+  CTRL-W CTRL-W
+| *
+| 多个窗口间的切换，依次遍历所有窗口。如果未加计数，切换到当前窗口的下/右窗口
+  如果没有，切换到最上左的窗口。如果存在计数，切换到计数指定编号的窗口。窗口
+  的编号从top-left到bottom-right。如果超过窗口数，切换到最后一个。
+
+| CTRL-W W
+| *
+| 如果没有计数，与CTRL-W w反向。如果存在计数，与CTRL-W w相同。
+
+| CTRL-W h +
+  CTRL-W CTRL-H +
+  CTRL-W <Left> +
+  CTRL-W <BS>
+| *
+| 切换到左边的窗口1 或者多次
+
+| CTRL-W j +
+  CTRL-W CTRL-J +
+  CTRL-W <Down>
+| *
+| 切换到下面的窗口1 或者多次
+
+| CTRL-W k +
+  CTRL-W CTRL-K
+  CTRL-W <Up>
+| *
+| 切换到上面的窗口1 或者多次
+
+| CTRL-W l +
+  CTRL-W CTRL-L +
+  CTRL-W <Right>
+| *
+| 切换到右边的窗口1 或者多次
+
+| CTRL-W t +
+  CTRL-W CTRL-T
+|
+| 切换到最上左面的窗口
+
+| CTRL-W b +
+  CTRL-W CTRL-B
+|
+| 切换到最下右面的窗口
+
+| CTRL-W p +
+  CTRL-W CTRL-P
+|
+| 切换到以前操作的窗口
+|===
+
+=== 窗口大小
+本节介绍改变窗口大小的命令
+
+[cols="2m,1,6a"]
+|===
+| 命令 | 计数 | 含义
+
+| CTRL-W *+*   
+| *
+| 将当前窗口高度增加1或者多行
+
+| CTRL-W -
+| *
+| 将当前窗口高度减少1或者多行
+
+| CTRL-W _
+| *
+| 如果不指定计数，设置当前窗口为最大的高度。如果指定计数，设置当前窗口为指定
+|===
+
+如果想使用鼠标，可以使用鼠标改变窗口大小
+
+可以使用下面的选项控制窗口的大小
+
+[cols="1m,4,3a"]
+|===
+| 选项 | 说明 | 范例
+
+| winheight +
+  wh
+| 一个新窗口期望的最小大小（以行为单位）
+|
+[source,vim]
+-------
+set winheight=10
+-------
+| winminheight +
+  wmh
+| 一个窗口可缩小的最小的大小(一行为单位）。这个值在减少一个窗口高度的时候被检
+  测。不要将这个值设得太大，否则会出现错误。0-3是比较合理的。
+|
+[source,vim]
+-------
+set winminheight=10
+-------
+| winwidth +
+  wiw
+| 一个窗口期望的最小宽度（以列为单位）
+.2+.^|
+[source,vim]
+------
+set winwidth=50
+set winminwidth=20
+------
+| winminwidth +
+  wmw
+| 一个窗口最小的宽度（以列为单位）。可以设置为0，不要设置为一个大值，否则在切换
+  或者新建一个窗口时会出错。0-12是比较合理的。
+| equalalways +
+  ea
+| 自动保持所有的窗口具有相同的大小。
+|
+[source,vim]
+------
+set equalalways
+set noequalalways
+------
+|===
+
+=== 窗口移动
+下面的命令用于移动窗口的位置
+
+[cols="2m,1,5a"]
+|===
+| 命令 | 计数 | 含义
+
+| CTRL-W r +
+  CTRL-W CTRL-R
+|
+| 向下向右移动窗口，第1个变成第2个，第n个变成第n+1个，最后一个变成第一个。
+  光标随着原来的窗口移动。仅仅作用与与当前窗口等长或者等高的窗口。
+
+| CTRL-W R
+|
+| 向上向右移动窗口，第2个变成第1个，第n个变成第n-1个，第一个变成最后一个。
+
+| CTRL-W x +
+  CTRL-W CTRL-X
+| *
+| 
+* 如果没有计数，当前窗口和下一个窗口交换；如果当前窗口是最后一个窗口，和
+  前一个窗口交换；
+* 如果存在计数，当前窗口和指定的第N个窗口交换。光标在交换的窗口。当存在水平和
+  垂直混合的情况，仅仅和那些与当前窗口等长或者等高的窗口交换。
+
+| CTRL-W K 
+| 
+| 将当前窗口移动到顶部，并且占用整个vim窗口的宽度。窗口的位置类似于位置修饰符
+  <<WindowsModifier,:topleft>>
+
+| CTRL-W J
+|
+| 将当前窗口移动到底部，并且占用整个vim窗口的宽度。窗口的位置类似于位置修饰符
+  <<WindowsModifier,:botright>>
+
+| CTRL-W H
+|
+| 将当前窗口移动到最左面，占用整个vim窗口的高度。窗口的位置相当于
+  <<WindowsModifier,:vert topleft split>>
+
+| CTRL-W L
+|
+| 将当前窗口移动到最右面，占用整个vim窗口的高度。窗口的位置相当于
+  <<WindowsMofifier,:vert botright split>>
+
+| CTRL-W T
+| *
+| 将当前窗口移动到一个新的tab 页。
+|===
+
+=== 窗口状态行
+
+使用 `laststatus` 选项可以设置什么时候最后的窗口存在状态行
+
+[source, vim]
+0       任何时候都没有
+1       仅当存在分割窗口的时候，默认值
+2       总是有
+
+[[TabPage]]
+=== Tab 页
+一个vim窗口的空间有限，不能分割太多窗口，或者分割的窗口空间很小，难于操作。为了
+解决这个问题，vim支持tab页的概念。每个tab页具有vim的维度空间，每个tab可以分割
+多个窗口。
+
+[[TabOpen]]
+=== Tab页打开文件
+在启动vim时，可以使用 -p 选项，打开多个文件，每个文件使用不同的tab页。tab页的
+数目由选项 `tabpagemax` 控制。
+
+=== Tab页创建
+下表列出关于tab页创建的命令。
+
+[cols="2m,1,7a"]
+|===
+| 命令 | 计数 | 含义
+
+| :tabe[dit] +
+  :tabnew +
+  :tabe[dit] _file_ +
+  :tabnew _file_
+| *
+| 打开一个新的tab页。如果没有计数，新的tab页在当前页的后面。如果指定计数，新的
+  tab也在计数指定的页后面。如果未指定文件新的tab页显示空，否者显示指定的文件。
+
+[source,vim]
+------
+:tabnew     " opens tabpage after the current one
+:.tabnew    " as above
+:+tabnew    " opens tabpage after the next tab page
+            " note: it is one further than :tabnew
+:-tabnew    " opens tabpage before the current one
+:0tabnew    " opens tabpage before the first one
+:$tabnew    " opens tabpage after the last one
+------
+| :tabf[ind] _file_
+| *
+| 在<<Path,path>>列表查找 _file_ 文件，并将其现在在新的tab中。计数与上同。
+
+| :tab {cmd}
+| *
+| 执行 {cmd}，如果命令打开一个新的窗口，使用新的tab页替代。计数与上同。
+
+[source, vim]
+------
+:tab split      " opens current buffer in new tab page
+:tab help gt    " opens tab page with help for gt
+:.tab help gt   " as above
+:+tab help      " opens tab page with help after the next tab page
+:-tab help      " opens tab page with help before the current one
+:0tab help      " opens tab page with help before the first one
+:$tab help      " opens tab page with help after the last one
+------
+
+| CTRL-W gf
+|
+| 打开一个新的tab页，编辑当前光标指定的文件。
+
+| CTRL-W gF
+|
+| 打开一个新的tab页，编辑当前光标指定的文件并跳转到文件名后面指定的行号。
+|===
+
+[[TabClose]]
+=== Tab页关闭
+关闭tab页的最后一个窗口，也关闭了这个tab页，除非这个tab是最后一个。也可以使用
+鼠标点击tab页行的X来关闭tab页。
+
+其它关闭tab页的命令如下：
+
+[cols="2m,1,7a"]
+|===
+| 命令 | 计数 | 含义
+
+| :tabc[lose][!]
+| *
+| 关闭当前tab页。如果仅有一个tab页或者未使用hidden，未使用!,当前buffer已经
+  改变。如果指定了计数，关闭计数指定的tab页。例子如下
+
+[source,vim]
+------
+:-tabclose      " close the previous tab page
+:+tabclose      " close the next tab page
+:1tabclose      " close the first tab page
+:$tabclose      " close the last tab page
+------
+
+| :tabo[nly][!]
+| *
+| 关闭所有其它tab页。如果设置了选项 `hidden` ，被关闭窗口的所有buffer都成为了
+  hidden。如果 `hidden` 没有被设置，但是设置了 `autowrite` 选项，被修改的
+  buffer将被保存，否则包含被修改buffer的窗口不会被关闭，除非指定了!, 这时这些
+  buffer成为hidden状态，但修改的buffer不会被删除，内容不会丢失。
+  如果指定了计数，只保留计数指定的tab页，而不是当前tab页。例子如下：
+
+[source,vim]
+----
+:tabonly        " close the current tab page
+:.tabonly       " as above
+:-tabonly       " close all tab pages except the previous one
+:+tabonly       " close all tab pages except the next one
+:1tabonly       " close all tab pages except the first one
+:$tabonly       " close all tab pages except the last one
+----
+
+|===
+
+[[TabSwitch]]
+=== Tab页切换
+使用鼠标，可以通过点击tab页行，切换tab页，下面介绍使用键盘切换tab页的命令。
+
+[cols="2m,1,7a"]
+|===
+| 命令 | 计数 | 含义
+
+| gt +
+  :tabn[ext] +
+  <C-PageDown>
+| *
+| 切换到下一个tab页，如果计数被指定，切换到计数指定的tab页。<C-PageDown>
+  是CTRL-<PageDown>
+
+| gT +
+  :tabN[ext]
+  :tabp[revious]
+  <C-PageUp>
+| *
+| 切换到前一个tab页，如果计数被指定，切换到前面N个tab页，如果到达第一个，后续
+  为最后一个。
+
+| :tabr[ewind] +
+  :tabfir[st]
+|
+| 切换到第一个tab页
+
+| :tabl[ast]
+|
+| 切换到最后一个tab页
+|===
+
+[[TabMove]]
+=== Tab页移动
+下面的命令用于重新编排窗口顺序。
+
+[cols="2m,1,9a"]
+|===
+| 命令 | 计数 | 含义
+
+| :tabm[ove]
+| *
+| 如果未指定计数，将当前窗口移动到最后面。如果指定计数，将当前窗口移动到计数
+  指定tab页的后面。计数为0，移动为第一个tab页。例子如下：
+
+[source, vim]
+------
+:.tabmove   " do nothing
+:-tabmove   " move the tab page to the left
+:+tabmove   " move the tab page to the right
+:0tabmove   " move the tab page to the beginning of the tab list
+:tabmove 0  " as above
+:tabmove    " move the tab page to the last
+:$tabmove   " as above
+:tabmove $  " as above
+------
+
+| :tabm[ove] +[N] +
+  :tabm[ove] -[N]
+|
+| 将当前窗口向右（+）或者向左（-）移动N个位置，例子如下
+
+[source,vim]
+----
+:tabmove -  " move the tab page to the left
+:tabmove -1 " as above
+:tabmove +  " move the tab page to the right
+:tabmove +1 " as above
+----
+|===
+
+[[TabStatus]]
+=== Tab页状态
+
+使用 `:tabs` 命令列出所有tab页以及tab页包含的窗口，其中以 `>` 修饰的为当前
+窗口，以 `+` 修饰的为修改的buffer。 +
+例如：
+
+  Tab page 1
+    + tabpage.txt
+      ex_docmd.c
+  Tab page 2
+  >   main.c
+
+[[TabBatch]]
+=== Tab页批量执行
+下面的命令用于批量执行某个命令。
+
+[cols="2m,1,9a"]
+|===
+| 命令 | 计数 | 含义
+
+| tabd[o] {cmd}
+| *
+| 在每个tab页执行{cmd}命令。如果提供[rang]，针对[rang]指定的tab页执行命令。
+
+[NOTE]
+====
+* 这个操作仅工作于每个tab页的当前窗口
+* 当一个错误发生，后续tab页不再被访问
+* 最后访问的tab页称为当前tab页
+* {cmd} 可以包含‘\|’，串联几个命令
+* {cmd} 禁止打开、关闭和重新排序tab页
+====
+|===
+
+// /* 文件路径 {{{2 */
+[[Path]]
+== 文件路径
+
+// /* 命令行 {{{2 */
+[[CmdLine]]
+== 命令行
+
+[[CmdRange]]
+=== 范围指定
+一些命令可以在其前面指定行范围。这被称为range。它包含一个或者多个行标识，
+行标识由逗号（，）或者分号（；）分隔。
+
+如果使用分号（；）分隔，在解释下一个行标识之前，会将光标位置指定为当前行标识
+的位置。如
+
+[source, vim]
+4,/这行/       "从当前行开始，直到搜索到第4行后匹配“这行”的行
+5;/这行/       "将当前光标设置为第5行，然后从第5行搜索匹配“这行”的行
+
+大多数命令的默认行标识符是光标所在的行。而“:write”和“:global”默认的行标识符是
+整个文件，即(1,$)。
+
+如果行标识符的数目大于命令要求的数目，前面的将被忽略。
+
+==== 行标识符
+行标识符可以使用下面的格式
+
+[cols="1m,5"]
+|===
+| 行标识符 | 含义
+
+| {number}  | 明确指定行号
+| $         | 最后一行
+| %         | 整个文件，相当于 1,$
+| 't        | 记号t的位置
+| 'T        | 记号T的位置，当这个记号在另一个文件时，不能在range中使用
+| /{pattern}[/] | 下一个匹配{pattern}的行
+| ?{pattern}[?] | 上一个匹配{pattern}的行
+| \/            | 下一个匹配前面所使用{pattern}的行
+| \?            | 上一个匹配前面所使用{pattern}的行
+| \&            | 下一个匹配前面替代{pattern}的行
+|===
+
+// /* 查找 {{{2 */
+[[search]]
+== 查找
+
+[[searchChar]]
+=== 基于字符
+[cols="2m,1,10"]
+|===
+| 命令 | 计数 | 简介
+
+| f{char} | *
+| 向右查找字符{char}的第N次出现
+| F{char} | *
+| 向左查找字符{char}的第N次出现
+
+| t{char} | *
+| 向右查找字符{char}的第N次出现,光标放在匹配字符之前
+| T{char} | *
+| 向左查找字符{char}的第N次出现,光标放在匹配字符之后
+
+| ; | *
+| 重复最后的 “f”，“F”，“t”，“T” 命令N次
+| , | *
+| 以相反的方向重复最后的 “f”，“F”，“t”，“T” 命令N次
+|===
+
+// /* 语法高亮 {{{2 */
+[highlight]
+== 语法高亮
+
+=== 打开/关闭语法高亮
+下面的命令可以使Vim根据不同文件类型进行语法高亮的显示：
+
+[source,vim]
+----
+:syntax enable
+----
+
+=== 前置条件
+如果你没有看到使用不同颜色高亮显示文本，可能存在如下原因：
+
+- 终端不支持颜色 +
+  Vim 支持使用粗体、斜体和下划线渲染正文，但是这个方式不是很好。最好选择支持
+  颜色的终端。在Linux下，可以使用 `gnome-terminal` 或者x-term
+- 终端支持颜色，但是Vim无法获知这个信息 +
+  确保 $TERM 设置正确。查看这个环境变量的值，确保其支持颜色。通常如果其支持颜色
+  其值应该是xterm-[num]color。
+- 文件类型无法识别 +
+  通常，Vim会根据文件的扩展名识别文件类型。请参考<<fileType,文件类型>>章节了解
+  设置Vim检测文件类型的方式。如果文件不是使用标准的或者Vim可识别的扩展名，
+  可以使用如下命令知道Vim正在编辑什么类型文件。 +
+  `:set filetype` +
+  如果结果是 `filetype=` ,那么说明Vim无法识别当前缓冲区的文件。可以实现如下的命
+  另明确告诉Vim正在编辑什么类型的文件： +
+  `:set filetype=fortran` +
+  要知道什么类型的文件支持语法高亮，查看$VIMRUNTIME/syntax目录下的文件。另外在
+  文件的开始或者结束位置中包含如下的注释行，Vim在每次读入这个文件时，它将自动
+  语法高亮显示该文本。 如，对于makefile文件，使用 +
+  `# vim: syntax=make`
+- 指定的文件类型不支持语法高亮 +
+  在这种情况下，可以使用Vim支持的相近语法的文件类型，或者自己动手写一个这用文件
+  类型的语法高亮文件。  
+- 设定的颜色很难阅读 +
+  Vim会预判当前编辑窗口的背景色，并将文本的颜色设置成相反的色调。如果Vim判断错
+  误，会导致文本难以阅读。在这种情况下可以明确设置 `background` 选项 +
+  `:set background=dark` +
+  `:set background=light`
+  
+=== 颜色主题
+如果你不满意默认的颜色搭配，你可以使用其他颜色主题。可以使用下面的命令。如果
+`colorscheme` 命令没有参数，则显示当前正在使用的schema。
+
+  :colorscheme evening
+
+evening是颜色主题的名称。所以预配置的颜色主题存放目录 `$VIMRUNTIME/colors` 。
+在Vim可以使用下面的命令查看，正如你猜测到的，Vim知道 `$VIMRUNTIME` 的值。
+
+  !ls $VIMRUNTIME/colors
+
+我们可以定义自己的颜色主题，通常的做法如下：
+
+. 从已有的主题中选择与希望比较相近的主题, 拷贝到自己的Vim目录。对于Linux，可以
+  采用如下的操作
++
+----
+!mkdir ~/.vim/colors
+!cp $VIMRUNTIME/colors/morning.vim ~/.vim/colors/mine.vim
+----
+
+. 编辑这个文件。特别是如下配置项
++
+[frame=none, cols="1m,3"]
+|===
+| 配置项    | 含义
+
+| term      | 黑白终端的属性
+| cterm     | 彩色终端的属性
+| ctermfg   | 彩色终端的前景色
+| ctermbg   | 彩色终端的背景色
+| gui       | 图形用户界面的属性
+| guifg     | 图形用户界面的前景色
+| guibg     | 图形用户界面的背景色
+|===
+例如，下面的命令设置注释使用绿色
+
+ :highlight Comment ctermfg=green guifg=green
++
+对于 `cterm` 和 `gui`，你可以设置它的属性为 `bold`，`underline` 或者 
+`bold,underline`
+. 使用下面的命令设置Vim使用自定义的颜色主题 +
+  *colorscheme mine* +
+  可以使用如下的命令显示各种颜色的搭配 +
+  *：runtime syntax/colortest.vim*
+
+
+// /* 文件类型 {{{2 */
+[fileType]
+== 文件类型
+
+// /* 多文件编辑 {{{2 */
+== 多文件编辑
+=== 编辑另一个文件
+当编辑完一个文件后，可以不用退出vim，使用下面的命令编辑另一个文件
+
+[source,vim]
+:edit foo.txt
+
+如果当前的文件没有保存，会弹出错误信息。可以使用``:edit! foo.txt``
+放弃当前修改。或者使用``:hide edit foo.txt``隐含foo.txt到缓冲区，
+参见<<buffer,缓冲区>>。
+
+----
+E37: No write since last change (use ! to override)
+----
+NOTE: 每条错误信息前面都会显示错误编号，可以使用``help``命令查看该错误
+编号的详细信息。对于本例，``help E37``
+
+=== 查看与切换
+
+有如下涉及到多个文件编辑的命令
+
+.多文件查看与切换命令
+[cols="1m,2a"]
+|====
+| 格式 | 含义
+
+| `vim` one.txt  two.txt  three.txt
+| 同时编辑三个文件
+
+| `:args` one.txt  two.txt  three.txt +
+  `:args` \**/*.txt + 
+  `:args` *.txt
+| 在vim环境下，编辑三个文件 one.txt, tow.txt and three.txt,
+  列出所有正在编辑的文件，用[]标注的是当前正在编辑的命令。
+  args支持shell通配符。
+
+| `:next` `:next!` +
+  `:2next`  `:wnext` +
+  `:previous` `:previous!` +
+  `:wprevious`
+| 切换到下一个或者上一个文件。如果当前文件没有保存会报错。如果有后缀!，
+  放弃当前的修改。前面有字符w，表示先保存，在切换。如果前面有数字，
+  相当于连续切换n次。
+
+| CTRL-^
+| 当编辑多个文件时，使用CTRL-^快捷键可以快速在最浏览的两个文件间切换。
+
+| `"
+| vim会记录每个文件编辑时所在的位置。当切换到某个文件时，使用该快捷键使光标
+  跳转到你最后编辑这个文件时光标所在的位置。
+
+| `.
+| vim会记录每个文件最后修改的位置。当切换到某个文件时，使用该快捷键使光标切
+  换到该文件最后修改的位置。
+
+| 基于记号（mark）的切换
+| 可以使用记号记录一个文件的某个位置，如果记号使用大写字母，这个记号将是全局
+  的。可以在编辑一个文件时使用记号直接切换到另一个定义该记号的文件。例如，
+  使用``mV``记录该文件的某个位置，然后切换到其它文件。然后使用```V``可以直接
+  切换到该文件的那个位置。
+|====
+
+=== 备份
+在默认情况下，vim不产生备份文件。如果希望产生备份文件，执行下面命令
+
+  :set backup
+
+备份文件的名称是在原文件名的后面加上一个波浪线符号（~）。如果想使用其它的扩展
+名，使用如下的命令。 这样，文件data.txt的备份文件将是data.txt.bak，而不是
+data.txt~。
+
+  :set backupext=.bak
+
+
+如果希望在编辑一个文件时保留一份修改前的备份，可以使用如下的命令。这样在一个
+文件修改保存后，将会存在另一个扩展名为.orig的文件，这个文件是修改前的一个备份。
+
+  :set patchmode=.orig
+
+
+另外，不要忘记可以使用如下的命令设置自动保存或者关闭自动保存。
+
+ :set [no]autowrite
+
+=== 批量修改
+
+. 进入vim
+. :args \**/*
+. :argdo %s/oldStr/newStr/egc \| update
+
+// /* 缓冲区 {{{2 */
+[buffer]
+== 缓冲区
+
+
+// /* 记号 {{{2 */
+[mark]
+== 记号（mark）
+记号是对文件中的一个位置的标识。通常由a-z小写字母对当前文件的位置做记号，
+这类记号只在一个文件中有效，而用A-Z对某个文件的位置做全局的记号，这种记号也
+称做文件记号，在不同文件间有效。
+
+有如下关于记号的命令：
+
+.主要记号命令
+[cols="1m,3"]
+|====
+| 命令格式 | 说明
+
+| m{a-zA-Z}
+| 使用 `m` 快捷键为当前位置设置记号。记号使用小写或者大写字母进行标识
+
+| m` or m'
+| 使用符号`或者'设置当前位置，可以使用''或者``进行跳转
+
+| m[ or m]
+| 使用符号[或者]标识当前位置，可以使用'[或者']进行跳转
+
+| '{a-z} `{a-z}
+| 跳转到当前缓冲区文件的记号{a-z}
+
+| '{A-Z0-9} `{A-Z0-9}
+| 跳转到定义记号{A-Z}文件，并且跳转到记号{A-Z}
+
+| g'{mark} g`{mark}
+| 跳转到记号{mark}，但是不改变跳转列表（justlist），关于跳转列表参见<<jump,
+  跳转列表>>
+
+| :marks
+| 列出所有记号，不包括记号 `(`, `)`, `{`, `}`
+
+| :marks {arg}
+| 列出指定的记号，如 `marks aB` 列出记号a和B
+
+| :delm[arks] {marks}
+| 删除指定的记号。不能删除记号'。记号可以使用枚举，用-分隔的区间，如果存在
+  空格，空格将被忽略。如 +
+  `:delmarks a` +
+  `:delmarks a b 1` +
+  `:delmarks ab1` +
+  `:delmarks p-z` +
+  `:delmarks ^.[]` +
+  `:delmarks \"`  +
+
+| :delm[arks]!
+| 删除当前缓冲区中除了A-Z或者0-9以外的所有记号
+|====
+
+- a - z 小写字母记号只在定义它们的那个文件中有效，只要这个文件在缓冲区列表中
+  存在，这些记号就会存在。如果这个文件从缓冲区列表中删除，那么这个文件定义的
+  所有记号都会消失。如果删除了包含一个记号的行，那么这个记号也会被删除。
+
+- 小写字母记号能够与操作符进行组合。比如 `d't` 将会删除当前光标所在行与记号 
+  `t` 所标记的行之间的所有行。
+
+- 大写字母记号记录了文件名，所以能够使用它们进行文件之间的跳转。当前正在显示
+  的文件定义了某个大写字母记号，也可以在当前文件中进行记号与操作符组合。
+
+- 记号标记的位置会根据插入或者删除行自动进行调整，从而保持是原来所标记的位置。
+
+- 数字标记 `0-9` 是比较特殊的，它记录了退出文件时光标所在的位置。每次退出，
+  新的光标位置使用0进行标记，上一次退出位置使用1进行标记，以此类推。
+
+.其它记号命令
+[cols="1m,3"]
+|====
+| 命令 | 说明
+
+| '[  `[
+|
+
+| ']  `]
+|
+
+| '<  `<
+|
+
+| '>  `>
+|
+
+| ''  ``
+|
+
+| '"  `"
+|
+
+| '^  `^
+|
+
+| '.  `.
+|
+
+| '(  `(
+|
+
+| ')  `)
+|
+
+| '{  `{
+|
+
+| '}  `}
+|
+
+| ]'
+|
+
+| ]`
+|
+
+| ['
+|
+
+| [`
+|
+
+| :loc[kmarks] {command}
+|
+
+| :kee[pmarks] {command}
+|
+
+| :keepj[umps] {command}
+|
+|====
+
+// /* 跳转列表 {{{2 */
+[jump]
+== 跳转列表 
+
+// /* 章节缩展显示 {{{2 */
+== 章节缩展显示（fold）
+当一个文件的内容比较多时，很难看到这个文件的组织结构，vim提供了可嵌套fold机制。
+通过这种机制，可以实现在一个页面内显示文件的结构，并可递进式显示文件的内容。
+
+// /* fold概念  {{{3 */
+=== fold概念
+所谓fold是将多行正文显示成一行。fold的概念是基于window的，不会修改buffer的
+内容，这意味着同一个文件在一个窗口可是使用fold，而在另一个窗口不使用。
+
+当一个fold处于关闭状态时，vim的一些命令将其看作一行，如上下移动命令（j，k），
+这允许快速掠过被fold的内容。这个特性也适合粘贴和删除操作。这对于程序代码的调整
+是非常有用的。
+
+// /* fold定义方法 {{{3 */
+=== fold定义方法
+vim提供了六种fold的方法，fold的定义方法通过选项 `foldmethod` 来指定：
+manual::
+    手工定义方法
+indent::
+    通过文件内容的缩进自动定义fold以及fold的层次。这种方法适合程序代码。
+expr::
+    通过表达式定义fold
+syntax::
+    通过语法高亮定义fold
+diff::
+    针对只读文件定义fold
+marker::
+    通过在文件中插入记号定义fold
+
+// /* MARKER 方法 {{{3 */
+=== MARKER 方法
+Marker方法是在正文中标记fold的开始和结束。这允许你精确的指定fold，并且不会包括
+错误的行。可以通过设置 `foldtext` 选项定义fold行的显示内容。默认情况下fold记号
+前的内容会显示在folder行，通常会设置成标题。
+
+// /* Marker 选项 {{{4 */
+==== marker 选项
+可以使用选项 `foldmarker` 定义fold的记号。它的默认值是 "{{{,}}}"。其中{{{标记
+fold的开始，}}}标记fold的结束。
+
+通常为了不影响文件的内容， `foldmarker` 定义在特定文件的注释行内。选项 
+`commentstring` 定义了默认的注释行格式。默认值为 /*%s*/ 其中%s是包含了fold记号
+的注释内容。
+
+// /* Marker 范例 {{{4 */
+==== marker 范例
+可以只使用fold开始记号定义folder，记号后面加上大于0的数字表示级别。例如
+
+[source, C+vim]
+------
+    /* global variables <<<1 */
+    int varA, varB;
+
+    /* functions <<<1 */
+    /* funcA() <<<2 */
+    void funcA() {}
+
+    /* funcB() <<<2 */
+    void funcB() {}
+------
+
+也可以明确使用结束标记指定fold的结束。另外，指定fold级别的标记和未指定fold
+级别的标记可以混合使用。
+
+[source,vim]
+------
+    <<<1
+    fold level here is 1
+    <<<3
+    fold level here is 3
+    >>>3
+    fold level here is 2
+
+    <<<
+    fold level here is 1
+    <<<
+    fold level here is 2
+    >>>
+    fold level here is 1
+
+------
+
+
+上面的例子 `foldmarker` 定义为 “<<<,>>>”
+
+// /* fold 命令 {{{3 */
+=== fold 命令
+
+==== 创建和删除fold
+
+[cols="2m,1,7"]
+|===
+| 命令 | 计数 | 含义
+
+| zf{motion} +
+  {Visual}zf
+|
+| 创建fold。这个命令只有当 `foldmethod` 设置成 “mannual” 或者 “marker” 时才有
+  效。对于 “mannual” 新的fold将会关闭， `foldenable` 被设置。
+
+| zF
+| *
+| 创建一个包括计数指定行数的fold。其它类似zf
+
+| :{range}fo[ld]
+| *
+| 创建一个{range}指定行数的fold。
+
+| zd
+|
+| 删除一个光标所在的fold。当光标在fold行时，那个fold将被删除。嵌套的fold的级别
+  将提升一级。没有undo操作，只针对mannual和marker。
+
+| zD
+|
+| 递归删除光标所在的fold。只作用于mannual和marker。
+
+| zE
+|
+| 删除fold的定义。只作用于mannual和marker
+|===
+
+==== 打开和关闭fold
+
+[cols="2m,1,7"]
+|===
+| 命令 | 计数 | 含义
+| zo
+| *
+| 打开光标所在位置的1或者计数指定深度的fold
+
+| zO
+| 
+| 递归打开所有光标所在位置的fold
+
+| zc
+| *
+| 关闭1或者计数指定深度的fold
+
+| zC
+|
+| 递归关闭所有fold
+
+| za 
+| *
+| 当在关闭的fold时，打开它；当在打开的fold时，关闭它。计数可以指定打开或者
+  关闭的深度
+
+| zA
+|
+| 当在关闭的fold时，递归打开它；当在打开的fold时，递归关闭它。
+
+| zv
+|
+| 打开必要的fold来显示当前光标所在的位置
+
+| zx +
+  zX
+| 
+| update folds. 当使用foldexpr时有帮助
+
+| zm
+| 
+| fold more
+
+| zM
+|
+| 关闭所有fold。设置foldlever为0
+
+| zr
+|
+| 缩减fold层次
+
+| zR
+|
+| 打开所有fold，设置foldlevel到最大的级别
+
+|:{range}foldo[pen][!]
+| *
+| 但开{range}内的folds。如果使用!，{range}内的所有fold被打开，如果没有，打开
+  一层
+
+|:{range}foldc[lose][!]
+| *
+| 关闭{range}内的folds。如果使用!，{range}内的所有fold被关闭，如果没有，关闭
+  一层
+
+| zn
+|
+| 关闭 `foldenable` ，所有的folds被打开。
+
+| zN
+|
+| 打开 `foldenable` ，所有的folds被关闭。
+
+| zi
+|
+| 开关 `foldenable`
+|===
+
+==== fold内/间移动
+
+[cols="2m,1,7"]
+|===
+| 命令 | 计数 | 含义
+
+| [z
+| *
+| 移到当前打开fold的开始，如果已经在开始，移动包含该fold的fold的开始。
+  如果存在计数，执行这个命令计数次。
+
+| ]z
+| *
+| 移到当前打开fold的末尾，如果已经在末尾，移动包含该fold的fold的末尾。
+  如果存在计数，执行这个命令计数次。
+
+| zj
+| *
+| 移到下一个fold的开始， 如果存在计数，执行这个命令计数次。
+
+| zk
+| *
+| 移到上一个fold的末尾， 如果存在计数，执行这个命令计数次。
+|===
+
+
+// /* 参考文献 {{{2 */
+== 参考文献
+[bibliography]
+- [[[1]]] http://vimdoc.sourceforge.net/htmldoc/[Vim 参考手册]
+- [[[2]]] http://www.yolinux.com/TUTORIALS/LinuxTutorialAdvanced_vi.html[ vi
+          and vim editor: Tutorial and advance features]
+- [[[3]]] https://vim.swaroopch.com/[A Byte of Vim]
+- [[[4]]] https://www.ibm.com/developerworks/cn/linux/l-vim-script-1/index.html#authorN1001F[Vimscript 基本元素入门]
+
+// vim: set syntax=asciidoc:

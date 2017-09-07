@@ -1,0 +1,414 @@
+= ASN.1 参考手册
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-06-15
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+
+== 前言
+
+本文的主要内容来源与 http://wmfbravo.blog.163.com/blog/static/2117582200811116107201/[wmfbravo的博客]，
+并对其进行修订和更新。
+
+[verse,Albert Einstein]
+Any intelligent fool can make things bigger, more complex, and more violent.
+It takes a touch of genius -- and a lot of courage --
+to move in the opposite direction.
+
+[quote,Hansen & Kevin 即日]
+ASN.1应用领域已是颇广，然国内资料却不易见。ASN.1发端于通讯行业，
+一方面，国内各厂商即使有所研究和收获，也是敝竹自珍，不肯轻易示人；
+另一方面，一二学者、教授或有涉猎，然多束之高阁， 未能系统性推行于世。
+我等不才，因机缘于六年前接触ASN.1，愿借一方之地，呈心得与资料于此。
+不以真名示人，概因有不得已之原因，不便相告。唯所引之材料，所述之内容，
+均来源正当，无任何不当 之处。 所撰之文，或为翻译，或为转载，或为自攒，
+皆以学习交流为目的。欲用之于它途，某无权阻君之意，亦无责作任何承诺。
+所有版权均归原作者所有，某不持有任何权利，亦不承担相关之责任。
+凡欲引用、转载，敬请注明原文出处。
+
+== 简介
+=== 产生背景
+ASN.1 – Abstract Syntax Notation dot one，抽象记法1。数字1被ISO加在ASN的后边，
+是为了保持ASN的开放性，可以让以后功能更加强大的ASN被命名为ASN.2等，但至今也
+没有出现。
+
+不同体系的系统，不同编程语言之间，都存在通讯障碍。如Figure 1-1a）所示极端情况
+下， 为了保证网络中n个异体的节点能互通，我们需要为每个节点编写(n-1)个编解码程
+序，即需要总数为n*(n-1)个编解码程序。在b）所示极端情况下，为了保证互通，需要为
+每个节点编写1个编码 和1个解码程序，即总数为2n个编解码程序。
+
+.两种类型的通讯方式
+[caption="Figure 1-1 "]
+image::image/twoways.bmp[Communication in two different ways]
+
+对于给定的记法描述，ASN.1编译器能执行并产生如Figure 1-2图中虚线部分，这样我们
+以有限的代价就能完成相当多数量系统之间的互连。
+
+.语法三元组：实际语法、抽象语法和传输语法
+[caption="Figure 1-2 "]
+image::image/syntaxtriples.bmp[]
+
+图中实际语法（Concrete Syntax）是指诸如C、Objective Caml等这样实际编程语言，抽象
+语法 （Abstract Syntax）指ASN.1，传输语法（Transfer Syntax）指表示层交换数据的表
+示方法。 从抽象语法到传输语法，由ASN.1编译器按照编解码规则实现。通俗来讲，抽象语
+法就是协议采用ASN.1 规范描述的描述文本；传输语法就是实际通讯系统间的码流。
+
+.抽象语法与传输语法
+[caption="Figure 1-3 "]
+image::image/abstrAndtransSyntax.bmp[]
+
+其实在早期的一些标准如ASCII，它们既定义了抽象语法（比如字母A），又定义了传输语法
+（0x41）。 ASN.1分离了这两种概念，以便可以选择一种适合要求的编解码方法。系统可以
+选择编码方法以使信息传送时效率很高，或者具有很高的可靠性，等等。另一方面，定义好
+的编码规则也会很大地节约应用协议开发人员的时间，特别是当牵涉到的数据结构很复杂的
+时候。当使用ASN.1的项目较多时，这种节约更加明显， 因为编解码程序可以只开发一次但
+很多应用程序都可以用它。
+
+我们可以看出，可以将通信编解码设计与开发工作转嫁给ASN.1编译器完成。从而不必在手
+工编写编解码器。 一方面大量减少了缺陷引入，另一方面更是大大加快了系统开发速度
+（不用编写编解码器，也不同详细调试，维护代价也很小）。
+
+.转嫁编解码器工作给ASN.1编译器
+[caption="Figure 1-4 "]
+image::image/encode.bmp[]
+
+讨论ASN.1就不得不先提到标准组织ISO和ITU。
+
+=== ISO简介
+
+国际标准组织（ISO – International Organization for Standardization）于1946年在
+美国成立，其负责制定众多领域的国际标准；但除电气、电子和电子工艺领域外，这些主
+要是IEC（International Electrotechnical Commission）负责。
+
+ISO汇集了一百多个代表其自己国家的标准委员会（称之为NB – National Body），ANSI 
+（American National Standard Institute）代表美国，AFNOR （Association Francaise
+ de NORmalisation）代表法国，BSI（British Standard Institute）代表英联邦，等等。
+其它一些组织可以参加讨论，提出议案，但不能参加投票。
+
+[.text-center]
+.ISO组织结构
+[caption="Figure 1-5 ",align="center"]
+image::image/iso_organization.bmp["获取图片失败",align="center"]
+
+如Figure 1-5所示，ISO共分为172个技术委员会Technical Committee （TC）负责相应标
+准化领域。所有议题都在子委员会SubCommittees中共享，Subcommittee又分为工作组
+Working Groups（WG）。
+
+到1987年，著名的OSI标准就是TC97的成果，称之为“Telecommunications and Information
+Exchange Between Systems”。在1987年，ISO和IEC两个标准化组织一致认为都应当关注信
+息技术 Information Technology，因此成立了一个联合技术委员会称为JTC1。JTC1的秘书
+处由ANSI负责。
+
+.JTC1组织结构示意图
+[caption="Figure 1-6 "]
+image::image/jtc1_organization.bmp["获取图片失败",align="center"]
+
+在ASN.1标准刚刚受到关注时，基于历史原因，ASN.1主要来自于CCITT的成果，有很多提案
+来自CCITT。 在80年代，ISO在1990年左右成为主角前，两个委员会的确有过合作。
+
+=== ITU简介
+
+国际电信联盟ITU（International Telecommunication Union）总部位于日内瓦，于1947年成为联合国的专设机构，其前身为成立于1865年的国际电报联盟（International 
+Telegraph Union）。ITU汇集了188个代表其国家的公共电信运营商和大约450个来自私有
+部门称之为RPOA（Registered Private Operating Authorities）的成员（如AT&T， Bell电话等）。来自其它组织的运营商也被接收，但不具有投票权利。
+
+[quote, ITU的目标]
+to promote and to offer technical assistance to developing countries in the 
+field of telecommunications, and also to promote the mobilization of the 
+material and financial resources needed for implementation， and to promote 
+the extension of the benefits of the new telecommunication technologies to all 
+the world's inhabitants
+
+ITU有5个常设组织，其中一个为CCITT（Consultative Committee on International 
+Telephony and Telegraphy）负责电信网络，如有线传输语音，数据和电视。在1992年
+ITU重组后， CCITT成为了ITU-T（ITU-Telecommunication Standardization Sector）。
+
+ITU-T发布的建议都是以一个字母开头（每个领域一个字母编号）和一个数字作为参考号。
+我们通常关注的有：
+
+- F: Non-Telephone Telecommunications Services;
+- H: Audiovisual and Multimedia Systems;
+- Q: Switching and Signalling;
+- T: Terminals for Telematic Services;
+- V: Data Communications Over the Telephone Network;
+- X: Data Networks and Open System Communications;
+- Z: Programming Languages.
+
+到1992年，所有CCITT已经通过其委员会多次论证后的建议每四年发布一次（即使某些部分
+还未完成），其封面用不同的颜色（即黄皮书、红皮书、兰皮书和白皮书）：黄色代表
+1976-1980，红色代表1980-1984，
+蓝色代表1984-1988，白色代表1988-1992。
+
+ITU-T现在是当某个标准稳定后单独发布。此外，自1994年开始，为了防止出现不一致，
+ISO/IEC和ITU-T都是联合发布标准文本（各用不同的参考号）。 不一致的情况在ASN.1中
+出现过。
+
+ITU-T分为研究组SG（Study Group），其中：
+
+- SG VII，“Data Networks and Open System Communications”，课题广泛，包括互连
+（比如ASN.1），X.25网络标准，X.400 Email姓名地址录标准，网络安全和网络管理等。
+
+- SG VIII，“Terminals for Telematic Services”负责Teletex，Videotex和字符集等。
+
+每个SG的工作又被划分为问题Question：其中一些相当有名，比如涉及OSI模型的Q24/7；
+另外一些则是对以发布标准的更为精确的更新。每个问题最终结束于一个新标准或者一个现有标准的补充。
+
+=== ASN.1历史
+
+开始于1982年夏天，许多开发应用层标准的人意识到他们面临同一个问题：数据结构变得
+越来越复杂，难以用预定的规程来编解码比特或者字节（在1978年，OSI中术语Open是至关
+重要的）。如同编译器取代了汇编器，通常认为编码器应当从描述Specification自动产生
+，这样使得描述也等效为一种计算机程序。
+
+==== 诞生
+
+James White和Douglas Steedman分别提出一个基本的记法和算法，这套记法能定义Email
+消息控制系统协议MHS（Message Handling System）的编码比特格式。这种记法和编码规
+则是机器无关的，能表述复杂的数据结构。
+
+James White当时是CCITT X.400 （MHS）建议系列的起草人，并且为施乐公司（Xerox 
+Corporation）设计了Courier记法，这种记法能翻译XNS（Xerox Network Services）的
+RPC（Remote Procedure Call）传送的数据。Courier作为第一种外部的数据记法而闻名。
+同时它对后来的XDR（来自Sun Microsystems Inc.）和NDR（来自Apollo Computer Inc.）
+都产生了积极的影响。
+
+1984年，CCITT将这种记法标准化，参考号为X.409（红皮书）。X.409建议成为：
+Message Handing Systems: Presentation Transfer Syntax And Notation。
+它的目标和范围为：“the presentation transfer syntax used by application layer 
+protocols in message handling systems and by the document interchange protocol 
+for the telematic services. In the architecture of open systems interconnection
+(OSI), a presentation transfer syntax is used to represent information exchanged
+between application entities”
+
+X.409记法和MHS系统是完全独立的，部分原因是Email协议处理的对象是十分复杂的，没有
+大小限制，多种字符串类型，链接的结构，为数众多的选项等。结果，许多OSI应用标准化
+工作组发现这种记法对他们也有用。
+
+==== 1989和1990版本
+
+如前所述，1987年ISO和IEC成立了JTC 1。
+
+1989年CCITT发布了两个文档X.208（ASN.1）和 X.209（BER）来替代X.409建议。其中很多
+新特性是由JTC 1引入的：subtypes, floats (REAL type), pointers (ANY DEFINED BY 
+type) and the default tagging modes (IMPLICIT TAGS and EXPLICIT TAGS)。
+他们这套X.200系列称为“General OSI Infrastructure”，表示ASN.1成为应用层一种独立
+的描述语言。
+
+1990年ISO发布了新的ISO 8824和ISO8825标准，和X.208相比，有三处地方相悖。具体问题
+请参考1.6.1 CCITT 1989版本和ISO 1990版本的冲突。
+
+自1998年开始，ISO和ITU-T联合发布他们的标准文本，避免再次出现标准间的冲突。
+
+==== 1994版本
+
+新的版本（实际是1994年完成草案） ASN.1 :1994于1995年被ISO通过，成为正式标准。
+为了阐述数目众多的条件和介绍新概念，该标准分为四个部分：
+
+- ITU-T Rec. X.680 (1994) | ISO/IEC 8824-1:199518:
+  Specification of Basic Notation,
+- ITU-T Rec. X.681 (1994) | ISO/IEC 8824-2:1995:
+  Information Object Specification,
+- ITU-T Rec. X.682 (1994) | ISO/IEC 8824-3:1995:
+  Constraint Specification,
+- ITU-T Rec. X.683 (1994) | ISO/IEC 8824-4:1995:
+  Parameterization of ASN.1 Specifications,
+
+几个月之后，发布了两个补充和一个技术勘误表：
+
+- ITU-T Rec. X.680/Amd.1 (1995) | ISO/IEC 8824-1:1995/Amd.1:
+  Rules of Extensibility,
+- ITU-T Rec. X.680/Corr.1 (1995) | ISO/IEC 8824-1:1995/Corr.1:
+  Technical Corrigendum 1,
+- ITU-T Rec. X.681/Amd.1 (1995) | ISO/IEC 8824-2:1995/Amd.1:
+  Rules of Extensibility.
+
+编码规则部分被分成了两个部分（和一个技术勘误表）：
+
+- ITU-T Rec. X.690 (1994) | ISO/IEC 8825-1:1995: ASN.1 Encoding Rules:
+  Specification of Basic Encoding Rules, Canonical Encoding Rules,
+  and Distinguished Encoding Rules,
+- ITU-T Rec. X.690/Corr.1 (1995) | ISO/IEC 8825-1:1995: Technical Corrigendum 1,
+- ITU-T Rec. X.691 (1995) | ISO/IEC 8825-2:1995: ASN.1 Encoding Rules:
+  Specification of Packed Encoding Rules
+
+这些标准给出了官方正式编码规则，这对诸如传输加密数据情况来说是必需的。
+
+1994版本和以前版本相比的差异和新特性，请参考1.6.2  1994版本的差异和新特性。
+
+====  1997版本
+
+语义模型分为三个补充文件：
+
+- ITU-T Rec. X.680 (1997)/Amd.2 (1999) | ISO/IEC 8824-1:1998/Amd.2
+- ITU-T Rec. X.681 (1997)/Amd.1 (1999) | ISO/IEC 8824-2:1998/Amd.1
+- ITU-T Rec. X.683 (1997)/Amd.1 (1999) | ISO/IEC 8824-4:1998/Amd.1
+
+相关对象标识符新的（RELATIVE-OID）类型说明在三个补充文件：
+
+- ITU-T Rec. X.680 (1997)/Amd.1 (1999) | ISO/IEC 8824-1:1998/Amd.1
+- ITU-T Rec. X.690 (1997)/Amd.1 (1999) | ISO/IEC 8825-1:1998/Amd.1
+- ITU-T Rec. X.691 (1997)/Amd.1 (1999) | ISO/IEC 8825-2:1998/Amd.1
+
+新增四个技术勘误表：
+
+- ITU-T Rec. X.680 (1997)/Corr.1 (1999) | ISO/IEC 8824-1:1998/Corr.1
+- ITU-T Rec. X.681 (1997)/Corr.1 (1999) | ISO/IEC 8824-2:1998/Corr.1
+- ITU-T Rec. X.690 (1997)/Corr.1 (1999) | ISO/IEC 8825-1:1998/Corr.1
+- ITU-T Rec. X.691 (1997)/Corr.1 (1999) | ISO/IEC 8825-2:1998/Corr.1
+
+1994版本和以前版本相比的差异和新特性，请参考1.6.3  1997版本新特性和1.6.4
+1990和1994/1997的差异。
+
+==== 最新版本
+
+目前最新版本的协议为：
+
+- ITU-T X.680 (ISO/IEC 8824-1) - Abstract Syntax Notation One (ASN.1):
+  Specification of Basic Notation
+
+- ITU-T X.681 (ISO/IEC 8824-2) - Abstract Syntax Notation One (ASN.1):
+  Information Object Specification
+
+- ITU-T X.682 (ISO/IEC 8824-3) - Abstract Syntax Notation One (ASN.1):
+  Constraint Specification
+
+- ITU-T X.683 (ISO/IEC 8824-4) - Abstract Syntax Notation One (ASN.1):
+  Parameterization of ASN.1 Specifications
+
+协议部分，ISO 8825标准被分成7个部分：
+
+- ITU-T X.690 (ISO/IEC 8825-1) - ASN.1 Encoding Rules:
+  Specification of Basic Encoding Rules (BER), 
+  Canonical Encoding Rules (CER)
+  and Distinguished Encoding Rules (DER)
+- ITU-T X.691 (ISO/IEC 8825-2) - ASN.1 Encoding Rules:
+  Specification of Packed Encoding Rules (PER)
+- ITU-T X.692 (ISO/IEC 8825-3) - ASN.1 Encoding Rules:
+  Specification of Encoding Control Notation (ECN)
+- ITU-T X.693 (ISO/IEC 8825-4) - ASN.1 Encoding Rules:
+  Specification of XML Encoding Rules (XER).
+- ITU-T X.694 (ISO/IEC 8825-5) - ASN.1 Encoding Rules:
+  Mapping W3C XML schema definitions into ASN.1.
+- ITU-T X.695 (ISO/IEC 8825-6) - ASN.1 Encoding Rules:
+  Registration and application of PER encoding instructions
+- ITU-T X.696 (ISO/IEC 8825-7) - ASN.1 Encoding Rules:
+  Specification of Octet Encoding Rules (OER)
+
+===  ASN.1应用情况
+
+- Accredited Standards Committee X9 - Financial Services
+- Manufacturing Message Specification (MMS)
+- Molecular Biology Standards
+- Request For Comments (RFC)
+- RSA Public-Key Cryptography Standards
+- Standard Security Label for Information Transfer
+- Secure Electronic Transaction (SET) ASN.1
+- T.120 Series Standards
+- Telecommunications Management Network (TMN)
+- Unicode Worldwide Character Standard
+- X.400 Standards - Message Handling Systems
+- X.500 Standards - The Directory
+- H.323
+- H.248
+- 3G on UMTS
+
+等等。 要了解更详细和最新的应用信息请参考<<1,ITU-T的ASN.1项目>>
+
+现在一些协议，标准组织在给出协议文本时往往也同时给出了ASN.1的描述。
+
+== 基本语法规则
+到目前为止，ASN.1记法仍然主要是BNF（Backus-Naur Form）形式的。
+
+a. 在ASN.1中，符号的定义没有先后次序：只要能够找到该符号的定义即可，而不必关心
+   在使用它之前是否被定义过。如：
++
+[source,asn1]
+------
+employeeNumber EmployeeNumber ::= 12345
+
+EmployeeNumber ::= [APPLICATION 2] INTEGER
+------
+
+b. 所有的标识符、参考、关键字都要以一个字母开头，后接字母（大、小写都可以）、数
+   字或者连字符“-”。不能出现下划线“_”。不能以连字符“-”结尾，不能出现两个连字符
+  （注释格式）。
++
+[source, asn1]
+------
+合法的：
+
+INTEGER
+
+v1515
+
+No-final-dash
+
+MY-CLASS
+
+不合法的：
+
+Final-dashdouble--
+
+under score
+
+1515
+
+3M
+------
+
+c. 关键字一般都是全部大写的，除了一些字符串类型（如PrintableString，UTF8String，   等。因为这些都是由原类型OCTET STRING衍生出来的）。
+
+d. 在标识符中，只有类型和模块名字是以大写字母开头的，其它标识符都是以小写字母开i
+   头的。
+
+e. 字符串有三种形式：
+
+    * 用引号引用的字符串
+
+        “This is a string”
+
+    * 单引号引用的二进制串后加大写字母B
+
+        ‘01101’B
+
+    * 单引号引用的十六进制串后加大写字母H
+
+        ‘0123456789ABCDEF’H
+
+f. 带小数点的小数形式不能在ASN.1中直接使用，在ASN.1中实数实际定义为三个整数：
+   尾数、基数和指数。
+
+g. 注释以两个连字符“--”开始，结束于行的结尾或者该行中另一个双连字符。
+
+h.  如同大多数计算机语言，ASN.1不对空格、制表符、换行符和注释做翻译。但是在定义
+    符号（或者分配符号Assignment）“::=”中不能有分隔符，否则不能正确处理。
+
+== 参考文献
+[bibilography]
+- [[[ASN_ITU]]]
+  http://www.itu.int/en/ITU-T/asn1/Pages/asn1_project.aspx[ITU-T的ASN.1项目]
+- [[[ASN_TOOLS]]]
+  http://www.itu.int/en/ITU-T/asn1/Pages/Tools.aspx[各类关于ASN.1的工具]
+  包括了大部分以下的工具
+- [[[ASN_OS1]]]
+  http://lionet.info/asn1c/[开源的ASN.1编译器ASN1C]
+  支持2002版本的BER、PER和2001版本的XER编码规则，目标语言为C。
+- [[[ASN_OS3]]]
+  http://iiiasn1.sourceforge.net/[开源项目ASN.1 Tool]
+- [[[ASN_OS4]]]
+  http://sourceforge.net/docman/display_doc.php?docid=19875&group_id=90342[
+  开源项目 Better ASN.1]
+- [[[ASN_OS2]]]
+  http://directory.fsf.org/snacc.html[开源项目SNACC]
+- [[[ASN_EDITOR1]]]
+  http://sourceforge.net/projects/asneditor/[Eclipse的ASN.1编辑器插件]
+- [[[ASN_EDITOR2]]]
+  http://www.codeproject.com/csharp/Asn1Editor.asp[C#编写的ASN.1编辑器]
+- [[[ASN_SC1]]]
+  http://www.oss.com/[专业公司OSS Nokalva]
+- [[[ASN_SC2]]]
+  http://www.unigone.com/en[专业公司uniGone]
+- [[[ASN_SC3]]]
+  http://www.obj-sys.com/[专业公司Object System]
