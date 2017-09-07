@@ -1308,6 +1308,19 @@ fold的开始，}}}标记fold的结束。
 | 移到上一个fold的末尾， 如果存在计数，执行这个命令计数次。
 |===
 
+==== 基于fold命令
+
+:[range]foldd[oopen] {cmd}::
+    针对所有关闭fold外的行执行{cmd}。如果存在[range]，则仅针对指定范围的
+    行。如下例所示，其中“e”是避免当没有匹配“end”时出现信息
++
+[source,vim]
+-------
+:folddoopen s/end/loop_end/ge
+-------
+
+:[range]folddoc[losed] {cmd}::
+    针对关闭fold中的所有行执行操作{cmd}。其它与前面的命令相同。
 
 // /* 参考文献 {{{2 */
 == 参考文献
