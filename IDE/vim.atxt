@@ -1082,8 +1082,8 @@ data.txt~。
 [jump]
 == 跳转列表 
 
-// /* 章节缩展显示 {{{2 */
-== 章节缩展显示（fold）
+// /* 缩展显示 {{{2 */
+== 缩展显示（fold）
 当一个文件的内容比较多时，很难看到这个文件的组织结构，vim提供了可嵌套fold机制。
 通过这种机制，可以实现在一个页面内显示文件的结构，并可递进式显示文件的内容。
 
@@ -1308,7 +1308,83 @@ fold的开始，}}}标记fold的结束。
 | 移到上一个fold的末尾， 如果存在计数，执行这个命令计数次。
 |===
 
+// /* fold选项 {{{3 */
+=== fold选项
+我们可以通过修改fold选项改变fold的显示风格和行为。fold具有如下的选项：
 
+颜色::
+    我们可以设置关闭的fold行的颜色。fold行颜色可以通过 `Folded` 组进行设置，
+    fold列的颜色可以通过 `FoldColumn` 组进行设置。列子如下：
++
+[source,vim]
+------
+:highlight Folded guibg=grey guifg=blue
+:highlight FoldColumn guibg=darkgrey guifg=white
+------
+
+foldlevel::
+    `foldlevel` 是个数字类型的选项，数值越大展开的区域越多。特别的
++
+* 当它的值设置为0时，所有的fold都关闭；
+* 当它的值大于当前定义最大的fold级别，所有的fold都展开；
+* 当它的值大于0而小于当前定义的最大的fold级别，一部分fold将关闭；
+* 如果它的值发生改变，它的新值立刻应用。fold按照新值进行打开和关闭；
+
+foldtext::
+    `foldtext` 是个string类型的选项，它定义了一个表达式，这个表达式用于定义
+    关闭的fold行显示的内容，如
++
+[source,vim]
+------
+:set foldtext=v:folddashes.substitute(getline(v:foldstart),'/\\*\\\|\\*/\\\|>>>\\d\\=','','g') <1>
+------
+<1> 显示fold定义的定义行，去掉“/*”，“*/”和“>>>”。
++
+其默认是foldtext()函数。如果不满意，可以使用vim script表达式重现定义，可以使用
+如下的vim变量, 如果结果存在Tab，使用空格代替，不可打印字符变成可打印字符。如果
+太长将被裁剪适应窗口，如果存在多余的空间，使用 `fillchars` 替换。
++
+[source, vim]
+------
+v:foldstart     fold第一行的行数
+v:foldend       fold最后一行的行数
+v:folddashes    包含表示fold级别的连字符的字符串
+v:foldlevel     fold的级别
+------
+
+foldcolumn::
+    `foldcolumn` 是个数字类型的选项，定义了foldcolumn的宽度。foldcolum是用于
+    显示fold层次和fold状态（open-或者close+）的区域。当它的值被设置成0时，
+    没有foldcolumn，通常被设置成4或者5用于显示3或者4级深度的fold。
+foldenable::
+    当没有设置时，打开所有folds
+foldexpr::
+    定义fold的表达式
+foldignore::
+    用于缩进fold的字符
+foldmarker::
+    用于标记fold的标记
+foldmethod::
+    当前窗口进行fold的方法
+foldminlines::
+    一个fold块关闭时，fold行最小的屏幕行的数目
+foldnestmax::
+    fold最大的嵌套数
+foldopen::
+    什么命令可以打开关闭的fold
+foldclose::
+    如果被设置为all，当光标移动一个fold区域后，如果这个fold的级别大于 `foldlevel`
+    这个fold将被关闭。当你希望离开一个fold时，相应的fold自动关闭，这个选项是有用
+    的。 
+
+// /* fold的行为 {{{3 */
+=== fold的行为
+
+* 当使用命令时，关闭的fold区域作为一个整体，作为一行处理。当光标处于关闭fold行，那么
+  `dl` 命令将删除这个fold所包含的所有行。 `:s/foo/bar/g` 将会针对这个fold区域的所有行进
+  行替换。
+* 当编辑一个以前编辑过的buffer时，最后使用的fold设置被再次使用。手工定义的fold被恢复
+  
 // /* 参考文献 {{{2 */
 == 参考文献
 [bibliography]
