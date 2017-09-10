@@ -1374,10 +1374,10 @@ foldtext::
 +
 [source, vim]
 ------
-v:foldstart     fold第一行的行数
-v:foldend       fold最后一行的行数
-v:folddashes    包含表示fold级别的连字符的字符串
-v:foldlevel     fold的级别
+v:foldstart     " fold第一行的行数
+v:foldend       " fold最后一行的行数
+v:folddashes    " 包含表示fold级别的连字符的字符串
+v:foldlevel     " fold的级别
 ------
 
 foldcolumn::
@@ -1437,10 +1437,10 @@ foldclose::
 
 [source, vim]
 ------
-:set textwidth=78       ; 设置行的宽度为78个字符
-:set fo=tcqmB           ; fo 是 formatoptions的缩写
-                        ; m 指定遇到大于255的字符也进行换行
-                        ; B 指定合并两行时，两个多字节字符不插入空格
+:set textwidth=78       " 设置行的宽度为78个字符
+:set fo=tcqmB           " fo 是 formatoptions的缩写
+                        " m 指定遇到大于255的字符也进行换行
+                        " B 指定合并两行时，两个多字节字符不插入空格
 ------
 
 // /* 自动软换行 {{{3 */
@@ -1455,10 +1455,10 @@ foldclose::
 
 [source, vim]
 ------
-:set wrap       ; 打开软换行
-:set nowrap     ; 关闭软换行
-:set linebreak  ; 打开linebreak
-:set breakat    ; 查看可以用于换行的字符
+:set wrap       " 打开软换行
+:set nowrap     " 关闭软换行
+:set linebreak  " 打开linebreak
+:set breakat    " 查看可以用于换行的字符
 ------
 
 如果使用软换行，屏幕上显示的行数与真实的行数不一致，j k 命令是基于硬换行，vim
@@ -1574,10 +1574,10 @@ foldclose::
 
 [source, vim]
 ------
-Vjj         ; 将三行向右移动4个缩进宽度
-:<<<        ; 将当前行向左移动3个缩进宽度
-:>> 5       ; 将5行向右移动2个缩进宽度
-:5>>        ; 将第5行向右移动2个缩进宽度
+Vjj         " 将三行向右移动4个缩进宽度
+:<<<        " 将当前行向左移动3个缩进宽度
+:>> 5       " 将5行向右移动2个缩进宽度
+:5>>        " 将第5行向右移动2个缩进宽度
 ------
 
 
@@ -1589,6 +1589,216 @@ Vjj         ; 将三行向右移动4个缩进宽度
 [[Reformat]]
 === 重新格式化
 
+// /* 选项 {{{2 */
+== 选项
+
+// /* 选项概念 {{{3 */
+=== 选项概念
+选项是vim的变量，通过这些变量用户可以改变或者扩展vim的行为。Vim有三种类型的变
+量，它们的格式为：
+
+[source, vim]
+------
+boolean         " 开关变量。可以打开或者关闭这些选项。
+                " 对于某个开关选项，有两个选项名，如果选项名为name，
+                " 则存在一个noname的选项名用于关闭这个开关，例如
+                " set nu   用于显示行号 而
+                " set nonu 用于取消显示行号
+number          " 数值选项，其值为数。     <1>
+string          " 字符串选项，其值为字符串 <1>
+------
+<1> 这种类型的选项通过 `:set optionName = optionValue` 的方式进行设置。
+
+// /* 选项命令 {{{3 */
+=== 选项命令
+
+[cols="1m,3a"]
+|===
+| 命令 | 说明
+
+| :se[t]
+| 显示所有值不同于默认值的选项
+
+| :se[t] all
+| 显示除终端选项外的所有其它选项
+
+| :se[t] termcap
+| 显示所有终端选项
+
+| :se[t] {option}?
+| 显示 {option} 的值
+
+| :se[t] {option}
+| 
+* boolean option: set (打开)
+* number  option：显示它的值
+* string  option：显示它的值
+
+| :se[t] no{option}
+| boolean option: reset （关闭）
+
+| :se[t] {option}! +
+  :se[t] inv{option}
+| boolean option: 取当前{option}值的反
+
+| :se[t] {option}&
+| 重置其值为默认值
+
+| :se[t] {option}&vi
+| 重置其值为vi默认值
+
+| :se[t] {option}&vim
+| 重置其值为vim默认值
+
+| :se[t] all&
+| 重置除终端选项外的所有选项为其默认值。'term', 'lines' 和 'columns' 的值不变
+
+| :se[t] {option}={value} +
+  :se[t] {option}:{value}
+| 对number，string类型的选项赋值。 +
+  对于number类型选项，其值可以是十进制，十六进制（前面加上0x）或者八进制（前面
+  加上0）。 +
+  {option}和‘=’之间可以有空白字符，但是‘=’和{value}之间不允许有空白字符。如果
+  字符类型选项值包括空格，需要使用反斜杠进行转义。
+
+| :se[t] {option}+={value}
+| 对于数值型选项，其值增加{value}；对于字符串类型选项填充{value}到原值后面。如
+  果选项的值是逗号分隔的list，如果原值不为空，自动添加逗号。如果选项值是一系列
+  flag，多余的将被移除，如果已经存在，选项值不变。
+
+| :se[t] {option}^={value}
+| 对于数值类型的选项，其值等于原来的值乘以{value}。对于string类型的选项，将
+  {value}插到原值的前面。对于list类型，如果必要自动插入逗号。
+
+| :se[t] {option}-={value}
+| 对于数值类型的选项，其值减去{value}。对于string类型选项，其值如果存在
+  {value}，删除它。如果不存在，不做任何事情。如果是list，删除不必要的逗号，如
+  果是flag，精确匹配，最好一次删除一个。
+
+|===
+
+[NOTE]
+======
+* :set 命令可以同时设置多个选项，如果其中一个参数出错，会提示错误，后续选项设
+  置被忽略。
++
+[source,vim]
+------
+:set ai nosi sw=3 ts=3
+------
+
+* 如果选项 verbose 的值非0，显示一个选项的值也会给出这个值最后是在哪里设置的信
+  息。可以使用:verbose命令执行下面的命令，而不需要提前设置 verbose 值。
++
+[source,vim]
+------
+:set verbose=1 shiftwidth? foldmethod       "or
+:verbose set shiftwidth? foldmethod         ":verbose 会设置 verbose 选项的值
+  shiftwidth=4
+        Last set from ~/.vimrc
+  foldmethod=marker
+        Last set from modeline
+------
+
+* 如果设置的选项值包括空格，反斜杠（\），竖线（|），双引号（"）等需要前面增加
+  转义字符反斜杠。如
++
+[source, vim]
+------
+:set titlestring=hi\ \"there\"     " result: hi "there"
+:set dir=\\machine\path             " result: \\machine\path
+                                    " 特例,适用于MS-DOS和WIN32环境
+------
+
+* string 类型的选项值可以包含环境变量，如果环境变量存在，$ 和它后面的环境变量
+  将会被替换为环境变量的值，如果不存在，保持原值，不做替换。任何非标识符的字符
+  （字母，数字，下划线）都可以跟在环境变量名后面作为分隔符，并且保留其值。
++
+[source, vim]
+------
+:set term=$TERM.new
+:set path=/usr/$INCLUDE,$HOME/include,.
+------
+======
+
+// /* 选项作用域 {{{3 */
+=== 选项作用域
+
+// /* 自动设置选项 {{{3 */
+[[AutoSetting]]
+=== 自动选项设置
+Vim 提供三种方式自动设置选项的值，而不用每次都在vim环境下使用 :set 命令进行设
+置。
+
+. 在启动Vim时，它的初始化过程会在很多地方读配置文件。大部分位置是用于所有对话
+ （sessions），有些是依赖于Vim的启动目录。可以在任意配置文件或者初始化文件中设
+  置选项的值。请参考<<Start,启动过程>>获知在什么地方使用什么文件。
+. Autocommand 机制能够针对特定类型的文件在不同的事件下执行不同的命令，其中包括
+  选项的设置，请参考<<Autocmd,AutoCmd>>获知详细的设置。
+. 如果在编辑一个文件前，选项 modeline 打开，可以通过在这个文件的前面或者后面几
+  行插入 modeline 来设置选项的值。在下面的<<modeline,模式行>>介绍这种方法。
+
+// /* 模式行 {{{3 */
+[[modeline]]
+=== 模式行（modeline）
+模式行是在编辑的文件的前面或者后面几行，插入一行Vim的set命令，从而在装入
+这个文件时，Vim自动执行set命令，进行选项的设置。存在两种格式的模式行：
+
+格式1: [text]{white}{vi:|vim:|ex:}{white}{options}::
++  
+* [text]  +         
+  任何正文或者空
+* {white} +
+  至少一个空白字符（空格或者tab）
+* {vi:|vim:|ex:} +   
+  开始进行设置
+* {white}  +
+  可选的空白字符
+* {options} +
+  选项设置。使用空白字符或者":"分隔选项
++
+[source, vim]
+------
+vi:noai:sw=3 ts=6
+------
+
+格式2: [text]{white}{vi:|vim:|ex:}[white]se[t] {options}:[text]::
++
+* [text]  +
+  任何正文或者空
+* {white} +
+  至少一个空白字符（空格或者tab）
+* {vi:|vim:|ex:} +
+  开始进行设置
+* {white}  +
+  可选的空白字符
+* se[t]    +
+  字符串set或者se
+* {options} +
+  选项设置。使用空白字符分隔选项
+* :  +   
+  冒号
+* [text]  +
+  任何正文或者空
++
+[source, vim]
+------
+ /* vim:net ai tw=78 sw=3: */
+------
+
+
+
+
+
+
+// /* Vim启动过程 {{{2 */
+[[start]]
+== Vim启动过程
+
+// /* Autocmd {{{2 */
+[[Autocmd]]
+== Autocmd
+
 // /* 参考文献 {{{2 */
 == 参考文献
 [bibliography]
@@ -1598,4 +1808,4 @@ Vjj         ; 将三行向右移动4个缩进宽度
 - [[[3]]] https://vim.swaroopch.com/[A Byte of Vim]
 - [[[4]]] https://www.ibm.com/developerworks/cn/linux/l-vim-script-1/index.html#authorN1001F[Vimscript 基本元素入门]
 
-// vim: set syntax=asciidoc foldmethod=marker foldlevel=1:
+// vim: set syn=asciidoc fdm=marker fdl=1 tw=78 fo=tcqmB:
