@@ -7,6 +7,7 @@ v1.0, 2017-08-03
 :icons: font
 :source-highlighter: highlightjs
 :highlightjsdir: highlight
+:experimental:
 
 // /* 模式（mode）{{{2 */
 == 模式（mode）
@@ -153,24 +154,80 @@ TIP: 关于基于字符查找导致光标移动参见 <<searchChar,查找字符>
 // /* 多视窗 {{{2 */
 [windows]
 == 多视窗
-vim支持两个方式分割显示区域，一种是平铺式，一种是重叠式。平铺式是将vim物理窗口
-水平或者垂直分割为多个部分，这些部分同时可见。不同部分可以显示相同或者不同文件。
-每个部分我们称其为一个窗口，我们管这种方式称其多窗口。重叠方式是同时只能看到一个
-显示区域，不同的显示区域重叠在一起，可以选择需要显示那个区域。我们将这种方式称为
-Tab页方式，每个显示区域称为一个tab页，每个tab也又可以分成多窗口。
+
+// /* 基本概念 {{{3 */
+=== 基本概念
+关于一个被编辑的文件，Vim存在三个概念：buffer, window, tab page。其中
+
+* buffer是这个文件的内存表示，包含文件的正文内容，它唯一对应一个文件。它相当于
+  MVC 模型中的Model
+* window 是一个buffer在屏幕上的表示（viewport）。一个buffer可以出现在不同的
+  window 中。它相当于MVC模型中View
+* tab page可以包含多个窗口，Vim可以包含多个tab页。它应该也算是View层次的概念。
+
+我们可以将window看作是平铺式的布局，而tab页是重叠式布局。平铺式是将vim物理窗口
+水平或者垂直分割为多个部分，这些部分同时可见。不同部分可以显示相同或者不同
+buffer。每个部分我们称其为一个窗口（window），我们管这种方式称其多窗口。重叠方
+式是同时只能看到一个显示区域，不同的显示区域重叠在一起，可以选择需要显示那个区
+域。我们将这种方式称为 Tab页方式，每个显示区域称为一个tab页，每个tab也又可以分
+成多窗口。
+
+// /* 缓冲区（buffer） {{{3 */
+=== 缓冲区（buffer）
+
+缓冲区是一个文件被编辑时使用的内存区域，它包括文件的正文内容。这个内容可以被修
+改。修改后的内容只用执行写命令后才会被写回到文件。在此之前，文件的内容不变。
+
+在每个Vim会话（session）中，每个缓冲区有唯一的编号和名字，可以使用函数 bufnr()
+和 bufname() 获取。 
+
+// /* 缓冲区状态 {{{{4 */
+====  缓冲区的状态
+缓冲区有三种状态：active, hidden, inactive
+
+[cols="1,1,1,1m,6a"]
+|===
+| state | displayed in window | loaded | ":buffers" shows | comment
+
+| active | yes | yes | 'a'
+| 这个缓冲区在一个窗口中显示。如果已经有一个文件与这个缓冲区对应，那么这个文件
+  已经装入了缓冲区。并且缓冲区的内容可能已经修改了，与那个文件的内容不同了。
+
+| hidden | no | yes | 'h'
+| 这个缓冲区没有在任何在任何窗口显示。如果已经有一个文件与这个缓冲区对应，那么
+  这个文件已经被装入缓冲区。其它方面与active相同，只是不能看到它。
+
+| inactive | no | no | '' ''
+| 这个缓冲区没有在任何窗口显示，也不包含任何内容。这块缓冲区的选项会被记录，当
+  对应的文件被再次装入时使用。它也可以包含标记，但是不包含任何内容。
+
+|===
 
 // /* 多窗口 {{{3 */
 === 多窗口
 vim 支持将一个窗口水平垂直分割成多个窗口，每个窗口可以显示相同或者不同的内容。本节描述关于窗口的分割，光标在多个窗口之间的转换或者控制。
 
+每个窗口有一个唯一的标识符，window ID。这个标识符在这个Vim会话中不会改变。可以
+使用函数 win_getid() 或者，每个window也会有一个编号，它的值会随着窗口的打开和
+关闭而改变。其函数是 winnr()。
+
+如果一个窗口太小，可以通过设置选项 winheight 或者 winwidth 设置一个窗口的大小。
+关于选项参见<<Option,选项>>。
+
+当打开一个新的窗口，读取文件的时候，Buf/Win Enter/Leave autocommand不被执行，
+这些autocommand只有当文件的内容已经被装入了才被执行。关于autocommand参见
+<<AutoCmd, AutoCmd>>。
+
+// /* 多窗口打开文件 {{{4 */
 ==== 多窗口打开文件
 可以使用-o或者-O选项打开多个文件，每个文件占用一个窗口。前者窗口上下部局，后者
-左右部局。
+左右部局。如果后面跟着一个数字N，即-oN或者-ON，那么同时打开N个窗口。
 
 [source,bash]
 $ vim -o one.txt two.txt three.txt
 $ vim -O one.txt two.txt three.txt
 
+// /* 窗口创建与关闭 {{{4 */
 ==== 窗口创建与关闭
 
 [cols="2m,1,6"]
@@ -206,24 +263,37 @@ $ vim -O one.txt two.txt three.txt
 | 垂直创建一个新的窗口包含一个新的空文件。 :vertical命令可以用于任何其它分割窗
   口的命令的前面，用于指明垂直分割窗口
 
+| CTRL-W CTRL-^ +
+  CTRL-W ^
+| *
+| 将窗口splite两部分，编辑任意一个。如果存在计数，编辑buffer N。
+
 | CTRL-W q +
   CTRL-W CTRL-Q +
   CTRL-W c +
-  :close +
-  :quit +
+  :clo[se] +
+  :q[uit] +
   ZZ
 | *
 | 关闭当前窗口。`:close` 与其它两种方式不同在于，它不会在最后一个窗口时退出vim.
   如果指定计数，是退出第n个窗口。n是指定的计数。
 
+| :hid[e] +
+  :hid[e] {cmd}
+| *
+| 推出当前窗口，除非它是Vim的最后一个窗口。如果存在计数，退出编号为计数的窗口
+  。除非存在另外一个窗口编辑这个文件，否则这个窗口对应的buffer成为hidden状态。
+  选项 bufhidden 决定当一个buffer不在显示在窗口时，如何进行处理。
+
 | CTRL-W o +
   CTRL-W CTRL-O +
-  :only
-|
+  :on[ly][!]
+| *
 | 关闭当前窗口以外的所有窗口
 
 |===
 
+// /* 窗口创建相关事项 {{{4 */
 ==== 窗口创建相关事项
 
 ===== s前缀
@@ -288,12 +358,13 @@ $ vim -O one.txt two.txt three.txt
 上面的修饰符可以进行组合，用来垂直分割分割窗口，并占用这个vim窗口的高度。例如
 
 [source,vim]
-------
+-----
 :vertical topleft split tags  <1>
 ------
 <1> 在vim窗口最左面垂直分割全高度的窗口，并显示tags文件
 ======
 
+// /* 窗口间切换 {{{4 */
 ==== 窗口间切换
 
 [cols="2m,1,6"]
@@ -352,6 +423,7 @@ $ vim -O one.txt two.txt three.txt
 | 切换到以前操作的窗口
 |===
 
+// /* 窗口大小 {{{4 */
 ==== 窗口大小
 本节介绍改变窗口大小的命令
 
@@ -359,24 +431,55 @@ $ vim -O one.txt two.txt three.txt
 |===
 | 命令 | 计数 | 含义
 
-| CTRL-W *+*   
-| *
-| 将当前窗口高度增加1或者多行
+| CTRL-W =
+|
+| 让所有的窗口具有相同的高度和宽度。但是当前的窗口使用选项 winheight 和
+  winwidth 的值。另外设置 winfixheight 的窗口保持其高度，设置 winfixwidth 的窗
+  口保持其宽度。
 
-| CTRL-W -
+| CTRL-W *+*  +
+  :res[ize] +N 
 | *
-| 将当前窗口高度减少1或者多行
+| 将当前窗口高度增加1或者N行
 
-| CTRL-W _
+| CTRL-W - +
+  :res[ize] -N
+| *
+| 将当前窗口高度减少1或者N行
+
+| CTRL-W _ +
+  CTRL-W CTRL-_ +
+  :res[ize] [N]
 | *
 | 如果不指定计数，设置当前窗口为最大的高度。如果指定计数，设置当前窗口为指定
+  计数值。
+
+| z{nr}<CR>
+|
+| 设置当前窗口的高度为{nr}
+
+| CTRL-W <
+| *
+| 当前窗口的宽度减少N列，默认为1
+
+| CTRL-W >
+| *
+| 当前窗口的宽度增加N列，默认为1
+
+| :vertical res[ize] [N] +
+  CTRL-W \|
+| *
+| 当前窗口的宽度设置成N。默认最大宽度。
 |===
 
-如果想使用鼠标，可以使用鼠标改变窗口大小
+如果想使用鼠标，可以使用鼠标改变窗口大小。使用鼠标设置选项 mouse,
+
+[source, vim]
+:set mouse=a
 
 可以使用下面的选项控制窗口的大小
 
-[cols="1m,4,3a"]
+[cols="1m,4a,3a"]
 |===
 | 选项 | 说明 | 范例
 
@@ -410,17 +513,31 @@ set winminwidth=20
   wmw
 | 一个窗口最小的宽度（以列为单位）。可以设置为0，不要设置为一个大值，否则在切换
   或者新建一个窗口时会出错。0-12是比较合理的。
+
 | equalalways +
   ea
-| 自动保持所有的窗口具有相同的大小。
+| 自动保持所有的窗口具有相同的大小。下面的 eadirection 选项影响它的行为。
 |
 [source,vim]
 ------
 set equalalways
 set noequalalways
 ------
+
+| ead[irection]
+| 这个选项影响 equalalways 的行为。其可以取下面三个值：
+ 
+* both: 窗口的宽度和高度均受到影响
+* ver:  只影响窗口的高度；宽度不受影响
+* hor:  只影响窗口的宽度；高度不受影响
+|
+[source,vim]
+------
+:set ead?   "查看它的取值
+------
 |===
 
+// /* 窗口移动 {{{4 */
 ==== 窗口移动
 下面的命令用于移动窗口的位置
 
@@ -428,18 +545,18 @@ set noequalalways
 |===
 | 命令 | 计数 | 含义
 
-| CTRL-W r +
-  CTRL-W CTRL-R
+| kbd:[CTRL+W] kbd:[R] +
+  kbd:[CTRL+W] kbd:[CTRL+R]
 |
 | 向下向右移动窗口，第1个变成第2个，第n个变成第n+1个，最后一个变成第一个。
   光标随着原来的窗口移动。仅仅作用与与当前窗口等长或者等高的窗口。
 
-| CTRL-W R
+| kbd:[CTRL+W] kbd:[Shift+R]
 |
 | 向上向右移动窗口，第2个变成第1个，第n个变成第n-1个，第一个变成最后一个。
 
-| CTRL-W x +
-  CTRL-W CTRL-X
+| kbd:[CTRL+W] kbd:[X] +
+  kbd:[CTRL+W] kbd:[CTRL+X]
 | *
 | 
 * 如果没有计数，当前窗口和下一个窗口交换；如果当前窗口是最后一个窗口，和
@@ -472,6 +589,7 @@ set noequalalways
 | 将当前窗口移动到一个新的tab 页。
 |===
 
+// /* 窗口状态行 {{{4 */
 ==== 窗口状态行
 
 使用 `laststatus` 选项可以设置什么时候最后的窗口存在状态行
@@ -1590,6 +1708,7 @@ Vjj         " 将三行向右移动4个缩进宽度
 === 重新格式化
 
 // /* 选项 {{{2 */
+[[Option]]
 == 选项
 
 // /* 选项概念 {{{3 */
@@ -1786,7 +1905,7 @@ vi:noai:sw=3 ts=6
  /* vim:net ai tw=78 sw=3: */
 ------
 
-
+WARNING: 模式行起作用的前提条件是选项 modeline 打开
 
 
 
@@ -1800,8 +1919,9 @@ vi:noai:sw=3 ts=6
 == Autocmd
 
 // /* 参考文献 {{{2 */
-== 参考文献
 [bibliography]
+== 参考文献
+
 - [[[1]]] http://vimdoc.sourceforge.net/htmldoc/[Vim 参考手册]
 - [[[2]]] http://www.yolinux.com/TUTORIALS/LinuxTutorialAdvanced_vi.html[ vi
           and vim editor: Tutorial and advance features]
