@@ -20,6 +20,7 @@ Vim是给予模式的编辑器，在不同的模式下，相同的输入会存�
 // /* 移动光标 {{{2 */
 == 移动光标
 
+// /* 左右移动 {{{3 */
 === 左右移动
 
 [cols="2m,1,10"]
@@ -43,8 +44,9 @@ Vim是给予模式的编辑器，在不同的模式下，相同的输入会存�
 | \| | * | 第N列，默认为1
 |===
 
-TIP: 关于基于字符查找导致光标移动参见 <<searchChar,查找字符>>  
+关于基于字符查找导致光标移动参见 <<searchChar,查找字符>>  
 
+// /* 上下移动 {{{3 */
 === 上下移动
 
 [cols="2m,1,10"]
@@ -82,6 +84,7 @@ TIP: 关于基于字符查找导致光标移动参见 <<searchChar,查找字符>
 
 |===
 
+// /* 基于屏幕的移动 {{{3 */
 === 基于屏幕的移动
 
 [cols="2m,1,10"]
@@ -111,6 +114,7 @@ TIP: 关于基于字符查找导致光标移动参见 <<searchChar,查找字符>
 | L     |  | 移光标到当前页面的最下部
 |===
 
+// /*  基于文本的移动 {{{3 */
 === 基于文本的移动
 [cols="1s,5"]
 |===
@@ -152,7 +156,7 @@ TIP: 关于基于字符查找导致光标移动参见 <<searchChar,查找字符>
 |===
 
 // /* 多视窗 {{{2 */
-[windows]
+[[windows]]
 == 多视窗
 
 // /* 基本概念 {{{3 */
@@ -173,6 +177,7 @@ buffer。每个部分我们称其为一个窗口（window），我们管这种�
 成多窗口。
 
 // /* 缓冲区（buffer） {{{3 */
+[[Buffer]]
 === 缓冲区（buffer）
 
 缓冲区是一个文件被编辑时使用的内存区域，它包括文件的正文内容。这个内容可以被修
@@ -353,16 +358,13 @@ $ vim -O one.txt two.txt three.txt
 :bo[tright]   {cmd}   窗口的最下面或者最右面，占用这个vim的宽度或者高度
 :vert[tical]  {cmd}   垂直创建一个窗口
 
-[NOTE]
-======
 上面的修饰符可以进行组合，用来垂直分割分割窗口，并占用这个vim窗口的高度。例如
 
 [source,vim]
 -----
 :vertical topleft split tags  <1>
-------
+-----
 <1> 在vim窗口最左面垂直分割全高度的窗口，并显示tags文件
-======
 
 // /* 窗口间切换 {{{4 */
 ==== 窗口间切换
@@ -431,7 +433,7 @@ $ vim -O one.txt two.txt three.txt
 |===
 | 命令 | 计数 | 含义
 
-| CTRL-W =
+| kbd:[CTRL+W] kbd:[=]
 |
 | 让所有的窗口具有相同的高度和宽度。但是当前的窗口使用选项 winheight 和
   winwidth 的值。另外设置 winfixheight 的窗口保持其高度，设置 winfixwidth 的窗
@@ -655,11 +657,11 @@ set noequalalways
 :$tab help      " opens tab page with help after the last one
 ------
 
-| CTRL-W gf
+| kbd:[CTRL+W] kbd:[GF]
 |
 | 打开一个新的tab页，编辑当前光标指定的文件。
 
-| CTRL-W gF
+| kbd:[CTRL+W] kbd:[G] kbd:[Shift+F]
 |
 | 打开一个新的tab页，编辑当前光标指定的文件并跳转到文件名后面指定的行号。
 |===
@@ -805,14 +807,11 @@ set noequalalways
 | *
 | 在每个tab页执行{cmd}命令。如果提供[rang]，针对[rang]指定的tab页执行命令。
 
-[NOTE]
-====
 * 这个操作仅工作于每个tab页的当前窗口
 * 当一个错误发生，后续tab页不再被访问
 * 最后访问的tab页称为当前tab页
 * {cmd} 可以包含‘\|’，串联几个命令
 * {cmd} 禁止打开、关闭和重新排序tab页
-====
 |===
 
 
@@ -987,15 +986,14 @@ evening是颜色主题的名称。所以预配置的颜色主题存放目录 `$V
 [source,vim]
 :edit foo.txt
 
-如果当前的文件没有保存，会弹出错误信息。可以使用``:edit! foo.txt``
-放弃当前修改。或者使用``:hide edit foo.txt``隐含foo.txt到缓冲区，
-参见<<buffer,缓冲区>>。
+如果当前的文件没有保存，会弹出错误信息。可以使用``:edit! foo.txt`` 放弃当前修
+改。或者使用``:hide edit foo.txt``隐含foo.txt到缓冲区，参见<<Buffer,缓冲区>>。
+每条错误信息前面都会显示错误编号，可以使用``help``命令查看该错误编号的详细信息
+。对于本例，``help E37``
 
 ----
 E37: No write since last change (use ! to override)
 ----
-NOTE: 每条错误信息前面都会显示错误编号，可以使用``help``命令查看该错误
-编号的详细信息。对于本例，``help E37``
 
 === 查看与切换
 
@@ -1069,10 +1067,6 @@ data.txt~。
 . 进入vim
 . :args \**/*
 . :argdo %s/oldStr/newStr/egc \| update
-
-// /* 缓冲区 {{{2 */
-[buffer]
-== 缓冲区
 
 
 // /* 记号 {{{2 */
