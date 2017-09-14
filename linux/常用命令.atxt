@@ -8,29 +8,34 @@ v1.0, 2017-06-15
 
 本文列出常用的linux命令
 
-## 网络命令(network)
+== 终端（terminal）
 
-### nc
+=== setterm
+设置terminal的属性，比如颜色，tab的宽度等等
+
+== 网络命令(network)
+
+=== nc
 创建TCP/UDP 连接。可以作为客户端与远端服务器连接，使用标准输入最为输入，
 传给服务器端，并接受服务器端的返回，发送到标准输出
 
-## 管道命令
+== 管道命令
 
-### pv
+=== pv
 监控数据在管道中的传输进度，例如大文件拷贝的速度
 
   pv file | nc -w 1 somewhere.com 3000
 
 查看与somewhere.com的传输速度
 
-## 文件编码命令(encode)
+== 文件编码命令(encode)
 
-### file
+=== file
 查看文件编码命令
 
 可以使用``file —help``了解file的详细用法
 
-### iconv
+=== iconv
 转换指定文件的编码,
 
 ----
@@ -54,24 +59,32 @@ v1.0, 2017-06-15
 
 这个命令读取aaa.txt文件，从utf-8编码转换为gb2312编码,其输出定向到bbb.txt文件。
 
-### convmv
+=== convmv
 文件名编码转换
 
 	convmv -f GBK -t UTF-8 --notest *.mp3
 
-### enca
+=== enca
 文件编码转换
 
 	enca -L zh_CN ip.txt 查看当前编码 +
 	enca -L 当前语言 -x 目标编码 文件名
 
-### hexdump
+=== hexdump
 
 以用户指定的格式输出内容
 
-## 进程命令(process)
+=== expand
+转换Tab为空格，比如
 
-### ps
+[source,bash]
+------
+cat testfile | expand -t 4
+------
+
+== 进程命令(process)
+
+=== ps
 这个命令在不同的操作系统选项会有所不同，Linux下的ps会做最大的兼容。
 
 -w::
@@ -79,9 +92,9 @@ v1.0, 2017-06-15
 w::
   同-w
 
-## 安全（Security）
+== 安全（Security）
 
-### gpg
+=== gpg
 - 使用签名验证下载文件的完整性
   ** 格式：gpg --keyserver __server__ --verify __sig-file__
      __data-file__
@@ -92,7 +105,7 @@ w::
   ** 格式：gpg -vvv --debug-all
   ** 说明：打开所有层次调试信息
 
-### dirmngr
+=== dirmngr
 作为``gpg``,``gpgsm``,``gpg-connect-agent``命令的后端，与OpenPGP的keyserver
 进行通信。
 
@@ -119,12 +132,12 @@ dirmngr --debug-all <1>
 <1> 设置那些模块打印调试信息
 <2> 设置日志文件。如果这个程序出现问题，想自己研究一下，日志文件还是相当有用的。
 
-### gpg-connect-agent
+=== gpg-connect-agent
 
 
-## 数学计算
+== 数学计算
 
-### bc
+=== bc
 bc支持任意精度的数学计算语言，是个用起来很方便的数学计算工具。bc可以交互式使用，
 也支持脚本输入。
 
