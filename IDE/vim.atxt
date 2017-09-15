@@ -1703,7 +1703,7 @@ Vjj         " 将三行向右移动4个缩进宽度
 
 // /* 选项 {{{2 */
 [[Option]]
-== 选项
+== 选项（Option）
 
 // /* 选项概念 {{{3 */
 === 选项概念
@@ -1912,14 +1912,30 @@ WARNING: 模式行起作用的前提条件是选项 modeline 打开
 [[Autocmd]]
 == Autocmd
 
+// /* 编程 {{{2 */
+[[Programming]]
+== 编程
+Vim的主要目的是编写程序，特别是C语言程序，这章介绍Vim是如何支持编写代码的。
+
+=== 编译（compile）
+我们在编写程序后，还要进行编译，检查可能出现的语法错误，如果存在，更改再编译，
+直到没有语法错误。
+
+Vim提供了一些被称为 quickfix 命令，调用build工具保存错误输出并分析错误输出，自
+动跳转到出错文件的出错行。该思想来源于Manx的运行在Amiga平台上的Aztec C编译器。
+
+// /* make {{{3 */
+
+
 // /* 参考文献 {{{2 */
-[bibliography]
-== 参考文献
+[bibliography] == 参考文献
 
 - [[[1]]] http://vimdoc.sourceforge.net/htmldoc/[Vim 参考手册]
 - [[[2]]] http://www.yolinux.com/TUTORIALS/LinuxTutorialAdvanced_vi.html[ vi
-          and vim editor: Tutorial and advance features]
+  and vim editor: Tutorial and advance features]
 - [[[3]]] https://vim.swaroopch.com/[A Byte of Vim]
-- [[[4]]] https://www.ibm.com/developerworks/cn/linux/l-vim-script-1/index.html#authorN1001F[Vimscript 基本元素入门]
+- [[[4]]]
+  https://www.ibm.com/developerworks/cn/linux/l-vim-script-1/index.html#authorN1001F[Vimscript
+基本元素入门]
 
 // vim: set syn=asciidoc fdm=marker fdl=1 tw=78 fo=tcqmB:
