@@ -974,9 +974,9 @@ evening是颜色主题的名称。所以预配置的颜色主题存放目录 `$V
   *：runtime syntax/colortest.vim*
 
 
-// /* 文件类型 {{{2 */
+// /* 文件类型（filetype） {{{2 */
 [fileType]
-== 文件类型
+== 文件类型（filetype）
 
 // /* 多文件编辑 {{{2 */
 == 多文件编辑
@@ -1905,8 +1905,118 @@ WARNING: 模式行起作用的前提条件是选项 modeline 打开
 
 
 // /* Vim启动过程 {{{2 */
-[[start]]
+[[VimStart]]
 == Vim启动过程
+
+// /* Vim启动参数 {{{3 */
+[[VimArguments]]
+=== Vim启动参数
+
+// /* Vim初始化 {{{3 */
+[[VimInitialization]]
+=== Vim初始化
+在Vim启动时，Vim检查环境变量和文件并相应的进行各种设置。顺序如下：
+
+1) 设置 `shell` 和 `term` 选项变量::
+    如果环境变量 `SHELL` 存在，使用它的值设置选项 `shell`. 在MS-DOS，Win32环境
+    下，如果 `SHELL` 不存在，使用 `COMSPEC` 。 +
+    如果环境变量 `TERM` 存在，使用它的值设置选项 `term`. 不过当启动GUI时，
+    `term` 的值会发生变化，参见后续的步骤8.
+2) 处理参数::
+    执行Vim命令时所带的参数，包括各种参数选项和参数文件被检测。为所有的参数文
+    件穿件缓冲区（buffer）（但是没有装载文件）。参数 -V 可以背使用，用来显示或
+    者记录启动过程发生的操作。这些信息有利于调试Vim的初始化过程。
+    (initializations）
+3) 执行环境变量和／或文件中定义的Ex 命令::
+    一个环境变量作为一个Ex命令行，如果存在多个命令，这些命令必须使用 ‘|’ 或者
+ “<NL>“ 分隔开。
++
+vim使用被称作”vimrc“的文件进行初始化，这个文件的每一行都作为一个Ex命令行执行。
+有时候这个文件也可被命名为”exrc“。它们时相同类型的文件。exrc是vi使用的，”vimrc
+“是vim特有的名字。
++
+推荐将你的个人初始化命令放在如下的文件：
++
+[cols="1,3",noframe]
+|===
+| Unix      | $HOME/.vimrc
+| OS/2      | $HOME/.vimrc or $VIM/.vimrc (or _vimrc)
+| MS-DOS or
+  Win32     | $HOME/_vimrc or $VIM/_vimrc
+| Amiga     | s:.vimrc or $VIM/.vimrc
+|===
++
+如果Vim使用 “-u filename” 启动，这个 filename 文件被使用，所有下面的步骤知道步
+骤4都省略。 +
+“vim -u NORC” 也会省略读一个文件进行初始化的步骤。 “vim -u NONE” 也略过转载插
+件（plugins）的步骤。
++
+如果Vim使用 “-s“ 参数启动，所有的后续步骤知道步骤4被略过。
++
+a. 如果 vim 作为 evim 或者 eview 或者使用参数 -y 启动，脚本文件
+    *$VIMRUNTIME/evim.vim*  将会被装载。
+b. *系统级vimrc文件* 被读进行初始化. +
+   这个文件的位置可以使用 `:version` 命令获得。通常是 “$VIM/vimrc“。这个文件
+   在 ‘compatible’ 模式下总是被读的，因为在后续步骤中才会关闭这个选项。如果你
+   愿意可以加 `:set nocp` 命令。 + 
+   对于Macintosh, *$VIMRUNTIME/macmap.vim* 文件被读。
+c. *用户级别的初始化被检测和执行。* +
+   Vim依次做如下方式的检测，如果一种方式成功，就不再做后续的检测。 
+   . 环境变量 *VIMINIT* 。它的值作为Ex命令行执行
+   . *用户vimrc* 文件：
+
+        "$HOME/.vimrc"      Unix and OS/2
+        "s:.vimrc"          Amiga
+        "home:.vimrc"       Amiga
+        "$VIM/.vimrc"       Amiga and OS/2
+        "$HOME/_vimrc"      MS-DOS and Win32
+        "$VIM/_vimrc"       MS-DOS and Wiin32
+    
+    . 环境变量 *EXINIT* 。它的值作为Ex命令行执行
+    . *用户exrc* 文件，与vimrc文件的作用相同。
+d. 如果 `exrc` 选项打开（默认关闭），在当前目录收缩下面三个文件。最先搜索到的
+   被执行，其它的忽略。使用这些文件将导致 `compatible` 选项关闭
+   . `".vimrc" (Unix, Amiga and OS/2)` +
+     `"_vimrc" (MS-DOS and Win32)`
+   . `"_vimrc" (Unix, Amiga and OS/2)` +
+     `".vimrc" (MS-DOS and Win32)`
+   . `".exrc"  (Unix, Amiga and OS/2)` +
+     `"_exrc"  (MS-DOS and Win32)`
+4）装载插件脚本（plugin）::
+   做如下命令所做的事情： +
+    `:runtime! plugin/\**/*.vim` +
+    结果是选项 `runtimepath` 定义的所有的目录的 `plugin` 子目录被搜索，其下面
+    包括其子目录下所有以 `.vim` 结尾的文件被执行（sourced）。 +
+    在下面的情况下忽律该步骤的工作：
+    * 选项 `loadpugins` 在某个 ·vimrc· 文件中被关闭
+    * 使用了 `--noplugin` 命令行参数
+    * 使用了 `-u NONE` 命令行参数
+    * 当build Vim命令时没有配置 `+eval` 功能
+    * 注意：使用 `-c 'set noloadplugins'` 不起作用，因为作为命令行参数，它在此
+      时还没有执行。但是可以使用 `--cmd 'set noloadplugins` 参数。 
+5）设置 `shellpipe` 和 `shellredir` 选项::
+    除非这两个选项已经被手工设置过，否则 `Vim` 会根据 `shell` 选项的值对这两个
+    选项进行设置。
+6）如果使用了 `-n` 命令参数，设置 `updatecount` 选项的值为0::
+7）设置二进制相关的属性::
+    如果在启动时使用了 `-b` 令旗（flag），与二进制编辑相关的选项将会被设置。关
+    于该选项参见<<VimArguments,Vim启动参数>>
+8）执行 GUI 初始化::
+    该步骤只在启动 `gvim` 的时候才起作用。参见<<GUI,GUI>>。
+9）读 `viminfo` 文件::
+    如果 `viminfo` 选项非空，读 viminfo 文件。参见<<VimInfo, viminfo>>。
+10）读 quickfix 文件::
+    如果使用了 `-q` 令旗，Vim读相应的 quickfix 文件。如果读失败，Vim退出。
+11）打开所有的窗口::
+    如果使用 `-o` 令旗，窗口将被打开（但没有显示） +
+    如果使用 `-p` 令旗，tab页将被创建（但没有显示） +
+    如果使用 `-q` 令旗，跳到第一个错误 +
+    所有窗口对应的缓冲区将被创建。
+
+
+// /* viminfo {{{3 */
+[[VimInfo]]
+=== viminfo
 
 // /* Autocmd {{{2 */
 [[Autocmd]]
@@ -1918,6 +2028,7 @@ WARNING: 模式行起作用的前提条件是选项 modeline 打开
 Vim的主要目的是编写程序，特别是C语言程序，这章介绍Vim是如何支持编写代码的。
 
 === 编译（compile）
+[[Compile]]
 我们在编写程序后，还要进行编译，检查可能出现的语法错误，如果存在，更改再编译，
 直到没有语法错误。
 
@@ -1925,7 +2036,12 @@ Vim提供了一些被称为 quickfix 命令，调用build工具保存错误输�
 动跳转到出错文件的出错行。该思想来源于Manx的运行在Amiga平台上的Aztec C编译器。
 
 // /* make {{{3 */
+[[Make]]
+=== make
 
+// /* GUI {{{2 */
+[[GUI]]
+== GUI
 
 // /* 参考文献 {{{2 */
 [bibliography] == 参考文献
