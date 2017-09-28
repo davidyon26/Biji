@@ -5,6 +5,9 @@ v1.0, 2017-06-15
 :toc: right
 :numbered:
 :icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
 
 *bc* 是用于科学计算的程序设计语言，可以进行任何精度的计算。可以交互式使用，
 也可以使用读取脚本文件。

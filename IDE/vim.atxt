@@ -907,7 +907,7 @@ set noequalalways
   确保 $TERM 设置正确。查看这个环境变量的值，确保其支持颜色。通常如果其支持颜色
   其值应该是xterm-[num]color。
 - 文件类型无法识别 +
-  通常，Vim会根据文件的扩展名识别文件类型。请参考<<fileType,文件类型>>章节了解
+  通常，Vim会根据文件的扩展名识别文件类型。请参考<<FileType,文件类型>>章节了解
   设置Vim检测文件类型的方式。如果文件不是使用标准的或者Vim可识别的扩展名，
   可以使用如下命令知道Vim正在编辑什么类型文件。 +
   `:set filetype` +
@@ -975,8 +975,148 @@ evening是颜色主题的名称。所以预配置的颜色主题存放目录 `$V
 
 
 // /* 文件类型（filetype） {{{2 */
-[fileType]
+[[FileType]]
 == 文件类型（filetype）
+Vim 可以根据文件的名称（主要是后缀）识别文件的类型。如果根据名称不能识别，Vim
+也会试图根据文件的内容进行识别。依据不同的文件类型，你可以设置不同选项值，不用
+的语法高亮，不同的键盘映射等等。
+
+// /* 文件类型检测 {{{3 */
+[[FileTypeDetect]]
+=== 文件类型检测
+想利用与文件类型相关的功能，首先需要让Vim检测到打开的文件属于什么类型。Vim 使
+用如下的命令打开和关闭文件类型的检测功能。
+
+[source,vim]
+-----
+    :filetype on
+    :filetype off
+-----
+
+如果想获得与文件类型相关的帮助，可以使用如下的命令：
+
+[source,vim]
+------
+    :help ft-vim-indent         "indent for specific file
+    :help ft-vim-syntax         "syntax for specific file
+    :help ft-man-plugin         "plugin for specific file
+------
+
+// /* 文件类型开关及其关系 {{{4 */
+[[FileTypeSwitch]]
+==== 文件类型开关及其关系
+文件类型涉及到下面几个开关：检测开关，插件开关，缩进开关。下面分别介绍这些开关
+的命令及其它们的关系。
+
+[cols="1m,4a"]
+|===
+| 命令 | 说明
+
+| :filetype on
+| 打开文件检测开关。这个命令将会装入下面的文件之一，这个文件是Vim脚本文件，它
+  定义了针对BufNewFile和BufRead事件的autocommands。 
+
+------
+    Amiga       $VIMRUNTIME/filetype.vim
+    Mac         $VIMRUNTIME:filetype.vim
+    MS-DOS      $VIMRUNTIME\filetype.vim
+    RiscOS      Vim:Filetype
+    Unix        $VIMRUNTIME/filetype.vim
+    VMS         $VIMRUNTIME/filetype.vim
+------
+
+如果文件类型没能被这些为文件识别，Vim将会尝试使用 `$VIMRUNTIME/scripts` 从文
+件的内容识别文件的类型。
+
+你可以增加自己的文件类型，参见<<NewFileType,增加文件类型>>。
+
+如果不能通过上面的方法自动检测，或者检测的类型不对。你可以使用下面两种方法手工
+设置。
+
+. 使用命令行命令
++
+[source,vim]
+------
+:set filetype=vim
+------
+. 使用模式行。请参考<<modeline,模式行>>
++
+[source,c]
+------
+/* vim: set filetype=idl : */
+------
+
+| :filetype plugin on
+| 该命令装入特定文件类型的插件。如果执行该命令是文件类型检测的开关没有打开，
+  Vim会自动打开文件检测开关。该命令实际上是装入 `runtimepath` 指定目录下的
+  `ftplugin.vim` 文件，其结果是当一个文件被编辑时，如果存在与该文件对应的插件
+  文件，那么与其对应的插件文件将被装入。
+
+| :filetype plugin off
+| 该命令关闭特定文件插件自动装入的功能。但是它并不自动关闭文件类型检测功能。该
+  命令实际上装入 `runtimepath` 指定目录下的 `ftplugof.vim` 文件。
+
+| :filetype indent on
+| 该命令装入特定文件类型的缩进文件。该文件也会自动打开文件类型自动检测的开关。
+  该命令实际上装入 `runtimepath` 目录下的 `indent.vim` 文件，其结果是当编辑一
+  个文件时，如果如果存在与该文件类型对应的缩进文件，该缩进文件将会被装入。
+
+| :filetype indent off
+| 该命令关闭特定文件缩进文件自动装入的功能。但它并不自动关闭文件自动检测功能。
+  该命令实际上装入 `runtimpath` 指定目录下的 `indoff.vim` 文件。该命令只影响将
+  要打开的文件，不影响已经打开的文件。 如果想关闭一个打开文件的缩进功能，需要
+  关闭选项 `autoindent`, `cindent`, `smartindent` and/or `indentexp`
+
+| :filetype off
+| 关闭文件类型自动检测功能。虽然插件和缩进的开关状态不变，但是因为文件类型不
+  被检测，所以它们在再次打开文件检测开关前不会起作用。
+
+| :filetype
+| 显示文件类型自动检测、插件和缩进开关的状态
+ 
+[source,vim]
+------
+:filetype
+filetype detection:ON plugin:ON indent:OFF
+------
+
+| :filetype detect
+| 如果你正编辑可以空文件，执行这个命令可以根据你敲入的内容尝试识别文件类型。比
+  如你正在编写shell脚本，并且敲入了 `#!/bin/cash` 。该命令也自动打开检测开关。
+  如同执行 `filetype on` 命令。
+|===
+
+下表总结了这个三种开关之间的关系：
+
+[cols="2m,1m,1m,1m"]
+|===
+| 命令  | 类型检测 | 插件 | 缩进
+
+|:filetype on           | on         | unchanged | unchanged
+|:filetype off          | off        | unchanged | unchanged
+|:filetype plugin on    | on         | on        | unchanged
+|:filetype plugin off   | unchanged  | off       | unchanged
+|:filetype indent on    | on         | unchanged | on
+|:filetype indent off   | unchanged  | unchanged | on
+|:filetype plugin indent on  | on        | on    | on
+|:filetype plugin indent off | unchanged | off   | off
+|===
+
+NOTE: 文件类型也直接影响语法高亮，如果执行命令 `:syntax on` ，文件类型检测也会
+自动打开。
+
+// /* 增加文件类型 {{{4 */
+[[NewFileType]]
+==== 增加文件类型
+如果你使用的文件类型没有被检测出来，存在如下四种方式增加你的文件类型。无论使用
+何种方式，最好不要修改 `$VIMRUNTIME/filetype.vim` 文件。该文件在Vim升级是会自
+动被覆盖。
+
+a. 如果你想重定义所有默认文件类型检查。 +
+   这种方法需要为没种文件都定义一个文件。其缺点不言而喻，会存在很多文件。其优
+   点是你可以简单的将一个文件放到正确的目录使其工作。其步骤是：
+   1. 创建用户级运行目录。通常是 `runtimepath` 定义的第一个目录。然后创建在其
+      下面创建 `ftdetect` 目录。对于Unix，它是 `~/.vim/ftdetect`
 
 // /* 多文件编辑 {{{2 */
 == 多文件编辑
@@ -1914,7 +2054,7 @@ WARNING: 模式行起作用的前提条件是选项 modeline 打开
 
 // /* Vim初始化 {{{3 */
 [[VimInitialization]]
-=== Vim初始化
+=== Vim初始化（Initialization）
 在Vim启动时，Vim检查环境变量和文件并相应的进行各种设置。顺序如下：
 
 1) 设置 `shell` 和 `term` 选项变量::
@@ -1924,12 +2064,12 @@ WARNING: 模式行起作用的前提条件是选项 modeline 打开
     `term` 的值会发生变化，参见后续的步骤8.
 2) 处理参数::
     执行Vim命令时所带的参数，包括各种参数选项和参数文件被检测。为所有的参数文
-    件穿件缓冲区（buffer）（但是没有装载文件）。参数 -V 可以背使用，用来显示或
-    者记录启动过程发生的操作。这些信息有利于调试Vim的初始化过程。
-    (initializations）
+    件穿件缓冲区（buffer）（但是没有装载文件）。参数 -V 可以被使用，用来显示或
+    者记录启动过程发生的操作。这些信息有利于调试Vim的初始化过程。关于参数参见
+    <<VimArguments,Vim启动参数>>。
 3) 执行环境变量和／或文件中定义的Ex 命令::
-    一个环境变量作为一个Ex命令行，如果存在多个命令，这些命令必须使用 ‘|’ 或者
- “<NL>“ 分隔开。
+    Vim识别某些环境变量，这些环境变量作为一个Ex命令行，如果存在多个命令，这些
+    命令必须使用 ‘|’ 或者“<NL>“ 分隔开。
 +
 vim使用被称作”vimrc“的文件进行初始化，这个文件的每一行都作为一个Ex命令行执行。
 有时候这个文件也可被命名为”exrc“。它们时相同类型的文件。exrc是vi使用的，”vimrc
@@ -1937,44 +2077,61 @@ vim使用被称作”vimrc“的文件进行初始化，这个文件的每一行
 +
 推荐将你的个人初始化命令放在如下的文件：
 +
-[cols="1,3",noframe]
+[cols="1m,3m",noframe]
 |===
-| Unix      | $HOME/.vimrc
-| OS/2      | $HOME/.vimrc or $VIM/.vimrc (or _vimrc)
+| Unix      | $HOME/.vimrc , $HOME/.vim/vimrc
+| OS/2      | $HOME/.vimrc , $HOME/vimfiles/vimrc ,
+              $VIM/.vimrc (or _vimrc)
 | MS-DOS or
-  Win32     | $HOME/_vimrc or $VIM/_vimrc
-| Amiga     | s:.vimrc or $VIM/.vimrc
+  Win32     | $HOME/_vimrc , $HOME/vimfiles/vimrc
+              or $VIM/_vimrc
+| Amiga     | s:.vimrc , home:.vimrc, home:vimfiles:vimrc or $VIM/.vimrc
 |===
 +
-如果Vim使用 “-u filename” 启动，这个 filename 文件被使用，所有下面的步骤知道步
-骤4都省略。 +
-“vim -u NORC” 也会省略读一个文件进行初始化的步骤。 “vim -u NONE” 也略过转载插
-件（plugins）的步骤。
+这个配置文件可以有不同的名字，放在不同的目录，Vim按照上表的顺序进行查找，只有
+第一个匹配的被使。
 +
-如果Vim使用 “-s“ 参数启动，所有的后续步骤知道步骤4被略过。
+[NOTE]
+=====
+* 如果Vim使用 `-u filename` 启动，这个 filename 文件被使用，所有下面的步骤直到步
+  骤4都省略并且不设置内部环境变量 `$MYVIMRC` 。否则会设置成上表被查询到的那个
+  文件目录。
+* `vim -u NORC` 也会省略读一个文件进行初始化的步骤。 `vim -u NONE` 也略过装载插
+  件（plugins）的步骤。 
+* 如果Vim使用 “-s“ 参数启动，所有的后续步骤直到步骤4被略过。关于参数，参考
+<<VimArguments,Vim启动参数>>。
+=====
 +
 a. 如果 vim 作为 evim 或者 eview 或者使用参数 -y 启动，脚本文件
     *$VIMRUNTIME/evim.vim*  将会被装载。
 b. *系统级vimrc文件* 被读进行初始化. +
-   这个文件的位置可以使用 `:version` 命令获得。通常是 “$VIM/vimrc“。这个文件
+   这个文件的位置可以使用 `:version` 命令获得。通常是 `$VIM/vimrc` 。这个文件
    在 ‘compatible’ 模式下总是被读的，因为在后续步骤中才会关闭这个选项。如果你
    愿意可以加 `:set nocp` 命令。 + 
-   对于Macintosh, *$VIMRUNTIME/macmap.vim* 文件被读。
+   对于Macintosh, *$VIMRUNTIME/macmap.vim* 文件被读。 `VIM`, `VIMRUNTIME` 是内
+   部环境变量，可以使用命令 `:echo $VIM` 获得它们的值。
 c. *用户级别的初始化被检测和执行。* +
-   Vim依次做如下方式的检测，如果一种方式成功，就不再做后续的检测。 
+   Vim依次做如下方式的检测，如果一种方式成功，就不再做后续的检测。内部环境变量
+   `MYVIMRC` 设置成第一个匹配的值。
    . 环境变量 *VIMINIT* 。它的值作为Ex命令行执行
    . *用户vimrc* 文件：
 
-        "$HOME/.vimrc"      Unix and OS/2
-        "s:.vimrc"          Amiga
-        "home:.vimrc"       Amiga
-        "$VIM/.vimrc"       Amiga and OS/2
-        "$HOME/_vimrc"      MS-DOS and Win32
-        "$VIM/_vimrc"       MS-DOS and Wiin32
+        "$HOME/.vimrc"          Unix and OS/2
+        "$HOME/.vim/vimrc"      Unix and OS/2
+        "s:.vimrc"              Amiga
+        "home:.vimrc"           Amiga
+        "home:vimfiles:vimrc"   Amiga
+        "$VIM/.vimrc"           Amiga and OS/2
+        "$HOME/vimfiles/vimrc"  MS-DOS and Win32
+        "$HOME/_vimrc"          MS-DOS and Win32
+        "$VIM/_vimrc"           MS-DOS and Wiin32
     
     . 环境变量 *EXINIT* 。它的值作为Ex命令行执行
-    . *用户exrc* 文件，与vimrc文件的作用相同。
-d. 如果 `exrc` 选项打开（默认关闭），在当前目录收缩下面三个文件。最先搜索到的
+    . 用户exrc 文件，与vimrc文件的作用相同，只是名字不同。
+    . 默认的 `vimrc` 文件 `$VIMRUNTIME/defaults.vim` 。这个文件设置了某些选项
+      的值，设置了 `syntax on` 和 `filetype on` 。这些设置多数新用户希望设置的
+      。
+d. 如果 `exrc` 选项打开（默认关闭），在当前目录搜索下面三个文件。最先搜索到的
    被执行，其它的忽略。使用这些文件将导致 `compatible` 选项关闭
    . `".vimrc" (Unix, Amiga and OS/2)` +
      `"_vimrc" (MS-DOS and Win32)`
@@ -1982,11 +2139,17 @@ d. 如果 `exrc` 选项打开（默认关闭），在当前目录收缩下面三
      `".vimrc" (MS-DOS and Win32)`
    . `".exrc"  (Unix, Amiga and OS/2)` +
      `"_exrc"  (MS-DOS and Win32)`
-4）装载插件脚本（plugin）::
+4) 装载插件脚本（plugin）::
    做如下命令所做的事情： +
     `:runtime! plugin/\**/*.vim` +
     结果是选项 `runtimepath` 定义的所有的目录的 `plugin` 子目录被搜索，其下面
-    包括其子目录下所有以 `.vim` 结尾的文件被执行（sourced）。 +
+    包括其子目录下所有以 `.vim` 结尾的文件按照字母顺序被执行（sourced）。 +
+    值得注意的是， `runtimepath` 中以 `after` 结尾的目录先被忽略。它们会在
+    package 被装载后执行。 +
+    Package被装载。这些包也是最为插件，但是它们搜索的是 `packpath` 定义的每项
+    路径的 `start` 目录。这些目录下的每个 `plugin` 目录将被收集并加到
+    `runtimepath` 选项中，然后这些插件目录下的脚本文件被执行（sourced）。 +
+    然后， `runtimepath` 中以 `after` 结尾的目录下的插件脚本将被装载。 +
     在下面的情况下忽律该步骤的工作：
     * 选项 `loadpugins` 在某个 ·vimrc· 文件中被关闭
     * 使用了 `--noplugin` 命令行参数
@@ -1994,25 +2157,31 @@ d. 如果 `exrc` 选项打开（默认关闭），在当前目录收缩下面三
     * 当build Vim命令时没有配置 `+eval` 功能
     * 注意：使用 `-c 'set noloadplugins'` 不起作用，因为作为命令行参数，它在此
       时还没有执行。但是可以使用 `--cmd 'set noloadplugins` 参数。 
-5）设置 `shellpipe` 和 `shellredir` 选项::
+5) 设置 `shellpipe` 和 `shellredir` 选项::
     除非这两个选项已经被手工设置过，否则 `Vim` 会根据 `shell` 选项的值对这两个
     选项进行设置。
-6）如果使用了 `-n` 命令参数，设置 `updatecount` 选项的值为0::
-7）设置二进制相关的属性::
+6) 如果使用了 `-n` 命令参数，设置 `updatecount` 选项的值为0::
+7) 设置二进制相关的属性::
     如果在启动时使用了 `-b` 令旗（flag），与二进制编辑相关的选项将会被设置。关
     于该选项参见<<VimArguments,Vim启动参数>>
-8）执行 GUI 初始化::
+8) 执行 GUI 初始化::
     该步骤只在启动 `gvim` 的时候才起作用。参见<<GUI,GUI>>。
-9）读 `viminfo` 文件::
+9) 读 `viminfo` 文件::
     如果 `viminfo` 选项非空，读 viminfo 文件。参见<<VimInfo, viminfo>>。
-10）读 quickfix 文件::
+10) 读 quickfix 文件::
     如果使用了 `-q` 令旗，Vim读相应的 quickfix 文件。如果读失败，Vim退出。
-11）打开所有的窗口::
+11) 打开所有的窗口::
     如果使用 `-o` 令旗，窗口将被打开（但没有显示） +
     如果使用 `-p` 令旗，tab页将被创建（但没有显示） +
     如果使用 `-q` 令旗，跳到第一个错误 +
     所有窗口对应的缓冲区将被创建。
-
+12) 执行启动（startup）命令::
+    a. 如果使用 `-t` 令旗，跳转到相应的标签（tag）
+    b. 使用 `-c` 或者 `+cmd` 参数指定的命令被执行
+    c. 如果 `insertmode` 选项被打开，进入 `Insert` 模式
+    d. staring 令旗被关闭
+    e. `v:vim_did_enter` 变量设置成1
+    f. `VimEnter` autocommand 被执行
 
 // /* viminfo {{{3 */
 [[VimInfo]]
