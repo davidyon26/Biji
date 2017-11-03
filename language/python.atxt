@@ -1,0 +1,90 @@
+// /* Python Language {{{1 */
+= Python Language
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-11-03
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+
+// /* Comment {{{2 */
+== Comment
+ 注释可以是单独一行, 或者前面带有空格或代码，但是字符串文本中的#不作为注释行
+ 代表# 字符本身。
+
+[source,python]
+----
+# this is the first comment
+spam = 1  # and this is the second comment
+          # ... and now a third!
+text = "# This is not a comment because it's inside quotes."
+----
+
+// /* Number {{{2 */
+== Number
+
+[cols="1,2,7a"]
+|===
+| type | syntax | comment
+
+| int | |
+| float | |
+| Decimal | |
+| Fraction | |
+| complex number | | 
+|===
+
+// /* String {{{2 */
+== String 
+语法:: 
+ `'...'` +
+  `"..."`  + 
+  `'''...'''` +
+  `"""..."""`
+
+转义::
+使用转义字符 `\` 对一些特殊字符进行转义，如引号，换行符
++
+[source,python]
+------
+>>> '"Isn\'t," she said.'
+'"Isn\'t," she said.'  <1>
+>>> print('"Isn\'t," she said.')
+"Isn't," she said.    <2>
+------
+<1> 如果不是用print函数， \' 原封不动的包含在输出中
+<2> 使用 print(),  援引字符字符，如\' 或者 \n被解释
+
+raw string::
+在第一个引号前增加 `r` 字符串. 对于原生字符串中的转义字符不被解释。每行的换行
+符在输出中保留，如果希望两行输出为一行，被续行的那行字符串需要以 `\` 结尾。 
++
+[source, python]
+----
+>>> print('C:\some\name')  # here \n means newline!
+C:\some
+ame
+>>> print(r'C:\some\name')  # note the r before the quote
+C:\some\name
+----
+
+跨多行::
+使用 ''' or """ 能够使用一个字符串跨多行。每行的换行符在输出中保留，如果希望
+两行输出为一行，被续行的那行字符串需要以 `\` 结尾。
++
+[source,python]
+----
+print("""\
+... Usage: thingy [OPTIONS]
+...     -h                        Display this usage message
+...     -H hostname               Hostname to connect to
+... """)
+Usage: thingy [OPTIONS]
+     -h                        Display this usage message
+     -H hostname               Hostname to connect to
+
+>>>
+----
+
