@@ -1836,6 +1836,89 @@ Vjj         " 将三行向右移动4个缩进宽度
 // /* 选项formatoptions {{{3 */
 [[FormatOptions]]
 === 选项formatoptions
+选项 `formatoptions` 的缩写格式为 `fo` 。其值为一系列字母，每个字母称为令旗，
+它们描述了怎么进行自动格式化，其默认值为 `tcq` 。令旗之间使用可选的逗号进行分
+隔以增加可读性。当选项 `paste` 打开时，不进行任何格式化。可以使用 “+=” 或者 
+“-=” 增加某个令旗。对于如何进行选项设置，请参见<<Option,选项>>。每个令旗的含义
+见下表。
+
+[cols="1m,9a"]
+|====
+| 令旗 | 含义
+
+| t | 使用 `textwidth` 的设置，自动wrap过长的正文。
+
+| c | 使用 `textwidth` 的设置自动wrap 注释行，并且自动插入注释的标识
+
+| r | 在 `Insert` 模式，当输入 kbd:[Enter] 键时自动插入当前注释行的标识。
+
+| o | 在 `Normal` 模式，当输入 `o` 或者 `O` 时，自动插入当前注释行的标识
+
+| q 
+| 允许使用 `gq` 命令格式化注释行。注意格式化不会改变空行或者仅包行注释标识的行
+。
+
+| w 
+| 以空格结尾的行表示下一行和本行同属一个段落。一个以非空格字符结尾的行表示段落
+  的结束。
+
+| a
+| 自动格式化段落。也就是说当增加或者删除一个段落的内容时，这个段落的内容将会重
+  新格式化，详见<<AutoFormat,自动格式化>>。当与令旗 `c` 同时存在时，自动格式化
+  只会影响可识别的注释行
+
+| n
+| 当格式化文本时，可以识别具有编号的列表。它使用 `formatlistpat` 选项来识别列
+  表的格式。下一行将进行缩紧，正文与列表编号后的正文对其。默认的情况下编号是数
+  字，数字后面也可以带有 '.', ':', ')', ']' 或者 '}' 。注意必须同时打开
+  `autoindent` 。该令旗与令旗 `2` 同时使用时会有问题。
+ 
+----
+    1. the first item
+       wraps
+    2. the second item
+----
+
+| 2
+| 使用段落的第二行的缩紧作为该段落其它行的缩紧，而不是使用第一行的缩紧。该令旗
+  支持段落的第一行具有与其它行不同缩紧格式的情况。注意必须同时打开
+  `autoindent` 。例如
+ 
+----
+        first line of a paragraph
+    second line of the same paragraph
+    third line
+----
+
+| v
+| 在插入模式中使用Vi兼容的自动wrapping。 Only break a line at a blank that you
+  have entered during the current insert command. (Note: this is not 100% Vi
+  compatible. Vi has some "unexpected features" or bugs in this area. It uses
+  the screen column instead of the line column.)
+
+| b
+| Like 'v', but only auto-wrap if you enter a blank at or before the wrap
+  margin. If the line was longer than 'textwidth' when you started the insert,
+  or you do not enter a blank in the insert before reaching 'textwidth', Vim
+  does not perform auto-wrapping.
+
+| l 
+| 在插入模式中，对于长的行不进行分割换行。当开始插入模式时，如果一个行的宽度大
+  于 `textwidth` 设置的值，Vim不对其进行格式化
+
+| m 
+| 也在超过255的多字节的字符处换行，这对于每个字符也是一个字的亚洲文本非常
+  有用
+
+| M 
+| 当连接两个行时，在多字节字符前或者后不插入空格。如果与令旗B同时存在，令
+  旗B将不起作用。
+
+| B | 当连接两行时，在两个多字节字符间不插入空格。它与M同时存在时被忽略。
+
+| 1 | 不在只包含一个字母的字后面换行，如果可能，在这个字的前面换行。
+|====
+
 
 // /* 重新格式化 {{{3 */
 [[Reformat]]
@@ -1875,9 +1958,10 @@ movement::
     。
 
 // /* 自动格式化 {{{4 */
+[[AutoFormat]]
 ==== 自动格式化
 
-通过在选项 `formatoptions` 中增加令旗 `a` ，可以在增加或者删除字符时让 Vim 自
+通过在选项 <<FormatOptions,formatoptions>> 中增加令旗 `a` ，可以在增加或者删除字符时让 Vim 自
 动进行格式化。 这对于格式化文本文件是非常有效的，下面给出几个提示：
 
 * 合适地定义段落。最简单的做法是段落由一个空行分隔。如果不存在用于分隔段落的空
@@ -1894,6 +1978,30 @@ bla foobar bla foobar bla
     bla bla foobar bla
 bla foobar bla bla foobar
 ----
+
+* 增加 `c` 令旗可以用于自动格式化注释（comment）。这对于源代码有作用。
+
+* 设置 `textwidth` 可以定义每行最大的字符数。如果设置为0，使用79或者屏幕的宽度
+  （当屏幕的宽度小于79）
+
+[NOTE]
+======
+* 当文档的部分不是以段落进行划分的，对这部分进行修改将总是自动进行格式化，格式
+  化的结果可能不是你所希望的，在这种情况下，考虑使用下面的命令禁止自动格式化。
++
+[source,vim]
+------
+:set fo-=a
+------
+
+* 当使用 `w` （尾部的空格意味延续当前段落）令旗时，如果使用 `dd` 命令删除了段
+  落的最后一行，后续的段落将合并到本段落。
+
+* 为了进行撤销（undo）命令，对文本的修改将会被保存。格式化也是修改，因此每次的
+  格式修改也会被保存，这将占用许多内存。
+
+* 格式化一个长的段落，特别是定义了复杂的缩紧格式时速度可能会非常慢。
+======
 
 // /* 选项 {{{2 */
 [[Option]]
