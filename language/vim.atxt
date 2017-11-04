@@ -1,0 +1,27 @@
+// /* Vim Script language {{{1 */
+= Vim脚本语言
+
+// /* 注释 {{{2 */
+== 注释
+
+在 “:map", ":abbreviate", ":execute" 和 "!" 命令后面不能直接跟注释，比如
+
+[source,vim]
+------
+:abbrev dev development         " shorthand      <1>
+:map <F3> o#include             " insert include <2>
+:execute cmd                    " do it          <3>
+:!ls *.c                        " list C files   <4>
+------
+<1> dev 将会替代为 `development         " shorthand`, 而不是developement
+<2> <F3> 将会映射为整行，包括 `" insert include`
+<3> 将会报错，因为后面的 `" do it` 不能被识别
+<4> 将会降整行内容，包括 ` list C files` 发送给shell
+
+// /* 插件（plugin） {{{2 */
+== 插件（plugins）
+插件是对Vim已有功能的扩展或者改变。你可以发布你的插件，和其他人共享。
+
+存在两种类型的插件：全局插件（global）和文件类型相关插件（filetype）
+
+
