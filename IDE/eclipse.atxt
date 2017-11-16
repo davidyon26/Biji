@@ -9,3 +9,12 @@ v1.0, 2017-07-04
 [qanda]
 如何修改Java VM和VM的配置参数?::
   修改eclipse.ini文件，详见 https://wiki.eclipse.org/Eclipse.ini[eclipse wiki]。通常在没有配置JAVA_HOME参数或者希望使用不同虚拟机的情况下需要在eclipse.ini中配置。
+
+== 插件
+
+SVN::
+    http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/
+
+GROOVY::
+    http://dist.springsource.org/snapshot/GRECLIPSE/e4.7/
+

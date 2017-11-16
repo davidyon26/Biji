@@ -1,4 +1,4 @@
-// /* VIM 参考手册 {{{1 */
+// /* VIM 参考手册 {{{2 */
 = VIM 参考手册
 David Yon <davidyon@hotmail.com>
 v1.0, 2017-08-03
@@ -2375,7 +2375,8 @@ Vim提供了一些被称为 quickfix 命令，调用build工具保存错误输�
 == GUI
 
 // /* 参考文献 {{{2 */
-[bibliography] == 参考文献
+[bibliography] 
+== 参考文献
 
 - [[[1]]] http://vimdoc.sourceforge.net/htmldoc/[Vim 参考手册]
 - [[[2]]] http://www.yolinux.com/TUTORIALS/LinuxTutorialAdvanced_vi.html[ vi
