@@ -2380,6 +2380,8 @@ Vim提供了一些被称为 quickfix 命令，调用build工具保存错误输�
 == 主要插件
 - [[[1]]] https://github.com/fatih/vim-go[Offical Go 插件]
 - [[[2]]] https://github.com/nsf/gocode[Go Autocompletion]
+- [[[3]]] https://https://github.com/junegunn/vim-plug/wiki/tutorial[Vim
+  Plugin Manager]
 
 // /* 参考文献 {{{2 */
 [bibliography] 
