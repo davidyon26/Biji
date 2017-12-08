@@ -1,0 +1,28 @@
+// /* RPC 技术 {{{1 */
+= RPC 技术
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-11-08
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+
+// /* 定义 {{{2 */
+== 定义
+RPC （remote procedure call) 是一种基于 client-server 的分布式计算模式。它基于
+传统的本地进程调用的概念，使用这种方法，一个定义在不同地址空间的过程（
+procedure）（通常是在另一台计算机），能够如本地过程一样进行编码调用，调用者不
+需要关心远程交互的细节。
+在面向对象程序设计中，远程调用（RPC）通常被成为远程方法调用（Remote Method
+Invocation)(RMI) 。
+RPC是一种进程间通信（inter-process communication)(IPC) 技术。
+
+
+
+// /* 参考文献 {{{2 */
+== 参考文献
+[bibliography]
+- [[[1]]] https://en.wikipedia.org/wiki/Remote_procedure_call[Remote Procedure
+  Call]

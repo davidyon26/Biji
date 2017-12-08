@@ -1,0 +1,58 @@
+// /* go 程序设计语言 {{{2 */
+= go 程序设计语言
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-12-08
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+
+== 程序组织结构（package)
+
+== 类型
+
+=== Boolean types
+
+=== Numeric types
+
+=== String types
+
+=== Array types
+
+=== Slice types
+
+=== Struct types
+
+=== Pointer types
+
+=== Function types
+
+=== Interface types
+
+=== Map types
+
+=== Channel types
+
+== 表达式
+
+== 语句
+
+// /* 并发 {{{2 */
+[[concurrency]]
+== 并发
+
+=== go (goroutine)
+
+=== channel
+
+=== select
+
+=== 互斥 （锁）
+
+== 参考资料
+[bibliography]
+- [[[1]]] https://golang.org/ref/spec[go 语言规约]
+- [[[2]]] https://tour.golang.org/list[go 语言入门指导]
+
