@@ -51,6 +51,106 @@ v1.0, 2017-12-08
 
 === 互斥 （锁）
 
+// /* go {{{2 */
+== go
+go 是一个Go 源代码的管理工具，使用这个工具可以进行源代码的版本控制（使用git）
+，源代码的编译、链接生成可执行文件（build）以及生成可执行文件或在库文件的安装
+。
+
+=== go get
+从git repository中check out代码
+
+=== go build
+生成可执行文件
+
+=== go install
+安装库文件
+
+// /* gopath {{{2 */
+== gopath
+Go path 是用于 import 语句。它由 `go/build` 包实现。
+
+=== GOPATH
+这个环境变量定义了一系列用于查找 Go 代码的目录。在Unix下，多个目录使用冒号（:
+）分隔；在Windows环境下使用分号（;）分隔。
+
+除了标准的Go树，其它代码的位置必须使用这个变量进行说明，以便让get, build 和
+install命令正确执行。
+
+每个定义在GOPATH中的目录必须使用如下的标准目录结构：
+
+src::
+    命名为src的目录用于存放源代码。src目录中的子目录决定了 import 的路径或者可
+    执行文件的名称。
+
+pkg::
+    命令为pkg的目录用于存放安装的包对象（installed package objects）。这些包对
+    象安装目标操作系统和体系结构进行细分，分别放在使用操作系统和体系结构命名的
+    目录中，这个目录直接作为 `pkg` 的子目录。
+
+bin::
+    这个目录用于存放生成的可执行命令。每个命令以生成它的源代码所在的目录命名。
+    不是全目录，是最后一级目录。也就是说，对于 由`DIR/src/foo/quux` 源代码生成
+    的命令会被安装为DIR/bin/quux，而不是 DIR/bin/foo/quux。将 DIR/bin 加入
+    PATH ，可以直接执行被安装的命令。通过设置 `GOBIN` 目录，你可以将生成的命令
+    安装到这个环境变量指定的目录而不是默认的 DIR/bin。 `GOBIN` 必须使用绝对目
+    录。
+
+下面是一个目录结构的例子：
+
+[source, bash]
+------
+    GOPATH=/home/user/gocode
+
+    /home/user/gocode/
+        src/
+            foo/
+                bar/        (go code in package bar)
+                    x.go
+                quux/       (go code in package main)
+                    y.go
+        bin/
+            quux            (installed command)
+        pkg/
+            linux_amd64/
+                foo/
+                    bar.a   (installed package object)
+------
+
+NOTE: Go 查找 GOPATH 定义的每个目录以便找到相应的源代码，但是新的包总是被下载
+      到第一个目录。
+
+=== Internal Directories
+位于命名为 `internal` 目录下的代码仅能够被其父目录下的代码引用。例如
+
+[source, bash]
+----
+    /home/user/gocode/
+            src/
+                crash/
+                    bang/               (go code in package bang)
+                        b.go
+                foo/                    (go code in package foo)
+                    fo.go
+                    bar/                (go code in pacakge bar)
+                        x.go
+                    internal/
+                        baz/            (go code in package baz)
+                            z.go
+                    quux/               (go code in pacakge main)
+                        y.go        
+----
+
+文件z.go的代码 import 为 `foo/internal/baz` ，但是这个 `import` 语句仅仅能够在
+以 `foo` 为根的目录中代码中使用。 `foo/f.go` `foo/bar/x.go` and
+`foo/quux/y.go` 能够 `import "foo/internal/baz"` ，但是源文件
+`crash/bang/b.go` 不能够使用这个 `import` 语句。
+
+=== Vendor Directories
+Go 1.6 支持对依赖的包文件进行本地的重新定义，这个方式被成为 vendoring。
+和 `
+
+// /* 参考资料 {{{2 */
 == 参考资料
 [bibliography]
 - [[[1]]] https://golang.org/ref/spec[go 语言规约]
