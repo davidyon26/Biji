@@ -117,11 +117,11 @@ bin::
                     bar.a   (installed package object)
 ------
 
-NOTE: Go 查找 GOPATH 定义的每个目录以便找到相应的源代码，但是新的包总是被下载
+NOTE: 虽然 Go 在查找源代码时会搜索 GOPATH 定义的每个目录，但是新的包总是被下载
       到第一个目录。
 
 === Internal Directories
-位于命名为 `internal` 目录下的代码仅能够被其父目录下的代码引用。例如
+位于命名为 `internal` 目录下的代码仅能够被其直接父目录下的代码引用。例如
 
 [source, bash]
 ----
@@ -147,8 +147,38 @@ NOTE: Go 查找 GOPATH 定义的每个目录以便找到相应的源代码，但
 `crash/bang/b.go` 不能够使用这个 `import` 语句。
 
 === Vendor Directories
-Go 1.6 支持对依赖的包文件进行本地的重新定义，这个方式被成为 vendoring。
-和 `
+Go 1.6 支持对外部依赖的包文件进行本地的重新定义，这个方式被成为 vendoring。被
+命名为 `vendor` 目录下的代码仅能够被 `vendor` 目录的直接父目录下的代码引用（
+import），并且引用的目录格式需要去掉包括 `vendor` 在内的所有父目录结点。
+
+下面是一个 `vendor` 目录的例子，它具有与 `internal` 相同的作用域规则，但是
+
+- `z.go` 代码的引用规则为 `import "baz"` ，而不是 `import "foo/vendor/baz"` 。
+- 在 `vendor` 目录下的代码会覆盖掉高层的代码。例如，在以 `foo` 为根结点的子树
+  中，对 `crash/bang` 的引用会定位到 `foo/vendor/crash/bang` ，而不是顶层的
+  `crash/bang`
+- `vendor` 目录不影响使用 `go get` check out 代码时存放的位置
+
+[source, bash]
+----
+    /home/user/gocode/
+            src/
+                crash/
+                    bang/               (go code in package bang)
+                        b.go
+                foo/                    (go code in package foo)
+                    fo.go
+                    bar/                (go code in pacakge bar)
+                        x.go
+                    vendor/
+                        crash/
+                            /bang/      (go code in package bang)
+                                b.go
+                        baz/            (go code in package baz)
+                            z.go
+                    quux/               (go code in pacakge main)
+                        y.go        
+----
 
 // /* 参考资料 {{{2 */
 == 参考资料
