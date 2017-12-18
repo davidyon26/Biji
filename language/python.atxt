@@ -88,3 +88,19 @@ Usage: thingy [OPTIONS]
 >>>
 ----
 
+// /* Python 包管理工具 {{{2 */
+== Python 包管理工具
+
+=== PyPI 
+PyPI 的全称是 Python Package Index, 是存放 Python 包的软件库，其网址请参见
+<<1>> 。这个库中的软件包可以通过 pip python 命令进行安装，截至2017/12/14日，该
+库中已经存放124246个软件包。
+
+==== pip
+
+
+// /* 参考文献 {{{2 */
+[bibliography]
+== 参考文献
+
+- [[[1]]] https://pypi.python.org/pypi[Pypi -the Python Package Index]

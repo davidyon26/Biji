@@ -1,0 +1,65 @@
+// /* gNMI {{{1 */
+= gNMI
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-12-15
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+
+// /* Go 参考实现 {{{2 */
+[GoRI]
+== Go 参考实现
+
+=== ygot 工具集
+这个项目包含了一些对Yang 模型进行转换的工具。 
+
+- `ygen`: 一个公共库文件，最为其它工具的基础库。
+- `generator`: 使用 `ygen` 基于一系列 YANG 模型，生成与其对应的 Go 程序。
+- `ygot`: 基于 `ygen` 产生的结构生成helper方法，用于将其转换成JSON格式或者 
+   gNMI notification
+- `ytypes`: 提供对 `ygen` 产生结构的验证，该验证基于 YANG schema。
+
+=== Yang to Go
+请参考 <<2,Yang to Go>> 了解ygen库文件如何将Yang模型文件映射为Go的代码
+
+=== Yang to Protobuf
+请参考 <<3,Yang to Protobuf>> 了解ygen库文件如何将Yang模型文件映射为Protobuf
+文件
+
+=== proto_generator
+这是一个将 YANG 模型转换为 protocol buffer 的工具。设计这个工具是基于下面几点： 
+
+- 除了 <<5,Go>> 和 <<6,Python>> 语言以外，很多语言没有专门的
+  工具用于将 YANG 模型转化成自己语言的数据结构。而使用 protobuf schema 可以使
+  用 `protoc` 产生。而 Protobuf 支持将 proto 模型转化成很多种语言结构，有些是
+  Protcol Buffer本身就支持的，称其为 <<7,native>> 或者是 <<8,thirdparty
+  plugins>>
+- 传输效率高。因为 Protobuf 支持二进制的序列化机制，这样相对于 XML 和 JSON 等
+  编码，其传输的数据量更少。
+请参考<<1>>了解进一步的信息。
+
+=== generator
+该工具产生与 YANG 模型对应的Go代码。
+
+[bibliography]
+== 参考文献
+
+- [[[1]]]
+  https://github.com/openconfig/ygot/blob/3fab995eed0612eb040e581214df5de0b78c6643/docs/protobuf_getting_started.md[Using
+  ygot To Generate a Protobuf Representation of a YANG Schema]
+- [[[2]]]
+  https://github.com/openconfig/ygot/blob/master/docs/design.md#naming-of-enumerated-entities[Yang
+  to Go]
+- [[[3]]]
+  https://github.com/openconfig/ygot/blob/master/docs/yang-to-protobuf-transformations-spec.md[Yang
+  to Protobuf]
+- [[[4]]] https://github.com/openconfig/ygot[ygot 工具集]
+- [[[5]]] https://github.com/openconfig/ygot[Go Binding]
+- [[[6]]] https://github.com/robshakir/pyangbind[Python Binding] 
+- [[[7]]]
+  https://developers.google.com/protocol-buffers/docs/reference/overview[
+  native] 
+- [[[8]]] https://github.com/google/protobuf/blob/master/docs/third_party.md[
+  thirdparty plugins]
