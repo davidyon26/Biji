@@ -124,6 +124,7 @@ dirmngr --debug-all <1>
   配置文件名称为__dirmngr.conf__，文件存放在``~/.gnupg/``目录下。
   这个命令的所有长参数均可以在这个文件中定义。如
 +
+
 ----
   debug ipc,network,dns <1>
   log-file ~/logs/dirmngr.log <2>
@@ -134,6 +135,70 @@ dirmngr --debug-all <1>
 
 === gpg-connect-agent
 
+=== openssl
+
+Create a self signed certificate::
+    (notice the addition of -x509 option)
+
+    openssl req -config example-com.conf -new -x509 -sha256 -newkey \
+      rsa:2048 -nodes -keyout example-com.key.pem -days 365 \
+      -out example-com.cert.pem
+
+Create a signing request:: 
+    (notice the lack of -x509 option):
+
+    openssl req -config example-com.conf -new -sha256 -newkey rsa:2048 -nodes \
+     -keyout example-com.key.pem -days 365 -out example-com.req.pem
+
+Print a self signed certificate::
+    for example
+    
+    openssl x509 -in example-com.cert.pem -text -noout
+
+Print a signing request::
+    for example
+
+    openssl req -in example-com.req.pem -text -noout
+
+Create an OpenSSL config file::
+    for example req.cnf which is used in -config option
+
+    [req]
+    distinguished_name = req_distinguished_name
+    x509_extensions = v3_req
+    prompt = no
+    [req_distinguished_name]
+    C = US
+    ST = VA
+    L = SomeCity
+    O = MyCompany
+    OU = MyDivision
+    CN = www.company.com
+    [v3_req]
+    keyUsage = critical, digitalSignature, keyAgreement
+    extendedKeyUsage = serverAuth
+    subjectAltName = @alt_names
+    [alt_names]
+    DNS.1 = www.company.com
+    DNS.2 = company.com
+    DNS.3 = company.net
+
+Then you can create the certificate with 
+
+    openssl req -x509 -nodes -days 730 -newkey rsa:2048 \
+     -keyout cert.key -out cert.pem -config req.cnf -sha256
+
+Q&A::
+https://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl[create
+certificate]
+
+https://stackoverflow.com/questions/8443081/how-are-ssl-certificate-server-names-resolved-can-i-add-alternative-names-using/8444863#[How
+are SSL certificate server names resolved/Can I add alternative names using
+keytool?]
+
+https://crsr.net/Notes/SSL.html[ssl]
+
+=== keytool
 
 == 数学计算
 
