@@ -28,6 +28,38 @@ escape sequence）控制光标显示在屏幕的任何位置（以x,y坐标系�
 最近是ECMA-48, 它已经升级了几次，最新的是1991年的第五版，它也被ISO和IEC组织采
 纳为 ISO/IEC 6429.
 
+// /* 平台支持 {{{2 */
+== 平台支持
+到1980年中期，转义序列在广泛的平台上得到支持。虽然越来越多的操作系统在文本终端
+支持转义序列，但是在通常情况下，它更多使用在终端模拟器（terminal emulator）上
+。比如Unix上的xterm，OS X上的Terminal或者MacOS上的ZTerm，以及IBM PC上的通讯程
+序。
+
+Unix和AmigaOS支持ANSI，这导致运行在这些操作系统的程序的广泛使用ANSI。在Unix-like
+操作系统上，许多软件能够通过诸如termcap和curses库产生ANSI控制字符去更新文本在
+终端上的显示。虽然这些库被设计为也支持非ANSI终端，但是几乎没有被测试。许多游戏
+和shell脚本可能会直接输出ANSI序列，但是这些脚步不能工作在不解释ANSI序列的终端
+上。
+
+MS-DOS 1.x 不支持ANSI或者其它escape sequences。仅仅在BIOS层面上支持几个控制字符（如BEL，CR
+，LF，BS），使得其几乎不能实现全屏的应用。
+
+MS-DOS 2.0增加了设备驱动程序支持ANSL escape sequences - 事实上的标准就是
+ANSI.SYS，但也使用诸如ANSI.COM, NANSI.SYS and ANSIPLUS.EXE。但是由于速度慢并且
+默认情况不安装，它们没有得到广泛支持。
+
+Win32 console根本不支持ANSI escape sequences。一些其他的cosole窗口程序，如JP
+Software的TCC，Michael J. Mefford的ANSI.COM，Jason Hood的ANSICON和Maximus的
+ConEmu可以解释程序打印的ANSI escape sequences。有一个Python的包能够解释被打印
+的正文中的ANSE escape sequence，并对其进行转换从而可以用于显示颜色和光标位置。
+
+在2016年，微软Windows 10的Threshod 2意外地在console应用中支持ANSI escape
+sequence，这使得移植Unix软件或者远程访问Unix系统更加容易。
+
+// /* Escape sequence {{{2 */
+== Escape sequences
+
+
 
 // /* 参考文献 {{{2 */
 [bibliography]
