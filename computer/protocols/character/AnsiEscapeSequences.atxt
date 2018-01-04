@@ -1,0 +1,46 @@
+// /* ANSI escape sequences code {{{2 */
+= ANSI escape sequences
+David Yon <davidyon@hotmail.com>
+v1.0, 2018-01-04
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+
+// /* Introduction {{{2 */
+== 简介
+ANSI escape sequences 是一个用于在文本视频终端下控制字符显示的标准。这些字符和
+其它普通字符一起发送给终端，由终端根据字符串中控制字符（ANSI escape code）决定
+字符的显示方式。这些控制字符是一系列字节流，通常以ESC 和 `[` 开始作为 escape
+code的标识。
+
+// /* 历史 {{{2 */
+== 历史
+几乎所有的视频终端厂商都会增加一些厂商相关的escape sequence控制字符串去进行某
+些操作，如控制光标所在的位置。比如在VT52终端允许通过发送转移序列字符（
+escape sequence）控制光标显示在屏幕的任何位置（以x,y坐标系）。而不同的厂商使用
+不同的转移序列，这样会给操作系统或者软件带来兼容性的问题。
+
+因此标准化组织开始对其进行标准化，以便简化软件的实现。
+
+最近是ECMA-48, 它已经升级了几次，最新的是1991年的第五版，它也被ISO和IEC组织采
+纳为 ISO/IEC 6429.
+
+
+// /* 参考文献 {{{2 */
+[bibliography]
+== 参考文献
+- [[[1]]] https://en.wikipedia.org/wiki/ANSI_escape_code[ANSI escape code
+  wikipedia]
+- [[[2]]]
+  http://www.ecma-international.org/publications/standards/Ecma-048.htm[
+  Standard ECMA-48 Control Functions for Coded Character Sets]
+- [[[3]]] https://www.iso.org/standard/12782.html[ISO/IEC 6429:1992
+  Information technology - Control functions for coded character sets]
+- [[[4]]]
+  https://stackoverflow.com/questions/6520116/java-framework-for-reading-writing-ansi-escape-sequenced-character-streams[
+  Java for reading ANSI escape-sequence character streams]
+- [[[5]]]
+  https://github.com/fusesource/jansi/tree/master/jansi/src/main/java/org/fusesource/jansi[jansi]
