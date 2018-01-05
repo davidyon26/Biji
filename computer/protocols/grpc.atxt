@@ -15,6 +15,14 @@ Protocol Buffer 作为其接口定义语言。它提供了很多功能模块，�
 输，流控制（flow control），阻塞和非阻塞的绑定，取消，超时等。它可以产生跨平台
 的多种语言的客户端和服务器端的代码。
 
+关于HTTP/2, 可以参见 <<RFC7540, HTTP/2>> 。 HTTP2的传输层可以基于TCP进行明文传
+输，也可以基于TLS进行安全加密传输。关于TLS可以参见 <<RFC5246,The Transport
+Layer Security (TLS) Protocol Version 1.2>>。然而HTTP/2是基于ALPN --- TLS协议
+的扩充，关于ALPN参见 <<RFC7301,Transport Layer Security (TLS)
+Application-Layer Protocol Negotiation Extension>>。这个扩充可以在TLS握手期间
+进行应用层协议的选择，从而避免为该选择进行的多次网络交互。关于网络传输层的安全
+性可以参见 <<W1,Transport Layer Security>>。
+
 === 体系结构
 与很多RPC系统一样，gRPC基于如下的思想：定义一个服务（service），该服务定义了能
 够被远端客户段调用的方法，以及参数和返回类型。在服务器端，服务器（server）软件
@@ -106,6 +114,7 @@ https://developers.google.com/protocol-buffers/docs/reference/proto3-spec[文件
 - <<4, GRPC Java Basics>>, 
 - <<5, Java Authentication>>, 
 - <<6, How to authentication on client>>
+- <<9, Grpc Java SSL mutual authentication>>
 
 以及host name 不匹配的解决方法
 
@@ -133,3 +142,14 @@ Python]
 - [[[8]]] 
   https://stackoverflow.com/questions/19540289/how-to-fix-the-java-security-cert-certificateexception-no-subject-alternative[No
   subject alternative names present 2]
+- [[[9]]]
+  https://stackoverflow.com/questions/32222389/grpc-java-ssl-mutual-authentication[Grpc
+  Java SSL mutual authentication]
+- [[[W1]]] https://en.wikipedia.org/wiki/Transport_Layer_Security[Transport
+   Layer Security]
+- [[[RFC7540]]] https://tools.ietf.org/html/rfc7540[RFC7540 HTTP/2]
+- [[[RFC5246]]] https://tools.ietf.org/html/rfc5246[The Transport Layer
+  Security (TLS) Protocol Version 1.2]
+- [[[RFC7301]]] https://tools.ietf.org/html/rfc7301[Transport Layer Security
+  (TLS) Application-Layer Protocol Negotiation Extension]
+

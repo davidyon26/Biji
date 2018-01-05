@@ -76,3 +76,5 @@ sequence，这使得移植Unix软件或者远程访问Unix系统更加容易。
   Java for reading ANSI escape-sequence character streams]
 - [[[5]]]
   https://github.com/fusesource/jansi/tree/master/jansi/src/main/java/org/fusesource/jansi[jansi]
+- [[[6]]] http://invisible-island.net/xterm/ctlseqs/ctlseqs.html[XTerm Control
+  Sequences]
