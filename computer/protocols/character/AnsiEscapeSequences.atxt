@@ -58,7 +58,15 @@ sequence，这使得移植Unix软件或者远程访问Unix系统更加容易。
 
 // /* Escape sequence {{{2 */
 == Escape sequences
+转义序列可以有不同的长度。转义序列开始于ASCII字符 kbd:[ESC] `(27/hex 0x1B)` ，后
+面跟着一个值位于``0x40 - 0x5F`` 的字节。 
 
+根据 <<2,ECMA-48>> ，在8-bit的环境下，这两个字节可以合并为一个范围为 0x80 -
+0x9F 的单个字节。详见 <<7, C control codes>>。然而在现在的设备上这些码值可能会
+有其他的含义，比如 UTF-8 或者 CP-1252 字符，所以两个字节的序列被使用。
+
+其它如C0编码包括 kbd:[ESC] 和 BEL，BS，CR，LF，FF，TAB，VT，SO 和SI 可以和转义
+序列在输出时产生相似的效果。
 
 
 // /* 参考文献 {{{2 */
@@ -78,3 +86,5 @@ sequence，这使得移植Unix软件或者远程访问Unix系统更加容易。
   https://github.com/fusesource/jansi/tree/master/jansi/src/main/java/org/fusesource/jansi[jansi]
 - [[[6]]] http://invisible-island.net/xterm/ctlseqs/ctlseqs.html[XTerm Control
   Sequences]
+- [[[7]]] https://en.wikipedia.org/wiki/C0_and_C1_control_codes[C1 control
+  codes]
