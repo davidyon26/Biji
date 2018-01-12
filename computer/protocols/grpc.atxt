@@ -115,6 +115,10 @@ https://developers.google.com/protocol-buffers/docs/reference/proto3-spec[文件
 - <<5, Java Authentication>>, 
 - <<6, How to authentication on client>>
 - <<9, Grpc Java SSL mutual authentication>>
+- <<10, Java Code Examples for io.grpc.Metadata>>
+- <<11, How to read Meta data in gRPC using Java at client side>>
+- <<12, how to get the connect channel on the server side>>
+- <<13, server side connect management>>
 
 以及host name 不匹配的解决方法
 
@@ -124,6 +128,20 @@ https://developers.google.com/protocol-buffers/docs/reference/proto3-spec[文件
 == Python
 一个简单的帮助文件参见 https://grpc.io/docs/quickstart/python.html[QuickStart
 Python]
+
+== HTTP/2
+HTTP/2 是被WWW使用的HTTP网络协议的一个主要版本。它衍生于由Google开发的
+https://en.wikipedia.org/wiki/SPDY[SPDY] 协议。是1997年标准化的
+https://tools.ietf.org/html/rfc2068[HTTP 1.1] 后的第一个HTTP 新版
+本。2014年12月提交给IESG（Internet Engineering Steering Group），2015年2月17日
+得到批准，并于2015年5月正式发布于 https://tools.ietf.org/html/rfc7540[RFC
+7540]。2015年底包括 Chrome, Opra, Firefox, Internet Explorer 11, Safari,
+Amazon Silk, Edge等主要浏览器支持HTTP/2. 据W3Techs统计，截至2017年11月，前1000
+万个网站中的有20.5%支持HTTP/2。
+
+
+
+== ALPN
 
 [bibliography]
 == 参考文献
@@ -145,6 +163,18 @@ Python]
 - [[[9]]]
   https://stackoverflow.com/questions/32222389/grpc-java-ssl-mutual-authentication[Grpc
   Java SSL mutual authentication]
+- [[[10]]]
+  https://https://www.programcreek.com/java-api-examples/index.php?api=io.grpc.Metadata[Java
+  Code Examples for io.grpc.Metadata]
+- [[[11]]]
+  https://stackoverflow.com/questions/43479217/how-to-read-meta-data-in-grpc-using-java-at-client-side[How
+  to read Meta data in gRPC using Java at client side]
+- [[[12]]]https://github.com/grpc/grpc-java/issues/779[how to get the connect
+  channel on the server side]
+- [[[13]]]
+  https://github.com/grpc/proposal/blob/master/A9-server-side-conn-mgt.md[Server-side
+  Connection Management]
+
 - [[[W1]]] https://en.wikipedia.org/wiki/Transport_Layer_Security[Transport
    Layer Security]
 - [[[RFC7540]]] https://tools.ietf.org/html/rfc7540[RFC7540 HTTP/2]
