@@ -19,6 +19,22 @@ v1.0, 2017-06-15
 创建TCP/UDP 连接。可以作为客户端与远端服务器连接，使用标准输入最为输入，
 传给服务器端，并接受服务器端的返回，发送到标准输出
 
+=== netstat
+显示网络连接，路由表，接口统计等信息。
+
+-----
+# netstat -tulpn    <1>
+
+Proto Recv-Q Send-Q Local Address           Foreign Address         State PID/Program name    
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN 4747/cupsd          
+tcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN 1026/xinetd         
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN 1248/exim4          
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN 580/rpcbind         
+-----
+<1> t 表示tcp；u 表示udp；l 表是正在监听的；p 建立该连接的进程号/程序名；n以数
+字形式显示IP address和端口号
+
+
 == 管道命令
 
 === pv
@@ -84,6 +100,27 @@ cat testfile | expand -t 4
 
 == 进程命令(process)
 
+=== proc 目录
+Linux将一个进程相关的信息放到根目录下的proc `/proc` 目录下。如对于进程号为1133
+的进程，其相关的信息放在 `/proc/1133` 目录下文件中。其中
+
+.进行信息
+[cols="1m,5a"]
+|====
+| 文件名 | 解释和/或例子
+
+| exe 
+|存放与该进程对应的程序名
+
+    # ls -l /proc/2266/exe
+    lrwxrwxrwx 1 david david 0 Jan 25 16:38 /proc/2266/exe -> /usr/lib/telepathy/mission-control-5
+
+| cwd
+| 进程使用的当前目录。命令 `pwdx` 完成相同的功能。
+
+    $ ls -l /proc/2620/cwd
+    lrwxrwxrwx 1 david david 0 Jan 25 16:45 /proc/2620/cwd -> /home/david
+|====
 === ps
 这个命令在不同的操作系统选项会有所不同，Linux下的ps会做最大的兼容。
 
@@ -91,6 +128,77 @@ cat testfile | expand -t 4
   输出的宽度增宽。如果使用两个w输出的宽度没有限制
 w::
   同-w
+
+- 使用标准语法显示系统中所有进程
+
+    ps -e
+    ps -ef
+    ps -eF
+    ps -ely
+
+- 使用BSD语法显示系统中所有进程
+
+    ps ax
+    ps axu
+
+- 打印进程树
+
+    ps -ejH
+    ps axjf
+
+- 获取关于线程的信息
+
+    ps -eLf
+    ps axms
+
+- 获取安全信息
+
+    ps -eo euser,ruser,suser,fuser,f,comm,label
+    ps axZ
+    ps -eM
+
+- 查看所有以root用户（real & effective ID）执行的进程
+
+    ps -U root -u root u
+
+- 使用用户定义的格式输出每个进程
+
+    ps -eo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm
+    ps axo stat,euid,ruid,tty,tpgid,sess,pgrp,ppid,pid,pcpu,comm
+    ps -Ao pid,tt,user,fname,tmout,f,wchan
+
+- 只打印 `syslogd` 进程的进程ID
+
+    ps -C syslogd -o pid=
+
+- 只打印进程号为42的命令名
+
+    ps -q 42 -o comm=
+
+=== fuser
+查看使用某个文件或者套接字（socket）的进程
+
+-----
+# fuser 7000/tcp
+    查找打开tcp端口7000的进程
+
+# fuser -km /home
+    关闭（kill）所有存取（access）文件系统 /home 的进程
+
+# if fuser -s /dev/ttyS1; then :; else something; fi
+    如果没有其它进程使用/dev/ttyS1，调用something
+
+# fuser telnet/tcp
+    显示所有监听在telnet端口的进程
+-----
+
+=== pwdx
+查看某个进程的当前工作目录
+
+----
+$ pwdx 2620
+2620: /home/david
+----
 
 == 安全（Security）
 
