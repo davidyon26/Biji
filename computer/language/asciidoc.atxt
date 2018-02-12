@@ -715,7 +715,7 @@ enrol::
   of a group
 ----
 === 参考书目（bibliography）
-具有预定义 `bibilography` 风格的无序列表，生成DocBook参考书目列表
+具有预定义 `bibliography` 风格的无序列表，生成DocBook参考书目列表
 
 [source,asciidoc]
 ----
