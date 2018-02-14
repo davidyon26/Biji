@@ -4,6 +4,9 @@ v1.0, 2017-07-04
 :toc: right
 :numbered:
 :icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
 
 == 问答
 [qanda]
@@ -12,9 +15,20 @@ v1.0, 2017-07-04
 
 == 插件
 
-SVN::
-    http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/
+=== SVN 插件下载位置
+http://community.polarion.com/projects/subversive/download/eclipse/6.0/update-site/[
+在这]
 
-GROOVY::
-    http://dist.springsource.org/snapshot/GRECLIPSE/e4.7/
+=== SVN 问答
+[qanda]
+svn: E200007: CHECKOUT can only be performed on a version resource::
+    this seems to be related to checking out an SVN repository with one
+    version of the SVN client then trying to manage it in Eclipse using a
+    newer version.
+    * in eclipse, right click on kbd:[project] -> kbd:[team] -> kbd:[cleanup]
+    * if it doesn't work, with console SVN command cleanup first, kbd:[svn
+    cleanup], then refresh and update in eclipse.
+
+=== GROOVY 插件下载位置
+http://dist.springsource.org/snapshot/GRECLIPSE/e4.7/[在这]
 
