@@ -4,6 +4,9 @@ v1.0, 2017-07-11
 :toc: right
 :numbered:
 :icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
 
 == 定义
 [glossary]
@@ -16,7 +19,8 @@ v1.0, 2017-07-11
   也称为标识符（identifier）
 原字符（metacharacter）::
   一个在非转义（unquoted) 情况下用来分隔字的字符，它包括如下的字符： +
-  ``| & ; ( ) < > space tab newline``
+  kbd:[|] kbd:[&] kbd:[;] kbd:[(] kbd:[)] kbd:[<] kbd:[>] kbd:[space]
+  kbd:[tab] kbd:[newline]
 控制操作符（control operator）::
   用于执行控制功能的字。它是如下符号： +
   ``||`` ``&`` ``&&`` ``;`` ``;;`` ``;&`` ``;;&`` ``(`` ``)`` ``|`` ``|&`` 
@@ -31,6 +35,28 @@ v1.0, 2017-07-11
 使用不同的选项调用 `bash` 可以带来不同的行为，决定了不同类型的shell。
 
 == 语言结构
+
+=== 简单命令（Simple Commands）
+简单命令是一系列由空白分割的字，它终止于控制操作符。第一字指定了要执行的命
+令，其它的字最为命令的参数。简单命令是其它复杂命令的组成单位。
+
+一个简单命令的返回值是其退出的状态；当这个命令由于信令（singal）n 终止时，其返
+回值为128+n。
+
+=== 管道（Pipelines）
+管道是由一个或者多个命令组成，这些命令由控制操作符 `|` 或者 `|&` 分隔。它具有
+如下的格式：
+
+[source, bash]
+-----
+[time [-p]] [!] command1 [ | or |& command2 ]
+-----
+
+管道命令中的每个命令的输出将最为下一条命令的输入，这种输出输入的连接建立在任何
+重定向操作命令之前。
+
+如果使用控制操作符 `&|` ，command1 的标准错误输出也会随同标准输出经过管道连接
+到 command2 的标准输入，它是 `2>&1 |` 的简写方式。
 
 == 函数（function）
 
