@@ -72,6 +72,12 @@ Shell 变量 `TIMEFORMAT` 定义. 在 posix 模式下, `time` 后面可以使用
 
 管道命令中的每条命令都在 subshell 中以独立的进程执行.
 
+== list
+一个 list 命令由一系列管道命令组成,这些管道命令以控制操作符 `;` `&` `&&` `||`
+进行分隔,以 `;` `&` 和 <newline> 结束.
+
+== 复合命令(compound command)
+
 == 函数（function）
 
 语法：::
