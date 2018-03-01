@@ -34,6 +34,13 @@ tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN 580/r
 <1> t 表示tcp；u 表示udp；l 表是正在监听的；p 建立该连接的进程号/程序名；n以数
 字形式显示IP address和端口号
 
+=== mount
+mount 远程的SAMBA（CIFS）共享文件目录
+
+[source,bash]
+-----
+mount -t cifs -o username=xxx,nounix,sec=ntlmssp //xxx.xxx.xxx.xxx/share mount_point
+-----
 
 == 管道命令
 
