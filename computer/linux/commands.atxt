@@ -312,6 +312,16 @@ https://crsr.net/Notes/SSL.html[ssl]
 关于keytool的详细用法请参见<<1,keytool>>。也可以参见<<2,Java Keytool
 Commands>>
 
+[[MultiMedia]]
+== 多媒体
+
+=== amixer
+
+=== pactl
+
+=== pacmd
+
+
 == 数学计算
 
 === bc
