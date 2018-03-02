@@ -1,21 +1,210 @@
-## static import
-  * 引入规范版本：Java 5
-  * 静态引用（static import）允许在使用某个类的静态成员不需要每次都通过该类进行限定，而直接使用该静态成员，就好像这些静态成员是在使用它们的类中定义一样。在Effective Java中，建议使用继承达到该效果。
-  * 用法：import **static** *class_full_name.static_memeber* 或者 *class_full_name.\**
-  ```
+// /* Java Lanuage {{{1 */
+= Java Language
+David Yon <davidyon@hotmail.com>
+v1.0, 2017-10-03
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+
+// /* enum type {{{2 */
+== enmu type
+
+* 引入：Java 5
+* enum type 可以用于描述任何有存在一个或多个常量实例的事物。比如方向有东、南、
+  西、北，一周有星期一至星期日7天。
+* 语法： public *enum* Day {...} 。其它中的 *enum* 与 *class* 一样是保留
+  字，它定义了一个 ``enum`` 类型。
+* 技术细节：
+  ** 在Java语言中，enmu 类型本质上是一个 *class* ，它可以包含方法和其
+     它的域。
+  ** 它隐含继承了抽象类 `java.lang.Enum` ，因为 Java 不支持多继承，因此
+     enum 类型不能继承其它任何类。同时所有类都继承了 `java.lang.Object` ，
+     它也包含了这个根类的方法。
+  ** 在编译时刻，编译器会为 *enum* 类型增加一些特殊的方法，比如，静态方法
+     `value` 。这个方法会返回一个数组，按照说明顺序包含了所有枚举常量值。
+  ** 枚举常量可以有多个参数，这些参数必须是个常量，并且这些常量必须预先定义并
+     通过枚举类型的构造函数对枚举常量进行初始化。
+  ** 当枚举类型包括其它域或者方法时，枚举常量必须以分号结束。
+  ** 枚举类型构造函数的作用域必须是 `package-private` 或者是 `private` 。它们
+     不能被显示调用，它们主要用于自动创建枚举类型的枚举常量。
+
+* 用法：参见下面章节。
+
+=== 用于 `switch` 语句
+    
+[source, java]
+-----
+public enum Day {
+    SUNDAY, MONDAY, TUESDAY, WEDNESDAY,
+    THURSDAY, FRIDAY, SATURDAY 
+}
+
+public class EnumTest {
+    Day day;
+    
+    public EnumTest(Day day) {
+        this.day = day;
+    }
+    
+    public void tellItLikeItIs() {
+        switch (day) {
+            case MONDAY:
+                System.out.println("Mondays are bad.");
+                break;
+                    
+            case FRIDAY:
+                System.out.println("Fridays are better.");
+                break;
+                         
+            case SATURDAY: case SUNDAY:
+                System.out.println("Weekends are best.");
+                break;
+                        
+            default:
+                System.out.println("Midweek days are so-so.");
+                break;
+        }
+    }
+    
+    public static void main(String[] args) {
+        EnumTest firstDay = new EnumTest(Day.MONDAY);
+        firstDay.tellItLikeItIs();
+        EnumTest thirdDay = new EnumTest(Day.WEDNESDAY);
+        thirdDay.tellItLikeItIs();
+        EnumTest fifthDay = new EnumTest(Day.FRIDAY);
+        fifthDay.tellItLikeItIs();
+        EnumTest sixthDay = new EnumTest(Day.SATURDAY);
+        sixthDay.tellItLikeItIs();
+        EnumTest seventhDay = new EnumTest(Day.SUNDAY);
+        seventhDay.tellItLikeItIs();
+    }
+}
+-----
+
+=== 参数枚举值
+
+[source, java]
+-----
+public enum Planet {
+    MERCURY (3.303e+23, 2.4397e6),
+    VENUS   (4.869e+24, 6.0518e6),
+    EARTH   (5.976e+24, 6.37814e6),
+    MARS    (6.421e+23, 3.3972e6),
+    JUPITER (1.9e+27,   7.1492e7),
+    SATURN  (5.688e+26, 6.0268e7),
+    URANUS  (8.686e+25, 2.5559e7),
+    NEPTUNE (1.024e+26, 2.4746e7);
+
+    private final double mass;   // in kilograms
+    private final double radius; // in meters
+    Planet(double mass, double radius) {
+        this.mass = mass;
+        this.radius = radius;
+    }
+    private double mass() { return mass; }
+    private double radius() { return radius; }
+
+    // universal gravitational constant  (m3 kg-1 s-2)
+    public static final double G = 6.67300E-11;
+
+    double surfaceGravity() {
+        return G * mass / (radius * radius);
+    }
+    double surfaceWeight(double otherMass) {
+        return otherMass * surfaceGravity();
+    }
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.err.println("Usage: java Planet <earth_weight>");
+            System.exit(-1);
+        }
+        double earthWeight = Double.parseDouble(args[0]);
+        double mass = earthWeight/EARTH.surfaceGravity();
+        for (Planet p : Planet.values())
+           System.out.printf("Your weight on %s is %f%n",
+                             p, p.surfaceWeight(mass));
+    }
+}
+-----
+
+=== Singleton
+Singleton 模式描述的是，对于某个特定的类，系统中只能存在其唯一个实例对象的应用
+场景。在引入 `enum` 类型之前，可以存在两种方式实现这个模式，这两种方式都将构造
+方法设计成私有的，通过其它公共成员存取唯一的实例。
+
+第一中方式的公共成员是一个常量域。
+
+[source, java]
+-----
+// Singleton with public final field
+public class Elvis {
+   public static final Elvis INSTANCE = new Elvis();
+   private Elvis() { ... }
+   public void leaveTheBuilding() { ... }
+}
+-----
+
+第二种方法的公共成员是一个静态公共工厂方法。
+
+[source, java]
+-----
+// Singleton with static factory
+public class Elvis {
+   private static final Elvis INSTANCE = new Elvis();
+   private Elvis() { ... }
+   public static Elvis getInstance() { return INSTANCE; }
+   public void leaveTheBuilding() { ... }
+}
+-----
+
+引入 *enum* 类型以后，可以使用 *enum* 类型简洁地实现，如下
+
+[source, java]
+-----
+// Enum singleton - the preferred approach
+public enum Elvis {
+   INSTANCE;
+   public void leaveTheBuilding() { ... }
+}
+-----
+
+这种方法功能上等同于公共域的方法，但是它更简洁；可以自由进行序列化；避免在
+序列化或者反射机制的情况下进行多实例的创建。这是实现单件模式的最好方法。
+
+// /* static import {{{2 */
+== static import
+
+* 引入规范版本：Java 5
+* 静态引用（static import）允许在使用某个类的静态成员不需要每次都通过该类进行
+  限定，而直接使用该静态成员，就好像这些静态成员是在使用它们的类中定义一样。
+  在Effective Java中，建议使用继承达到该效果。
+* 用法： 
+
+[source, java]
+------
   import static java.lang.Math.PI;
-  或者
-  import static java.lang.Math.*;
+  import static java.lang.Math.*; //引入Math对象的所有静态成员
   
-  如果想使用Math中的静态成员，就不需要通过Math进行限定，而直接使用其静态成员，如
+  //如果想使用Math中的静态成员，就不需要通过Math进行限定，
+  //而直接使用其静态成员，如
   double r = cos(PI * theta);
-  ```
-## interface default and static method
-  * 引入规范版本：Jave 8
-  * 默认方法（**default method**）允许一个接口增加抽象方法而保证向后兼容性。即一个接口增加新的提供默认实现（defualt）方法后，原来实现旧版本接口的实现类不需要重新改写且继承了新接口定义的默认实现
-  * 语法：在方法前使用`default`修饰符
-  * 用例：
-  ```
+------
+
+// /* interface default/static method {{{2 */
+== interface default and static method
+
+* 引入规范版本：Jave 8
+* 默认方法（**default method**）允许一个接口增加抽象方法而保证向后兼容性。
+  即一个接口增加新的提供默认实现（defualt）方法后，原来实现旧版本接口的实现类
+  不需要重新改写且继承了新接口定义的默认实现
+* 语法：在方法前使用`default`修饰符
+* 用例：
+
+[source,java]
+------
   package defaultmethods;
  
   import java.time.*;
@@ -41,5 +230,5 @@
         return ZonedDateTime.of(getLocalDateTime(), getZoneId(zoneString));
     }
   }
-  ```
-  
+------ 
+
