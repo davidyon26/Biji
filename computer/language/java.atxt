@@ -232,3 +232,8 @@ public enum Elvis {
   }
 ------ 
 
+== 参考文献
+[bibliography]
+- [[[1]]]
+  http://www.drdobbs.com/jvm/creating-and-destroying-java-objects-par/208403883?pgno=3[Java
+  Singleton Implementation]
