@@ -1361,6 +1361,7 @@ data.txt~。
 // /* fold定义方法 {{{3 */
 === fold定义方法
 vim提供了六种fold的方法，fold的定义方法通过选项 `foldmethod` 来指定：
+
 manual::
     手工定义方法
 indent::
