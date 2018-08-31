@@ -2370,6 +2370,55 @@ Vim提供了一些被称为 quickfix 命令，调用build工具保存错误输�
 [[Make]]
 === make
 
+[[InteractiveWithShell]]
+== 与Shell互动
+在编辑文本的时候，你可以执行其它Unix命令。存在两种方式与其它命令的交互方式：在
+线或者离线方式。
+
+=== 离线方式（Suspend and Resume）
+离线方式不是官方的叫法。这里所说的离线方式是指首先挂起vim进程，回到shell环境，
+执行需要执行的命令，完成后在回到vim环境。
+
+==== 挂起（suspend）
+像大多数Unix程序一样，Vim程序可以通过 kbd:[CTL+Z] 被挂起。Vim被挂起后，系统将
+工作的环境设成你执行Vim程序前的状态。在这个环境下，你可以执行任何其它的命令。
+
+你也可以使用在Vim环境下使用 `:suspend` 命令挂起Vim
+
+==== 恢复（resume）
+当你执行完命令，或者想回到Vim的环境，你可以使用 `fg` 命令回到原来的Vim环境，这
+个环境和挂起前没有任何改变，你可以无缝地继续原来的编辑工作。
+
+NOTE: 不要忘记使用 `fg` 命令恢复Vim程序，否则你的任何没有保存的修改都将会丢失
+。
+
+=== 在线方式
+如果仅想执行一个简单的shell命令，你可以使用 `:!{command}` 的在线方式。例如，如
+果想知道当前目录下的文件列表，可以行用如下的方式：
+
+    :!ls    'Linux 命令
+    :!dir   'Windows 命令
+
+有下面几种方式：
+
+[cols="m,a"]
+|======
+| command | comments
+
+| :!{program}
+| 执行 {program}
+
+| :r !{program}
+| 执行 {program}，并将其结果插入到当前编辑的文件
+
+| :w !{program}
+| 执行 {program}, 并将当前编辑文本的内容作为 {program} 的输入
+
+| :[range]!{program}
+| 通过 {program} 过滤文本
+
+|======
+
 // /* GUI {{{2 */
 [[GUI]]
 == GUI
