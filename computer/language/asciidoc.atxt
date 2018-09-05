@@ -675,7 +675,6 @@ Java is black.
 标签一行。列表项的正文可以包含一行或者多行文字，也可以是嵌套的列表或者列表段
 落。列表项正文可以与列表标签处于同一行，或者另起一行。可以有选择地进行缩紧。
 ....
-[horizontal]
 周六::
 周日::
   和朋友吃饭
@@ -693,8 +692,44 @@ Java is black.
       做笔记:::
       * 要点：预算
 ....
+
+输出为：
+
+
+周六::
+周日::
+  和朋友吃饭
+
+  到公园去玩
+
+周一:: 上课要带的东西
+  * 语文书
+  * 数学书
+周二::
+  注意事项
+    骑车;;
+      * 带墨镜
+    开会;;
+      做笔记:::
+      * 要点：预算
+
+
 ==== 水平（horizontal）标签列表风格
 可以使用[horizontal]使得列表项正文与列表项标签并排而不是在下面
+
+......
+[horizontal]
+CPU:: The brain of the computer.
+Hard drive:: Permanent storage for operating system and/or user files.
+RAM:: Temporarily stores information the CPU uses during operation.
+......
+
+输出为：
+
+[horizontal]
+CPU:: The brain of the computer.
+Hard drive:: Permanent storage for operating system and/or user files.
+RAM:: Temporarily stores information the CPU uses during operation.
 
 === 问答（Question and Answer）列表
 具有预定义`qanda`风格的标签列表
