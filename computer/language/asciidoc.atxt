@@ -17,10 +17,6 @@ v1.0, 2017-06-15
 一篇 AsciiDoc 文档，可以划分为两种元素：块元素 (block element) 和内嵌元素
 (inline element). 
 
-// /* 块元素 {{{3 */
-=== 块元素 (block element)
-块元素定义为一行或者多行文本, 块元素可以包含在其它块元素内. 存在如下类型的块于
-元素. 
 
 - 头 (Header)
 - 标题 (Title)
@@ -69,15 +65,51 @@ v1.0, 2017-06-15
 // /* 文章结构定义 {{{2 */
 [[DocumentStructure]]
 == 文章结构定义
-从结构上来看，一篇文章通常包括多个<<Section,章节>>（section）。
-文章和每个章节通常都有标题用于分别概要文章和每个章节的内容。另外，
-在第一个章节之前，可能包括<<Preamble,前言>>。
+一篇 AsciiDoc 文档包含一系列<<BlockElement,块元素>>. 它通常开始于文档头
+(Document Header), 然后是<<Preamble,前言>>, 再后是文档的主体 -- 多个<<Section,
+章节>> (section). 其中文档头和序言是可选的.  文章和每个章节通常都有标题用于
+概要文章和每个章节的内容。
+
+// /* 块元素 {{{3 */
+=== 块元素 (block element)
+块元素定义为一行或者多行文本, 块元素可以包含在其它块元素内. 
+
+AsciiDoc 文档的块结构可以非形式的表示如下:
+
+    Document      ::= (Header?,Preamble?,Section*)
+    Header        ::= (Title,(AuthorInfo,RevisionInfo?)?)
+    AuthorInfo    ::= (FirstName,(MiddleName?,LastName)?,EmailAddress?)
+    RevisionInfo  ::= (RevisionNumber?,RevisionDate,RevisionRemark?)
+    Preamble      ::= (SectionBody)
+    Section       ::= (Title,SectionBody?,(Section)*)
+    SectionBody   ::= ((BlockTitle?,Block)|BlockMacro)+
+    Block         ::= (Paragraph|DelimitedBlock|List|Table)
+    List          ::= (BulletedList|NumberedList|LabeledList|CalloutList)
+    BulletedList  ::= (ListItem)+
+    NumberedList  ::= (ListItem)+
+    CalloutList   ::= (ListItem)+
+    LabeledList   ::= (ListEntry)+
+    ListEntry     ::= (ListLabel,ListItem)
+    ListLabel     ::= (ListTerm+)
+    ListItem      ::= (ItemText,(List|ListParagraph|ListContinuation)*)
+
+其中
+
+- 问号? 表示出现0或者1次, 加号+ 表示1或者多次, * 表示0或者多次.
+- 上面所有的块元素都是由行标界符分隔.
+- +BlockID+, +AttributeEntry+ 和 +AttributeList+ 块元素 (没出现在上面的定义中)
+  几乎可以位于文档任何位置.
+- 不同的文档类型和不同的backend可以具有不同的块语法.
+- 下面的元素不能包括空行: Header, Title, Paragraph, ItemText.
+- ListParagraph 是设置了 _listelement_ 选项的 paragraph.
+- ListContinuation 是 列表连续元素.
 
 // /* 文章头（Document Header） {{{3 */
 === 文章头（Document Header）
 一篇文章除了具有一个文章标题（Document title）以外，通常还有其他文章属性
 （Document attribute），如作者，作者联系方式，版本，完成日期等。
-文章标题和文章属性信息组成了文章头，文章头是可选的
+文章标题和文章属性信息组成了文章头，文章头是可选的.
+
 
 // /* 文章标题（Document Title） {{{3 */
 === 文章标题（Document Title）
@@ -1398,5 +1430,11 @@ Pygements是asciidoctor推荐的引擎，因为没有使用。所以详情请参
 // /* 宏 {{{2 */
 [AscMacro]
 == 宏(macro)
+
+[glossary]
+== 术语表
+
+[[BlockElement,Block element]]Block element (块元素) ::
+    块元素是AsciiDoc文档的基本组成部分, 它包括一或者多行整行的正文.
 
 // vim: set syn=asciidoc fdm=marker fdl=1 tw=78 fo=tcqmB:
