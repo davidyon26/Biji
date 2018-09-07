@@ -102,16 +102,25 @@ AsciiDoc 文档的块结构可以非形式的表示如下:
 - 不同的文档类型和不同的backend可以具有不同的块语法.
 - 下面的元素不能包括空行: Header, Title, Paragraph, ItemText.
 - ListParagraph 是设置了 _listelement_ 选项的 paragraph.
-- ListContinuation 是 列表连续元素.
+- ListContinuation 是列表连续元素, 参见<<ListItemContinuation,列表项衔接>>.
 
 // /* 文章头（Document Header） {{{3 */
 === 文章头（Document Header）
-一篇文章除了具有一个文章标题（Document title）以外，通常还有其他文章属性
-（Document attribute），如作者，作者联系方式，版本，完成日期等。
-文章标题和文章属性信息组成了文章头，文章头是可选的.
+文档头 (Header) 包括了文档的元数据, 典型包括标题加上可选的作者和版本信息属性.
+它具有如下的特性:
 
+- 头是可选的, 但是如果存在, 头必须以<<Title,标题>>开始.
+- 可选的, 作者和版本信息紧随头标题之后.
+- 文档头必须使用一个或者多个空白行与文档其它部分分开. 头本身不能包括空白行.
+- 头可以包括注释.
+- 头可以包括<<AttributeEntries,属性条目>>, 典型包括 _doctype_, _lang_,
+  _encoding_, _icons_, _data_uri_, _toc_, _numbered_. 
+- 头属性的值可以被命令行中同名属性的值取代.
+- 如果头包括非UTF-8字符, 那么该编码的说明必须先于头 (或者在文档中或者在命令行
+  )
 
 // /* 文章标题（Document Title） {{{3 */
+[[Title]]
 === 文章标题（Document Title）
 文章的标题定义很简单，它以等号（=）开始，后面至少包括一个空格，然后紧跟文章标
 题。如本文的标题定义如下
@@ -321,6 +330,7 @@ source,music,latex,graphivz。
 正常段落包括一行或多行不包括空行的正文，正常段落的第一行的起始字符不能是
 空白字符。正常式段落具有默认的normal风格。
 
+[[LiteralParagraph]]
 // /* 字面式（literal）段落 {{{3 */
 === 字面式（literal）段落
 字面式段落也称为缩进式（indented）段落，因为段落的一行需要使用一个或者
@@ -704,13 +714,21 @@ Java is black.
 == 列表（lists）
 存在下面几种类型的列表
 
-.列表类型
-- Bulleted lists:
-- Numbered lists:
-- Labelled lists:
-- Callouts lists:
-
-.列表行为
+列表类型::
+  - Bulleted lists:
+  - Numbered lists:
+  - Labelled lists:
+  - Callouts lists:
+列表行为::
+  - 列表项的缩进是可选的, 并不决定列表的嵌套, 但是缩进可以提高AsciiDoc文档
+    可读性, 并且更符合可见即所得.
+  - 仅接着列表项的如果是另一个列表或者<<LiteralParagraph,字面式段落>>, 那么新
+    的列表和<<LiteralParagraph,字面式段落>>将包含在这个列表项中. 如果将其它块
+    元素加入到一个列表项中,需要明确使用<<ListItemContinuation,列表项衔接符>>.
+  - 注释块和注释行块宏元素会结束一个列表. 使用内嵌注释如果想在列表加入注释.
+  - <<IntrinsicAttribute,固有属性>> `listindex` 是当前列表项的索引. 如果这个属
+    性使用在一个列表的范围外, 那么它的值是最近一个列表的列表项的数目. 这对于要
+    想显示一个列表包括多少项是非常有用的.
 
 === 无序列表（Bulledted Lists）
 无序列表起始于单个连字符（dash）-或者一到五个星号，紧接着一些空格，然后是列表项正文
@@ -871,6 +889,7 @@ enrol::
 语法[[[<reference>]]]用于生成一个索引点<reference>, 显示为[taoup]，
 在文档其他地方可以使用\<<taoup>>建立链接
 
+[[ListItemContinuation]]
 === 列表项衔接（List Item Continuation）
 如果列表项后面紧接着其他列表或者字面段落，那么后面的内容将被隐含地作为这个
 列表项的一部分。如果希望将其他块元素加入列表项，则需要明确使用列表衔接
