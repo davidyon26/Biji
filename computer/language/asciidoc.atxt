@@ -10,7 +10,9 @@ v1.0, 2017-06-15
 :source-highlighter: highlightjs
 :highlightjsdir: highlight
 
-本文介绍AsciiDoc的基本用法
+本文介绍AsciiDoc的基本用法. AsciiDoc是一种轻量级的标签语言用于写文档或者Web页.
+当前主要存在两种AsciiDoc解析器, 基于 http://asciidoc.org[Python]的asciidoc 和 基于
+http://asciidoctor.org[Ruby]的asciidoctor. 本文的用法主要是基于asciidoctor.
 
 // /* 术语和概念 {{{2 */
 == 术语和概念
@@ -120,8 +122,8 @@ AsciiDoc 文档的块结构可以非形式的表示如下:
   )
 
 // /* 文章标题（Document Title） {{{3 */
-[[Title]]
-=== 文章标题（Document Title）
+[[DocumentTitle]]
+==== 文章标题（Document Title）
 文章的标题定义很简单，它以等号（=）开始，后面至少包括一个空格，然后紧跟文章标
 题。如本文的标题定义如下
 
@@ -140,7 +142,7 @@ AsciiDoc Guide
 
 // /* 文章属性（Document attribute）{{{3 */
 [[DocuemntAttribute]]
-=== 文章属性（Document attribute）
+==== 文章属性（Document attribute）
 文章属性是AsciiDoc区别于其他标签语言的主要特征。文章属性主要具有如下三个目的：
 
 * 描述文章的基本信息：如作者、版本、创作时间等。这些属性当转换成完整的一篇文章
@@ -184,6 +186,13 @@ AsciiDoc Guide
 * 文章头和文章其他部分必须使用一个或者多个空行分隔；并且文章头内部不能存在空行
 ====
 
+// /* 前言（preamble）{{{2 */
+[[Preamble]]
+== 前言（preamble）
+通常一本书在书名（Document title）和第一章节之间会存在序言，致谢等等部分。
+这部分英文为preamble。这部分可以有多个段落，AsciiDoc会使用特殊的方式对其
+进行处理，如果不存在书名或者文章名，这部分将不作为前言处理。
+
 // /* 章节（section）{{{2 */
 [[Section]]
 == 章节（section）
@@ -195,14 +204,90 @@ AsciiDoc Guide
 === 章节标识（section ID)
 章节标识的目的，主要是为本章节定义一个锚点，以便在文章其他部分可以使用链接的
 形式进行引用。章节标识是可可选的，如果没有定义标识，处理器将会为每个文档和
-章节标题定义生成一个默认的标识，以便可以生成本文章的内容列表。其定义形式为
+章节标题定义生成一个默认的标识，以便可以生成本文章的内容列表。
+
+==== 自动产生ID规则
+如果不定义ID, 自动产生的 ID 依据如下的规则:
+
+- 所有的字符都转换成小写格式
+- 前面增加前缀符, 前缀符由属性 `idprefix` 定义. 默认情况下, 该属性的值是下划
+  线 `_`. 如果不想增加前缀, 将该属性的值设置为空.
+- 字符引用 (character reference) , HTML/XML tags, 和无效的ID字符被去掉
+    ** 有效的ID 字符, 请参考XML规范的
+       https://www.w3.org/TR/REC-xml/#NT-Name[NT-Name]章节
+    ** 在版本1.5.7之前, HTML/XML tags不被去掉, 字符引用和无效的字符会被属性
+    `idseparator` 的值替代, 默认情况是下划线.
+- 空格, 连字符和句号会被属性 `idseparator` 的值替代.
+- 连续的分隔字符将会被合并为一个
+- 如果必要, 会在后面增加数字, 从而使 ID 在文档中是唯一的.
+
+例如, 标题为 _Wiley & Sons, Inc_ 的章节默认情况下将会自动产生 ID
+`_wiley_sons_inc`. 可以使用重定义文档属性值改变自动产生的ID. 如下面的设置将会
+去掉前缀和分隔字符.
+
+  :idprefix:
+  :idseparator:
+
+关闭属性 `:sectids!:` 停止自动产生章节ID. 
+
+==== 自定义标识(ID)
+AsciiDoc 支持自定义ID 以及可选的引用标签 (reference text). 当对ID的引用没有明
+确指明显示正文时, 引用标识被使用. 这对于使用统一的文本链接同一个章节是非常有用
+的.
 
 [source, asciidoc]
 ----
 [[<章节标识>,默认引用标签]] <1>
 ----
-<1> 标识使用两个放括号括起来，标识可以包括字母，数字，下划线和连字符，
+<1> 标签使用两个方括号括起来，标签可以包括字母，数字，下划线和连字符，
     其他字符被被替换为下划线
+
+AsciiDoctor 也支持如下的形式定义ID
+
+[source, asciidoc]
+------
+[#tiger-subspecies, reftext=Tigers] <1>
+=== Subspecies of Tiger
+------
+<1> 可以使用 `reftext` 属性指定默认引用标签; 如果标签中包括空格或者冒号, 必须
+使用引号括起来
+
+==== 多标识(ID) 
+尽管一个章节标题只能有一个主ID. 但是自从AsciiDoctor 1.5.7, 可以使用内嵌锚点
+(inline anchors) 的方式注册附加的锚点. 无论是否自定义主ID, 这个功能都有效.
+
+- 在标题前注册锚点
++
+------
+== [[secondary-id]][[tertiary-id]]Section Title
+------
+
+- 在标题后注册锚点
++ 
+------
+== Section Title[[secondary-id]][[tertiary-id]]
+------
++
+锚点可以位于标题行的任何位置, 这个位置是跳转到的点, 所以最好将锚点放在开头或结
+尾. 开始是推荐的位置.
+
+- 在标题前定义附加锚点并且自定义标识(ID)
++ 
+------
+[#primary-id]
+== [[secondary-id]][[tertiary-id]]Section Title
+------
+
+
+- 在标题中设置自定义ID
++
+也可以将主ID 内嵌到章节标题的后面, 使用一个空格和其它部分分隔开.
++
+------
+== Section Title[[secondary-id]][[tertiary-id]] [[primary-id]]
+------
++
+这种内嵌主标识(ID)的方式是不推荐的, 因为这个方式不易读.
 
 // /* 章节标题（section Title） {{{3 */
 章节标题（section Title）
@@ -252,12 +337,97 @@ AsciiDoc Guide
 章节的格式可以通过属性进行修改，请参考<<AdvanceSection, 章节进阶>>获知如何
 定制章节的显示
 
-// /* 前言（preamble）{{{2 */
-[[Preamble]]
-== 前言（preamble）
-通常一本书在书名（Document title）和第一章节之间会存在序言，致谢等等部分。
-这部分英文为preamble。这部分可以有多个段落，AsciiDoc会使用特殊的方式对其
-进行处理，如果不存在书名或者文章名，这部分将不作为前言处理。
+// /* 浮标题 {{{3 */
+[[FloatTitle]]
+=== 浮标题 (float title)
+如果标题的第一个位置属性或者 _style_ 属性是 _float_, 那么该标题是浮标题. 在
+AsciiDoctor中也称为离散标题 (discrete heading), 并且第一个位置参数可以是值
+_discrete_.
+
+浮标题和常规的章节标题一样被渲染, 但是它不包含内容, 不列入章节层次的排列, 前面
+没有序号, 不会出现在内容表中. 但是它仍然会自动产生 ID, 能够被索引.
+
+和常规章节标题一样, 浮标题可以有1-6个层次.
+
+----
+****  <1>
+Discrete headings are useful for making headings inside of other blocks, like this sidebar.
+
+[discrete]  <2>
+== Discrete Heading <3>
+
+Discrete headings can be used where sections are not permitted.
+****
+----
+<1> 分隔行指示一个 sidebar 块的开始.
+<2> 在章节标题上定义 `discrete` 属性表明其是浮标题.
+<3> 浮标题可以像正规标题一样具有1-6个级别.
+
+显示为
+
+****
+Discrete headings are useful for making headings inside of other blocks, like this sidebar.
+
+[discrete]
+== Discrete Heading
+
+Discrete headings can be used where sections are not permitted.
+****
+
+// /* 章节属性 {{{3 */
+=== 章节属性
+AsciiDoctor 还提供了下面的属性用于改变章节标题的行为:
+
+sectlinks::
+    设置该属性, 会将章节的标题转变成链接. 点击标题会将该章节置顶. 默认情况下,
+    AsciiDoctor使用相同的颜色和风格显示加链接的标题和未加链接的标题.
+sectanchors::
+    设置该属性, 会在章节标题的前面增加一个锚点. 默认情况下, AsciiDoctor会使用
+    符号 $ 标识这个锚点, 并在鼠标位于标题时在标题的左侧显示这个符号.
+sectnums::
+    章节的编号可以在整个文档中随时打开和关闭. 可以使用 `:sectnums:` 打开章节编
+    号 , 而使用 `:sectnum!:` 关闭章节编号. 可以将这个属性条目放在任何章节标题
+    的上面, 用于打开和关闭章节编号.
++
+TIP: 为了保持与 AsciiDoc Python 的兼容性. AsciiDoctor 仍然支持属性名
+`numbered` 用于对章节编号的开关. 但是最好使用 `sectnums`.
+sectnumlevels::
+    可以使用__文档属性条目__ `sectnumlevels` 限制章节编号的深度. 将该属性的值
+    设置成0 等同于关闭该属性 `:sectnumlevels!:`.
++
+------
+:sectnumlevels: 2 <1>
+------
+<1> 当 `sectnumlevels` 属性的值设置成 `2`. 章节深度为3-5的标题将不会被编号. 也
+就是说不会在标题的前面加上表征章节编号的数字. 
+
+// /* 章节风格 {{{3 */
+=== 章节风格 (Section Styles)
+Asciidoctor 提供了除了正文章节以外的其它风格的章节, 它们在期刊文章, 学术论文和
+书中经常看到. 它们是:
+
+- 版权页 (colophon)
+- 摘要 (abstrac)
+- 前言 (preface)
+- 献词 (dedication)
+- 部分引言 (part introduction)
+- 附录 (appendix)
+- 术语表 (glossary)
+- 参考文献 (bibliography)
+- 索引 (index)
+
+这些风格适用于文章 (article) 和书 (book) 文档类型. 部分引言专门是针对书的.
+
+通常, 这些风格适用于Level 1的章节标题和块. 例如, 下面的是摘要章节的写法.
+
+------
+[abstract]
+== Documentation Abstract
+
+Documentation is a distillation of many long, squiggly adventures.
+------
+
+每个风格的结构和用法参见<<StructuringNavigatingReferencing, 文档附加结构>>
 
 // /* 章节内容（Section Body）{{{2 */
 [[SectionBody]]
@@ -1445,6 +1615,64 @@ Pygements是asciidoctor推荐的引擎，因为没有使用。所以详情请参
 // /* 章节进阶篇 {{{2 */
 [[AdvanceSection]]
 == 章节进阶篇
+
+// /* 文档属性 {{{2 */
+[[Attributes]]
+== 文档属性(Document Attributes)
+文档属性由 _名_ 和 _值_ 组成. 它主要用于在 AsciiDoc 文档和配置文件中进行文本替
+换. 对一个属性的引用 (将一个属性名用花括号括起来) 将被相应的属性值取代. 属性名
+是大小写不敏感的, 只能使用字母 (a-z,A-Z), 数字 (0-9), 下划线 (_), 连字符 (-).
+
+在如下四个地方可以定义属性, 优先级从高到低:
+
+- 命令行 (Command-line) 属性.
+- 属性条目 (AttributeEntry), 属性列表 (AttributeList), 宏 和 块标识 (BlockId)
+  元素.
+- 配置文件 +[attributes]+ 段
+- 固有属性 (Intrinsic attributes)
+
+上面的每个部分, 最后处理的优先级最高.
+
+// /* 属性条目 {{{3 */
+=== 属性条目 (AttributeEntry)
+属性条目块元素允许在 AsciiDoc 文档中对属性进行赋值. 属性条目被加到全局的文档属
+性字典中. 一个属性条目是单行的名值对, 语法如下:
+
+  :<name>: <value>
+
+例如:
+
+  :Author Initials: JB
+
+这将在当前的文档定义个一个属性 +authorinitials+ , 其属性引用
++{authorinitials}+ 的值是 _JB_.
+
+要删除一个属性,或者说取消一个属性的定义, 使用下名的语法:
+
+ :<name>!:
+
+==== 属性条目的行为
+
+- 一个属性条目行必须以冒号开始 -- 前面不允许包括空白符号.
+- AsciiDoc 解析器会将 +<name>+ 转换为合法的属性名 -- 小写的字母, 数字, 连字符,
+  下划线 -- 所有的其它字符将被删除. 这能够在文档中使用更加易读的方式定义属性名
+  .
+- 属性值 <value> 两边的空白字符会被删除.
+- 如果行的结尾包括一个空格然后是一个加号, 那么它会延续到下一行, 例如:
++
+------
+:description: AsciiDoc is a text document format for writing notes, +
+              documentation, articles, books, slideshows, web pages +
+              and man pages.
+------
+- 如果 +<value>+ 是空白, 那么相应的属性值被设置成空字符串
+- 如果 +<value>+ 中包括属性引用, 该引用会被相应的值替代.
+- 默认情况下, +<value>+ 中的特殊字符和属性引用将会被替代, 如果不想替代需要使用
+  inline macro 语法.
+- 文档头中的属性条目会进行相应的头标签模版替代 (header markup template
+  substitution).
+- 文档中定义的属性元素会覆盖配置文件和内置属性定义, 但是不能覆盖命令行中的属性
+  定义. 也就是说命令行中的属性定义会覆盖文档中相应的属性定义.
 
 // /* 宏 {{{2 */
 [AscMacro]
