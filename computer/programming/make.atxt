@@ -1,0 +1,21 @@
+// /* make 简介 {{{1 */
+= make 简介
+David Yon <davidyon@hotmail.com>
+v1.0, 2018-09-11
+:toc: right
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+:sectanchors:
+
+// /* 参考文献 {{{2 */
+[bibliography]
+== 参考文献
+
+- [[[1]]] https://blog.csdn.net/cnsword/article/details/7542696[cmake与
+  autoconf+automake的对比]
+- [[[2]]] https://blog.csdn.net/dc_726/article/details/48978849[C实战：项目构
+  建Make, Automake，CMake]
+
