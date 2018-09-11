@@ -8,22 +8,21 @@ v1.0, 2017-08-03
 :source-highlighter: highlightjs
 :highlightjsdir: highlight
 :experimental:
+:sectanchors:
+:sectnumlevels: 5
 
 // /* 术语 {{{2 */
 == 术语
 
-[glossary]
-[[word,word]]
-word::
+[horizontal]
+[[word,word]]word::
     在VIM中, 一个 _word_ 是通常是由字母, 数字或者下划线组成的字符串. _word_ 可
     以由选项 `iskeyword` 进行重新定义, 因此不同的文件类型, _word_ 的定义可能不
     同. 一个空行也被看作一个 _word_.  
-[[WORD,WORD]]
-WORD::
+[[WORD,WORD]]WORD::
     在VIM中, 一个 _WORD_ 是由空白符(space, Tab, NL)分隔的一串非空白字符.
     _WORD_ 不能被重新定义. 一个空行也被看作一个 _WORD_.
-[[sentence,sentence]]
-sentence::
+[[sentence,sentence]]sentence::
     在VIM中, _sentence_ 以 `.`, `!` 或者 `?` 结尾, 后面跟着换行符,空格或者Tab
     字符. 在结束符和空白符之间可以包括任何数目的 `)`, `]`, `"` 以及 `'` 字符.
     _paragraph_ 和 _section_ 边界符也是 _sentence_ 的边界符. +
@@ -246,10 +245,10 @@ iii) 敲入可视命令. 这个命名将作用在被高亮标示的选择区域.
 [cols="1m, 5a"]
 |===
 | 动作  | 简介
-| aw    | 选择一个光标所在位置的 <<word>> 并且包括分隔符. 
-| iw    | 选择一个光标所在位置的 <<word>> 并且不包括分隔符. 
-| aW    | 选择一个光标所在位置的 <<WORD>> 并且包括分隔符. 
-| iW    | 选择一个光标所在位置的 <<WORD>> 并且不包括分隔符. 
+| aw    | 选择一个光标所在位置的 <<word,word>> 并且包括分隔符. 
+| iw    | 选择一个光标所在位置的 <<word,word>> 并且不包括分隔符. 
+| aW    | 选择一个光标所在位置的 <<WORD,WORD>> 并且包括分隔符. 
+| iW    | 选择一个光标所在位置的 <<WORD,WORD>> 并且不包括分隔符. 
 | as    |
 |===
 
