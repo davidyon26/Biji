@@ -26,7 +26,7 @@ WORD::
 sentence::
     在VIM中, _sentence_ 以 `.`, `!` 或者 `?` 结尾, 后面跟着换行符,空格或者Tab
     字符. 在结束符和空白符之间可以包括任何数目的 `)`, `]`, `"` 以及 `'` 字符.
-      _paragraph_ 和 _section_ 边界符也是 _sentence_ 的边界符. +
+    _paragraph_ 和 _section_ 边界符也是 _sentence_ 的边界符. +
     _sentence_ 不能被重新定义.
 
 // /* 模式（mode）{{{2 */
