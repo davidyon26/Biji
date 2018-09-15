@@ -5,6 +5,7 @@ AsciiDoc Guide
 David Yon <davidyon@hotmail.com>
 v1.0, 2017-06-15
 :toc: right
+:toc-title: 目录
 :numbered:
 :icons: font
 :source-highlighter: highlightjs
@@ -415,6 +416,7 @@ Asciidoctor 提供了除了正文章节以外的其它风格的章节, 它们在
 - 术语表 (glossary)
 - 参考文献 (bibliography)
 - 索引 (index)
+- 目录
 
 这些风格适用于文章 (article) 和书 (book) 文档类型. 部分引言专门是针对书的.
 
@@ -427,7 +429,7 @@ Asciidoctor 提供了除了正文章节以外的其它风格的章节, 它们在
 Documentation is a distillation of many long, squiggly adventures.
 ------
 
-每个风格的结构和用法参见<<StructuringNavigatingReferencing, 文档附加结构>>
+每个风格的结构和用法参见<<ExtraStructure, 文档附加结构>>
 
 // /* 章节内容（Section Body）{{{2 */
 [[SectionBody]]
@@ -1678,6 +1680,158 @@ Pygements是asciidoctor推荐的引擎，因为没有使用。所以详情请参
 [AscMacro]
 == 宏(macro)
 
+// /* 文档附属结构 {{{2 */
+
+[[ExtraStructure]]
+== 文档附属结构
+本章介绍正文以外的其它附属结构.
+
+// /* 目录 {{{3 */
+[[TOC]]
+=== 目录 (Table of Contents)
+目录包括一篇文档或一部书的章节 (Section) 或者子章节. 它能够由AsciiDoc的解析器
+根据文档内容自动产生. 
+
+要自动产生目录, 需要设置 `toc` 属性. 这个属性可以通过命令行或者在文档头中指定.
+
+- 命令行设置TOC属性:
++
+    $asciidoctor -a toc adventure.adoc
+
+- 文档头中设置TOC属性: 
++
+------
+    = 文档标题 
+    David Yon
+    :toc:
+
+    == 第一章
+------
+
+TIP: AsciiDoctor 允许设置目录的布局, 位置和标题. 但不是所有的定制都适用于任何
+目标文件类型. 详细的定制参见<<TOCAttributes, 目录属性>>.
+
+// /* 目录位置 {{{3 */
+=== 目录位置
+可以通过设置 `toc` 属性的值来决定目录在文档的位置. `toc` 可以设置为: _auto_,
+_preamble_, _macro_, _right_, _left_. 其中前三个是将目录放在文档之中, 后两个使
+用于 HTML 的输出, 将标题放在右边框或者左边框. 当将AsciiDoc文档转换成嵌入式HTML
+时, `toc` 属性的值也只能是前三种, 而不能是 _left_ 和 _right_.
+
+auto::
+    如果未指定 `toc` 的值或者将其设置为 _auto_, 那么目录直接放在文档头下面, 也
+    就是标题,作者和版本行的下面.
+preamble::
+    目录直接放在序言 (preamble) 下面.
++
+WARNING: 如果文档不存在序言, 那么目录不会显示. 这时可以将 `toc` 的值设置成
+_auto_ 或者 不设置.
+macro::
+    目录可以放到文档的任何位置. 同时需要将 toc 块宏 ( `toc::[]` ) 放到文档中希
+    望看到目录的地方. toc 宏在文档中至多出现一次. 如果 `toc` 的值不是 _macro_,
+    那么文档中出现的 toc 宏将被忽略.
++
+------
+= AsciiDoc 指南
+David Yon
+:toc: macro  <1>
+
+序言部分
+
+== 文档的结构
+
+toc::[] <2>
+
+文档包括....
+------
+<1> `toc` 属性设置成 _macro_ 以便能够将目录放到文档中任何位置.
+<2> 在该例中, 目录放到第一章标题的下面, toc 块宏指定了目录存放的位置.
++
+结果如下图: 
++
+image::image/tocmacro.png[alt=":toc:macro 文档任何位置"]
+
+leaf right::
+    这两个值只适合于将AsciiDoc转换成HTML格式. 这两个值分别将目录放在文档正文的
+    左边和右边. 目录的宽度是固定的, 并且包括滚卷条.
++
+------
+= AsciiDoc 指南
+David Yon
+:toc: left
+
+序言部分
+
+== 文档的结构
+文档包括....
+------
++
+结果如下图:  
++
+image::image/tocleft.png[alt=":toc:left 文档左边框"]
+
+=== 目录标题
+在默认情况下, 目录的标题是英文 `Table of Content`, 可以使用 `toc-title` 属性重
+新定义目录的标题. 如下面定义将目录的标题定义为中文的 目录.
+
+----
+= AsciiDoc 指南
+David Yon
+:toc: left
+
+序言部分
+
+== 文档的结构
+文档包括....
+----
+
+=== 目录层次
+在默认情况下, 目录的显示层次的第一级标题和第二级标题, 可以通过属性 `toclevels`
+重新定义目录显示标题的层次. 如下面的定义显示4级目录结构.
+
+----
+= AsciiDoc 指南
+David Yon
+:toc: left
+:toclevel: 4
+
+序言部分
+
+== 文档的结构
+文档包括....
+----
+
+=== 目录属性总结
+
+.目录属性及其取值约束
+[cols=“1m,2m,2m,4m,1m"]
+|===
+s| 属性 s| 值 s| 例 s| 注释 s| 目标文档类型
+
+.4+|toc   
+| auto, leaft, right, macro, preamble 
+| :toc: leaft
+| 默认不设置, 即不建目录. 如果设置但是没设置, 使用 _auto_
+| html
+| auto, macro, preamble
+| :toc: macro
+| 默认不设置, 即不建目录. 如果设置但是没设置, 使用 _auto_
+| 嵌入(embeddable)html
+| auto
+| :toc:
+| 默认不设置, 即不建目录. 目录在文档标题页的后面
+| pdf
+| auto
+| :toc:
+| 默认不设置, 即不建目录. 目录的位置和风格由DocBook的工具链配置决定
+| docbook
+
+| toclevels | 1-5 | :toclevels: 4 | 默认值是2. | html, pdf
+| toc-title | <text> | :toc-title: Contents | 默认值是 _Table of Contents_ 
+| html, pdf
+|===
+
+// /* 术语表 {{{2 */
 [glossary]
 == 术语表
 
