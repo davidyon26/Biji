@@ -9,6 +9,12 @@ v1.0, 2017-11-03
 :highlightjsdir: highlight
 :experimental:
 
+// /* Python v3 & v2 {{{2 */
+== V3 & V2
+版本3 和版本2 的主要区别在于
+
+- Python v3 是基于Unicode的, 而 Python v2 是基于ASCII. 
+
 // /* Comment {{{2 */
 == Comment
  注释可以是单独一行, 或者前面带有空格或代码，但是字符串文本中的#不作为注释行
@@ -22,18 +28,68 @@ spam = 1  # and this is the second comment
 text = "# This is not a comment because it's inside quotes."
 ----
 
+// /* 变量和数据类型 {{{2 */
+== 变量和数据类型
+
+=== 变量
+
+- 命名: [a-zA-Z_][a-zA-Z_0-9]* +
+    ** 首字符是字母下划线, 小写或者大写阿拉伯字母. 
+    ** 数字不能作为第一个字符.
+    ** 后面的字符可以是大小写字母, 数字或者下滑线.
+- 关键字不能用于变量名: +
+    使用命令 `print(keyword.kwlist)` 可以打印所有关键字. 其中 _keyword_ 是
+    python标准模块名. 
+- 变量先赋值再使用, 变量的类型由所赋值决定
+    ** 只有当对一个变量赋值的时候, 这个变量才被创建并赋予相应的数据类型.
+    ** 变量的值和类型可能由于被重新赋值而发生改变.
+- 可以使用标准内建函数 _print_, _type_ 打印一个变量所属的类型.
+- 可以使用标准内建函数 _int_, _float_ 等对一个变量值的数据类型进行转换.
+
 // /* Number {{{2 */
 == Number
 
+=== 类型
+
 [cols="1,2,7a"]
+. 相关数据类型
 |===
 | type | syntax | comment
 
 | int | |
-| float | |
+| float | 
+| CPU在转换浮点类型时存在精度的问题, 会出现 5.2*9 =
+46.800000000000004的情况.
 | Decimal | |
 | Fraction | |
 | complex number | | 
+|===
+
+=== 算术运算
+. Python 数学算术运算
+[cols="1m,4a"]
+|===
+| Operator | Description
+
+| +     | Addition
+| -     | Subtraction
+| *     | Multiplication
+| /     
+| Division +
+NOTE: 作为 Python v3.2 的新特征, Python会自动将除法运算的值转换成浮点类型, 尽
+管可能两个操作数都是整型.
+| %     | Modulus
+| //    | Floor Division
+| **    | Exponentiation
+| &     | Binary AND
+| \|    | Binary OR
+| ^     | Binary XOR
+| ~     | Binary ones complement
+| <<    | Binary left shift
+| >>    | Binary right shift
+| and   | Logical AND
+| or    | Logical OR
+| not   | Loginal NOT
 |===
 
 // /* String {{{2 */
@@ -44,9 +100,9 @@ text = "# This is not a comment because it's inside quotes."
   `'''...'''` +
   `"""..."""`
 
-转义::
+=== 转义
 使用转义字符 `\` 对一些特殊字符进行转义，如引号，换行符
-+
+
 [source,python]
 ------
 >>> '"Isn\'t," she said.'
@@ -57,7 +113,11 @@ text = "# This is not a comment because it's inside quotes."
 <1> 如果不是用print函数， \' 原封不动的包含在输出中
 <2> 使用 print(),  援引字符字符，如\' 或者 \n被解释
 
-raw string::
+Unicode字符转义::
+    Python 3支持使用 `\u####` (####是四个十六进制字符) 的转移序列表示任何
+    unicode 字符.
+
+=== raw string
 在第一个引号前增加 `r` 字符串. 对于原生字符串中的转义字符不被解释。每行的换行
 符在输出中保留，如果希望两行输出为一行，被续行的那行字符串需要以 `\` 结尾。 
 +
@@ -70,14 +130,14 @@ ame
 C:\some\name
 ----
 
-跨多行::
+=== 跨多行
 使用 ''' or """ 能够使用一个字符串跨多行。每行的换行符在输出中保留，如果希望
 两行输出为一行，被续行的那行字符串需要以 `\` 结尾。
 +
 [source,python]
 ----
-print("""\
-... Usage: thingy [OPTIONS]
+print("""Usage: \
+... thingy [OPTIONS]
 ...     -h                        Display this usage message
 ...     -H hostname               Hostname to connect to
 ... """)
@@ -88,6 +148,8 @@ Usage: thingy [OPTIONS]
 >>>
 ----
 
+=== 字符串衔接 (String concatenation)
+如果要显示的字符串比较长
 == List
 
 === methods
@@ -260,7 +322,19 @@ comprehension.
 NOTE: 我们应该尽可能使用内置函数做复杂的运算。 `zip` 函数对于上述运算提供了有
 力的支持。
 
+// /* 集成开发环境  {{{2 */
+== 集成开发环境 (IDE)
 
+=== IDLE
+IDLE是纯python开发的集成开发环境, 它具有如下的功能
+
+- 基于菜单的开发环境, 每个菜单选项有匹配的快捷键
+- 基本的文本编辑功能
+- code completion
+- 语法检查
+- 高亮显示
+- 支持缩紧
+- 支持调试
 
 // /* Python 包管理工具 {{{2 */
 == Python 包管理工具
@@ -270,7 +344,7 @@ PyPI 的全称是 Python Package Index, 是存放 Python 包的软件库，其�
 <<1>> 。这个库中的软件包可以通过 pip python 命令进行安装，截至2017/12/14日，该
 库中已经存放124246个软件包。
 
-==== pip
+=== pip
 
 
 // /* 参考文献 {{{2 */
