@@ -28,7 +28,8 @@ v1.0, 2017-08-03
     字符. 在结束符和空白符之间可以包括任何数目的 `)`, `]`, `"` 以及 `'` 字符.
     _paragraph_ 和 _section_ 边界符也是 _sentence_ 的边界符. +
     _sentence_ 不能被重新定义.
-
+[[paragraph,paragraph]]paragraph::
+    
 // /* 模式（mode）{{{2 */
 == 模式（mode）
 Vim是基于模式的编辑器，在不同的模式下，相同的输入会存在不同的含义。两个最常用的
@@ -250,7 +251,11 @@ iii) 敲入可视命令. 这个命名将作用在被高亮标示的选择区域.
 | iw    | 选择一个光标所在位置的 <<word,word>> 并且不包括分隔符. 
 | aW    | 选择一个光标所在位置的 <<WORD,WORD>> 并且包括分隔符. 
 | iW    | 选择一个光标所在位置的 <<WORD,WORD>> 并且不包括分隔符. 
-| as    |
+| as    | 选择一个光标所在位置的 <<sentence,sentence>> 并且包括分隔符. 
+| is    | 选择一个光标所在位置的 <<sentence,sentence>> 并且不包括分隔符. 
+| ap    | 选择一个光标所在位置的 <<paragraph,paragraph>> 并且包括分隔符. 
+| ip    | 选择一个光标所在位置的 <<paragraph,paragraph>> 并且不包括分隔符. 
+
 |===
 
 ==== 可视操作
