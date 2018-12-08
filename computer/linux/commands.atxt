@@ -34,6 +34,22 @@ tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN 580/r
 <1> t 表示tcp；u 表示udp；l 表是正在监听的；p 建立该连接的进程号/程序名；n以数
 字形式显示IP address和端口号
 
+
+=== iperf/iperf3
+测量网络带宽的程序. iperf3 是对 iperf 的重新实现, 并且不向前兼容. 使用起来特别
+方便. 支持Linux, Windows 和 MacOS主要平台. 用法:
+
+在一台机器作为server端执行如下:
+
+    iperf3 -s 
+
+在另一台机器上作为client端执行如下:
+
+    iperf3 -c 172.16.1.50 -t 5
+
+上面的IP地址是第一台作为服务器的机器的地址,  `-t 5` 表示执行5s
+
+
 === mount
 mount 远程的SAMBA（CIFS）共享文件目录
 
