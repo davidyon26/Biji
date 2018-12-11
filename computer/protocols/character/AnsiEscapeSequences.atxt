@@ -38,7 +38,7 @@ escape sequence）控制光标显示在屏幕的任何位置（以x,y坐标系�
 Unix和AmigaOS支持ANSI，这导致运行在这些操作系统的程序的广泛使用ANSI。在Unix-like
 操作系统上，许多软件能够通过诸如termcap和curses库产生ANSI控制字符去更新文本在
 终端上的显示。虽然这些库被设计为也支持非ANSI终端，但是几乎没有被测试。许多游戏
-和shell脚本可能会直接输出ANSI序列，但是这些脚步不能工作在不解释ANSI序列的终端
+和shell脚本可能会直接输出ANSI序列，但是这些脚本不能工作在不解释ANSI序列的终端
 上。
 
 MS-DOS 1.x 不支持ANSI或者其它escape sequences。仅仅在BIOS层面上支持几个控制字符（如BEL，CR
@@ -93,4 +93,5 @@ Control Sequence Introducer），引入一串控制字符。在下节详细介�
   Sequences]
 - [[[7]]] https://en.wikipedia.org/wiki/C0_and_C1_control_codes[C1 control
   codes]
+- [[[8]]] http://ascii-table.com/control-chars.php[C0 Control codes]
   
