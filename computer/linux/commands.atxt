@@ -354,6 +354,9 @@ Commands>>
 === ffmpeg
 视频和音频转换程序
 
+=== mediainfo
+显示音频/视频文件的信息
+
 == 磁盘
 === fdisk
 分区工具
