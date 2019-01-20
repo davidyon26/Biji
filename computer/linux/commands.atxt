@@ -352,7 +352,20 @@ Commands>>
 === pacmd
 
 === ffmpeg
-视频和音频转换程序
+视频和音频转换程序. 关于ffmpeg的详细介绍参见
+https://ffmpeg.org/documentation.html[ffmpeg Documentation].
+
+* ffmpeg -i fileName +
+    显示filenName文件的多媒体信息，包括视频和音频的编码方式
+
+* ffmpeg -i fileName -vcodec libx264 -acodec aac -f mp4 ${fileName.*}.mp4 +
+    将fineName转换成H264和AAC编码的mp4文件. 我们可以使用 CRF （Constant Rate
+    Factor）控制H264编码输出视频质量。默认值是23，当设置为0时可以无损编码，当
+    设置为17-18时，可以达到视觉上的无损转换。详见 
+    https://trac.ffmpeg.org/wiki/Encode/H.264[H.264 Video Encoding Guide ]
+
+* ffmpeg -i movie.mpg movie%d.jpg +
+    将movie.mpg转化成一张一张的图片
 
 === mediainfo
 显示音频/视频文件的信息
