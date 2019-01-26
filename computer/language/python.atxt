@@ -9,6 +9,8 @@ v1.0, 2017-11-03
 :highlightjsdir: highlight
 :experimental:
 
+更详尽的内容请参考<<5,Python Tuturial>>
+
 // /* Python v3 & v2 {{{2 */
 == V3 & V2
 版本3 和版本2 的主要区别在于
@@ -46,7 +48,21 @@ text = "# This is not a comment because it's inside quotes."
 - 可以使用标准内建函数 _print_, _type_ 打印一个变量所属的类型.
 - 可以使用标准内建函数 _int_, _float_ 等对一个变量值的数据类型进行转换.
 
+
+=== 数据类型
+Python 主要包括下面数据类型：
+
+. Booleans
+. <<DataType_Number,Numbers>>
+. <<DataType_String,Strings>>
+. Bytes
+. <<DataType_List,Lists>>
+. Tuples
+. Sets
+. Dictionaries
+
 // /* Number {{{2 */
+[[DataType_Number]]
 == Number
 
 === 类型
@@ -93,7 +109,14 @@ NOTE: 作为 Python v3.2 的新特征, Python会自动将除法运算的值转�
 |===
 
 // /* String {{{2 */
+[[DataType_String]]
 == String 
+在 Python 中由单引号或者双引号扩起来的一个或者多个字符被解析为String（字符串）
+。Python也支持多行字符串，这时需要使用三个单引号后者双引号扩起来。
+
+在 Python 2 中，字符默认的是ASCII而不是Unicode，在后续版本中支持Unicode。而在
+Python 3 中，所有的字符都是Unicode
+
 语法:: 
  `'...'` +
   `"..."`  + 
@@ -150,6 +173,9 @@ Usage: thingy [OPTIONS]
 
 === 字符串衔接 (String concatenation)
 如果要显示的字符串比较长
+
+// /* List {{{2 */
+[[DataType_List]]
 == List
 
 === methods
@@ -322,8 +348,41 @@ comprehension.
 NOTE: 我们应该尽可能使用内置函数做复杂的运算。 `zip` 函数对于上述运算提供了有
 力的支持。
 
-// /* 集成开发环境  {{{2 */
-== 集成开发环境 (IDE)
+// /* Tool for Python {{{2 */
+== Python 工具集
+这章主要介绍使用Python用的主要工具
+
+[cols="1,4a,4a"]
+.Python 工具集
+|=====
+| 用途  | 工具 | 实例
+
+| Web应用
+| Django, Flask, CherryPy and Bottle
+| Plone (Content Management System), Zope application server, Quixote web
+  framework and ERP5
+
+| 科学和数字计算
+| 模块 NumPy, SciPy, Pandas, matplotlib and IPython
+| 
+
+| GUI
+| wxWidgets, pyqt and pyside
+| Inkscape, Scribus, Paint Shop Pro and GIMP. 甚至3D软件如 3ds Max, Blender,
+  Cinema 4D, Houdini and Maya
+
+| 原型开发
+| Pygame（多媒体库）
+|
+
+| 调试
+| pdb，pudb，PyDebug
+|
+
+| IDE
+| IDLE，默认的IDE，集成在Python包中；PyCharm，Eclipse with PyDev
+|
+|=====
 
 === IDLE
 IDLE是纯python开发的集成开发环境, 它具有如下的功能
@@ -347,12 +406,14 @@ PyPI 的全称是 Python Package Index, 是存放 Python 包的软件库，其�
 === pip
 
 
-// /* 参考文献 {{{2 */
 [bibliography]
+// /* 参考文献 {{{2 */
 == 参考文献
 
 - [[[1]]] https://pypi.python.org/pypi[Pypi -the Python Package Index]
 - [[[2]]] https://docs.python.org/3/tutorial/index.html[The Python Tutorial]
 - [[[3]]] https://docs.python.org/3/[Python 3 documentation]
 - [[[4]]] https://docs.python.org/3/reference/index.html[The Python Language
-  Reference]]
+  Reference]
+- [[[5]]] https://www.techbeamers.com/python-tutorial-step-by-step[Python
+  Tutorial - Learn Python Programming Step By Step]
