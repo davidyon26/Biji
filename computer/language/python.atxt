@@ -348,6 +348,38 @@ comprehension.
 NOTE: 我们应该尽可能使用内置函数做复杂的运算。 `zip` 函数对于上述运算提供了有
 力的支持。
 
+// /* Exception {{{2 */
+[[Exception]]
+== 异常处理
+Python 也如Java语言一样提供异常处理机制用于截获期望或者不期望的错误，然后对其
+进行处理。
+
+=== 语法
+Python 使用如下形式的语法
+
+[source, python]
+------
+try:
+    # code
+except [(Exception1, Exception2)] [as ex]: <1> <2> <3>
+    # code
+    raise [ex]      <4>
+else: <5>
+    # code
+finally: <6>
+    # code
+------
+<1> except 可以捕获一种或者多种异常，如果没有指定任何异常，形如 `except:` 讲捕
+获所有类型的异常.
+<2> 如果捕获两种或多种异常，需要使用（）将其扩起来并用逗号分隔. 这些异常可以分
+成多个 `except` 语句单独处理。
+<3> 可以使用 as 语句将其赋值一个变量，并在except 块中使用这个变量
+<4> 在 except 块中可以 `raise` 语句抛出异常，如果没有参数，抛出被捕获的异常
+<5> 可选择的，可以使用 `else` 语句定义没有发生错误时应该执行的操作
+<6> 可选择的，可以使用 `finally` 语句定义无论是否发生异常都需要进行的操作。通
+常时做清理工作。
+
+
 // /* Tool for Python {{{2 */
 == Python 工具集
 这章主要介绍使用Python用的主要工具
