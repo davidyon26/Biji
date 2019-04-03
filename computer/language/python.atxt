@@ -348,6 +348,31 @@ comprehension.
 NOTE: 我们应该尽可能使用内置函数做复杂的运算。 `zip` 函数对于上述运算提供了有
 力的支持。
 
+// /* Tuple {{{2 */
+[[DataType_Tuple]]
+== 元组（Tuple）
+在Python语言中，一个元组是各类Python对象的集合，这些对象使用逗号进行分隔。
+元组和列表很相似，它们都具有如下的特征：
+
+* 它们都是有序的序列；
+* 它们能够被索引和重复（repetition）；
+* 允许嵌套
+* 它们能够存放不同类型的值
+
+=== 语法
+一个元组使用（）进行界定，它的元素使用逗号进行分隔；
+
+一个元组::
++
+[source,python]
+----
+    # Defining a tuple without any element
+    pure_tuple = ()
+    print (pure_tuple)
+
+    # Output- ()
+----
+
 // /* Exception {{{2 */
 [[Exception]]
 == 异常处理
