@@ -8,6 +8,7 @@ v1.0, 2017-07-11
 :highlightjsdir: highlight
 :experimental:
 
+// /* 定义 {{{2 */
 == 定义
 [glossary]
 空白（blank）::
@@ -31,9 +32,11 @@ v1.0, 2017-07-11
   `!` `case` `coproc` `do` `done` `elif` `else` `esac` `fi` `for` `function` 
   `if` `in` `select` `then` `until` `while` `{` `}` `time` `[[` `]]`
 
+// /* 启动过程 {{{2 */
 == 启动过程
 使用不同的选项调用 `bash` 可以带来不同的行为，决定了不同类型的shell。
 
+// /* 语言结构 {{{2 */
 == 语言结构
 
 === 简单命令（Simple Commands）
@@ -72,12 +75,15 @@ Shell 变量 `TIMEFORMAT` 定义. 在 posix 模式下, `time` 后面可以使用
 
 管道命令中的每条命令都在 subshell 中以独立的进程执行.
 
+// /* 命令组 {{{2 */
 == list
 一个 list 命令由一系列管道命令组成,这些管道命令以控制操作符 `;` `&` `&&` `||`
 进行分隔,以 `;` `&` 和 <newline> 结束.
 
+// /* 复合命令 {{{2 */
 == 复合命令(compound command)
 
+// /* 函数 {{{2 */
 == 函数（function）
 
 语法：::
@@ -96,9 +102,10 @@ __name__ () __compound-command__ [__redirection__] +
 内建命令 *return* 如果在函数中被执行，将导致函数执行完成，`shell` 将执行调用
 这个函数命令的后续命令。
 
-
+// /* Bash 参数 {{{2 */
 == 参数（Parameters）
 
+// /* 条件表达式 {{{2 */
 == 条件表达式（Conditional Expressions）
 条件表达式用于复合命令（`[[`），以及 `test` 或 `[` 内建命令。它主要用于测试
 文件的属性，或者执行字符串比较和数的算术比较。条件表达式可以是一元的（unary）
@@ -258,6 +265,7 @@ __name__ () __compound-command__ [__redirection__] +
   返回``True``
 |====
 
+// /* 模式匹配 {{{2 */
 [[Pattern_Matching]]
 == 模式匹配（Pattern Matching）
 模式匹配是一串字符，除了特殊字符以外字符匹配字符本身，如果需要匹配特殊字符本身，
@@ -329,13 +337,59 @@ __name__ () __compound-command__ [__redirection__] +
 | 与模式列表__pattern-list__中任意模式均不匹配的字符串
 |===
 
+// /* Shell内建命令 {{{2 */
 == Shell内建命令
 
 [[ShOpt_Builtin]]
 === shopt
 
+// /* Bash 变量 {{{2 */
+== Bash 变量
+Bash的变量通常大写，存在两种变量：全局变量和（Global）和局部变量（local)。
+
+全局变量也称为环境变量，它们对所有Shell都有效。可以使用 env 或者 printenv 命令显
+示全局变量。
+
+局部变量只在当前的Shell有效，使用内建命令 `set` 不加任何参数可以显示当前Shell
+定义的所有变量（包括全局变量）和函数。
+
+从类型上来看，变量可以分为字符型变量、整型变量、常量和数组变量
+
+=== 创建变量
+变量名可以包含字母和数字，但是变量名的首个字符不能为数字：
+使用如下的格式创建一个局部变量
+
+*VARNAME="Value"*
+
+使用如下的格式创建一个全局变量, 这个变量可以传递给当前Shell的子Shell。子Shell
+可以改变父Shell传承变量的值，但是这个值并不影响父Shell的值。比如
+
+[source,bash]
+-------
+sun:resource davidyon$ echo $TEST1
+hello
+sun:resource davidyon$ bash
+bash-3.2$ echo $TEST1
+hello
+bash-3.2$ export TEST1=world
+bash-3.2$ echo $TEST1
+world
+bash-3.2$ exit
+exit
+sun:resource davidyon$ echo $TEST1
+hello
+sun:resource davidyon$ 
+-------
+
+=== 内建变量
+
+
+
+// /* 参考文献 {{{2 */
 == 参考文献
 [bibilography]
 - [[[POSIX_2008]]]  http://pubs.opengroup.org/onlinepubs/9699919799/[POSIX IEEE Std 1003.1-2008, 2016 Edition]
+- [[[Basic]]] http://tldp.org/LDP/Bash-Beginners-Guide/html/[Bash Guide for
+  Beginners]
 
 // vim: set syntax=asciidoc:
