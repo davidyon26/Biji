@@ -411,6 +411,10 @@ bc 具有结构化程序设计语言可控制结构，可以定义变量，定�
 +
     /exports   _target machine_(options)
 
+* 如果希望mount的nfs系统在苹果客户端可以修改，需要保持用户的UID在服务区端和客
+  户端保持一致。
+
+
 [bibliography]
 == 参考文献
 
