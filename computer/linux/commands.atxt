@@ -414,6 +414,62 @@ bc 具有结构化程序设计语言可控制结构，可以定义变量，定�
 * 如果希望mount的nfs系统在苹果客户端可以修改，需要保持用户的UID在服务区端和客
   户端保持一致。
 
+== 维护
+
+=== update-alternatives
+这个命令是在系统范围内选择多版本软件的默认版本
+例如，想在系统范围内切换默认的 python ， 
+
+- 查看已经安装的 python 的不同版本
++
+--------
+$ sudo update-alternatives --list python
+/usr/bin/python2.7
+/usr/bin/python3.5
+--------
+
+- 也可以是使用 ls 命令列出python的版本
++
+------
+$ ls /usr/bin/python*
+/usr/bin/python            /usr/bin/python3.5
+/usr/bin/python3m-config
+/usr/bin/python2           /usr/bin/python3.5-config   /usr/bin/python-config
+/usr/bin/python2.7         /usr/bin/python3.5m         /usr/bin/pythontex
+/usr/bin/python2.7-config  /usr/bin/python3.5m-config  /usr/bin/pythontex3
+/usr/bin/python2-config    /usr/bin/python3-config
+/usr/bin/python3           /usr/bin/python3m
+------
+
+- 如果使用 update-alternatives 不能列出 python 版本，但是使用ls可以列出，那么
+  可以可能将其注册进去
++
+------
+# update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+update-alternatives: using /usr/bin/python2.7 to provide /usr/bin/python (python) in auto mode
+# update-alternatives --install /usr/bin/python python /usr/bin/python3.5 2
+update-alternatives: using /usr/bin/python3.5 to provide /usr/bin/python (python) in auto mode
+------
++
+每条命令后面的数字表示优先级，数字最大的是默认的选项。
+
+- 切换某个版本
++
+------
+ sudo update-alternatives --config python
+ [sudo] password for david: 
+ There are 2 choices for the alternative python (providing /usr/bin/python).
+
+   Selection    Path                Priority   Status
+   ------------------------------------------------------------
+     0            /usr/bin/python3.5   2         auto mode
+   * 1            /usr/bin/python2.7   1         manual mode
+     2            /usr/bin/python3.5   2         manual mode
+
+  Press <enter> to keep the current choice[*], or type selection number: 0
+  update-alternatives: using /usr/bin/python3.5 to provide /usr/bin/python (python) in auto mode
+  $ 
+------
 
 [bibliography]
 == 参考文献

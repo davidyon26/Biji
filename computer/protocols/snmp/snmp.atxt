@@ -18,12 +18,19 @@ SNMP的协议操作定义在<<3,RFC SNMP Protocol Operation V2>>中。其中Trap
 - 第5章：关于USM的MIB定义，模块SNMP-USER-BASE-SM-MIB
 - 第4章：定义了SNMP client 应用如何发现授权SNMP agent应用的信息，以及交互过程。
 
+
+== MIB 定义
+
+
+- The Interfaces Group MIB <<5, RFC2863>>
+- IANAifType-MIB <<6>>
+
 == 参考资料
 [bibliography]
 - [[[1]]] https://tools.ietf.org/html/rfc2578[RFC-2578
           Structure of Management Information Version 2 (SMIv2)]
 - [[[2]]] https://tools.ietf.org/html/rfc3414[RFC-3414
-          User-based Security Model (USM) for version 3 of the Simple Network 
+          User-based Security Model (USM) for version 3 of the Simple NeItwork 
           Management Protocol (SNMPv3)]
 - [[[3]]] https://tools.ietf.org/html/rfc3416[RFC-3416
           Version 2 of the Protocol Operation for the Simple Network Management
@@ -31,4 +38,8 @@ SNMP的协议操作定义在<<3,RFC SNMP Protocol Operation V2>>中。其中Trap
 - [[[4]]] https://tools.ietf.org/html/rfc3418[RFC-3418
           Management Information Base (MIB) for the 
           Simple Network Management Protocol (SNMP)]
+- [[[5]]] https://tools.ietf.org/html/rfc2863[RFC-2863]
+- [[[6]]]
+  https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib[Interface
+  type - IANAifType-MIB]
 
