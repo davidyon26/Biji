@@ -6,7 +6,7 @@ v1.0, 2017-06-15
 :numbered:
 :icons: font
 
-本文列出常用的linux命令
+本文列出常用的linux命令, 可参考<<5, Linux 命令大全>>
 
 == 终端（terminal）
 
@@ -425,3 +425,4 @@ bc 具有结构化程序设计语言可控制结构，可以定义变量，定�
 - [[[3]]] https://www.sslsupportdesk.com/openssl-commands/[OpenSSL Commands]
 - [[[4]]] https://www.cyberciti.biz/faq/nfs4-server-debian-ubuntu-linux/[设置
   NFS文件系统]
+- [[[5]]] http://man.linuxde.net[Linux 命令大全]
