@@ -20,4 +20,6 @@ https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Working%20Wi
 notebook] 的Markdown使用MathJax渲染Latex数学公式
 
 == Latex
-Latex 的语法可以参见 https://en.wikibooks.org/wiki/LaTeX[LaTex on wikibooks]
+Latex 的语法可以参见 https://en.wikibooks.org/wiki/LaTeX[LaTex on wikibooks].
+其中数学的部分参见 https://en.wikibooks.org/wiki/LaTeX/Mathematics[Mathmatics
+in LaTex]
