@@ -1,0 +1,91 @@
+// /* Django - Web framework based on Python {{{1 */
+= Django - Web framework based on Python
+David Yon <davidyon@hotmail.com>
+v1.0, 2019-02-09
+:toc: right
+:toclevels: 4
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+:sectanchors:
+:sectnumlevels: 5
+
+// /* 简介   {{{2 */
+== 简介
+Django 是基于Python语言的Web应用框架。
+
+
+// /* 主要步骤  {{{2 */
+== 主要步骤
+本章介绍使用Django进行web应用开发的主要步骤（主要命令）。
+
+* 显示安装的Django版本信息 + 
+  `python -m django --version`
+
+* 创建一个项目 +
+  `django-admin startproject mysite` +
+  项目（project）是一个Django实例包含的所有设置，包括数据库的配置，Django专有
+  的选项以及一个或者多个应用的配置。一个项目可以包含一个或者多个应用。 上面的
+  命令会创建一个Django项目的主要文件，包括如下的目录结构： +
+
+  mysite/
+    manage.py
+    mysite/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+
+* 运行创建的Django项目 +
+  `python manage.py runserver` +
+  Django默认的web server使用端口8000. 可以使用 http://127.0.0.1:8000/ 查看项目
+  是否创建成功。如果想改变监听的端口号或者监听不同的接口，使用如下的命令 +
+  `python manage.py runserver [ipaddress:][端口号]`
+
+* 创建一个应用 +
+  `python manage.py startapp myapp` +
+  上面的命令创建名称为 myapp 的应用。一个项目可以包括多个应用，一个应用可以发
+  布到不同的项目。项目的命令将创建一个应用包括基本目录结构及相应的 python 代码
+  。一个应用包括的主要目录结构如下： +
+
+  myapp/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        --init__.py
+    models.py
+    tests.py
+    views.py
+
+* 建立URL与View的映射 +
+  其中的views.py包括要展示给用户的信息。这个是一个python程序，要调用这个程序，
+  需要将其映射到一个URL。 Django使用文件名为 `urls.py` 的文件完成这个映射。需
+  要在 `myapp` 目录下增加一个 `urls.py` 文件。
+
+* 将应用增加到项目 +
+  完成应用的部分后，需要在项目级别将该应用增加到项目中。需要编辑项目根目录下面
+  的 `urls.py` 文件，将建立该应用在项目级别的URL映射，如下： 
++  
+[source,python]
+----
+mysite/urls.py
+
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('polls/', include('polls.urls')),
+    path('admin/', admin.site.urls),
+]
+----
+
+
+
+[bibliography]
+== 参考文献
+
+- [[[1]]] https://docs.djangoproject.com/en/2.1/[Django documentation]
+- [[[2]]] https://docs.djangoproject.com/en/2.1/topics/db/models[Models]

@@ -1,0 +1,23 @@
+= Math Jax
+David Yon <davidyon@hotmail.com>
+v1.0, 2019-06-13
+:toc: right
+:toclevels: 4
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+:sectanchors:
+:sectnumlevels: 5
+
+
+
+== 简介
+Math Jax 是基于JavaScript的LaTex，MathML和AsciiMath标签语言的渲染引擎，其目的是可以在任何浏览器中显示数学公式，可以参见 https://www.mathjax.org/index.html[MathJax] 
+
+https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Working%20With%20Markdown%20Cells.html[Jupyter
+notebook] 的Markdown使用MathJax渲染Latex数学公式
+
+== Latex
+Latex 的语法可以参见 https://en.wikibooks.org/wiki/LaTeX[LaTex on wikibooks]
