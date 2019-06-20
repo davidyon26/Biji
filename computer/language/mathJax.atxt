@@ -19,6 +19,15 @@ Math Jax 是基于JavaScript的LaTex，MathML和AsciiMath标签语言的渲染�
 https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Working%20With%20Markdown%20Cells.html[Jupyter
 notebook] 的Markdown使用MathJax渲染Latex数学公式
 
+== 例子
+下面的链接给出使用 MathJax 写数学公司的例子
+
+- StackExchange
+  https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference?page=1&tab=votes#tab-top[MathJax
+  basic tutorial and quick reference]
+- https://blog.csdn.net/liyuanbhu/article/details/51473886[MathJax 支持的Latex
+  符号总结]
+
 == Latex
 Latex 的语法可以参见 https://en.wikibooks.org/wiki/LaTeX[LaTex on wikibooks].
 其中数学的部分参见 https://en.wikibooks.org/wiki/LaTeX/Mathematics[Mathmatics
