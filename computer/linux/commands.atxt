@@ -65,6 +65,40 @@ mount 远程的SAMBA（CIFS）共享文件目录
 mount -t cifs -o username=xxx,nounix,sec=ntlmssp //xxx.xxx.xxx.xxx/share mount_point
 -----
 
+=== ip
+在以前的Linux版本提供了网络工具，包装在 net-tools 包中。这个包已经被最新的
+iproute2 包所替代，前者已经多年没有维护。iproute2 套件中提供了许多增强功能的命
+令，ip命令就是其中的一个。
+
+下表显示新旧工具集的关系. 更详细两者的比较和例子可以参见
+http://xmodulo.com/linux-tcpip-networking-net-tools-iproute2.html[Linux TCP/IP
+networking: net-tools vs. iproute2]
+
+[cols="m,m"]
+|====
+| net-tools 		| iproute2
+
+| arp -na   		| ip neigh
+| ifconfig  		| ip link
+| ifconfig -a 		| ip addr show
+| ifconfig --help 	| ip help
+| ifconfig -s		| ip -s link
+| ifconfig eth0 up  | ip link set eth0 up
+| ipmaddr			| ip maddr
+| iptunnel			| ip tunnel
+| netstat			| ss
+| netstat -i		| ip -s link
+| netstat -g		| ip maddr
+| netstat -I		| ss -I
+| netstat -r		| ip route
+| route add			| ip route add
+| route del			| ip route del
+| route -n			| ip route show
+| vconfig			| ip link
+|====
+
+关于IP命令的详细解释可以参见 https://www.linuxidc.com/Linux/2017-11/148353.htm[ip 命令详解]
+
 == 管道命令
 
 === pv
