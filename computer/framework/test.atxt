@@ -19,3 +19,4 @@ v1.0, 2019-06-09
 == CMocka
 cmocka 是一个用于C语言的单元测试框架，它支持mock object模拟接口的实例化。它仅仅需要标志C库，用于大多数平台和不同编译器。
 
+URI: https://cmocka.org
