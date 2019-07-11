@@ -1,0 +1,21 @@
+// /* Test framework  {{{1 */
+= Test framework 
+David Yon <davidyon@hotmail.com>
+v1.0, 2019-06-09
+:toc: right
+:toclevels: 4
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+:sectanchors:
+:sectnumlevels: 5
+
+// /* 简介   {{{2 */
+== 简介
+本文介绍各种测试框架
+
+== CMocka
+cmocka 是一个用于C语言的单元测试框架，它支持mock object模拟接口的实例化。它仅仅需要标志C库，用于大多数平台和不同编译器。
+
