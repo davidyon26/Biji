@@ -1,0 +1,20 @@
+Homebrew 工具
+==========
+David Yon <davidyon@hotmail.com>
+v1.0, 2019-07-20
+:toc: right
+:numbered:
+:icons: font
+
+== 简介
+Homebrew 是一个将Linux工具移植到MacOS上的管理工具，类似于MacPort，与MacPort不用在
+于，它会尽可能使用MacOS自身的库文件。
+
+== Trouble Shooting
+
+Brew安装某个软件时不能使用可定制的option了::
+	参见 
+	https://stackoverflow.com/questions/54057871/homebrew-vim-and-numpy-dont-support-options-anymore
+	[Homebrew vim and Numpy don't support options anymore?]
+
+
