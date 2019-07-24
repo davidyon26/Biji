@@ -505,6 +505,17 @@ update-alternatives: using /usr/bin/python3.5 to provide /usr/bin/python (python
   $ 
 ------
 
+=== systemctl
+
+CLI 和 GUI 切换::
+
+	** From GUI to CLI: `systemctl isolate multi-user.target`  
+	** From CLI to GUI: `systemctl isolate graphical.target`
+
+	** To set CLI as default runlevel: `systemctl set-default multi-user.target`
+	** To set GUI as default runlevel: `systemctl set-default graphical.target`
+
+
 == alias
 如果希望基于用户使用某个软件的特定版本，可以在用户的.bashrc 文件中使用alias命
 令定义某个命令。
@@ -518,6 +529,8 @@ $ . .bashrc
 $ python --version
 Python 3.5.3
 ----------
+
+
 
 
 
