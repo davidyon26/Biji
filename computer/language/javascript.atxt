@@ -1,0 +1,101 @@
+// /* Javascript {{{1 */
+= Javascript
+David Yon <davidyon@hotmail.com>
+v1.0, 20202-02-14
+:toc: right
+:toclevels: 4
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+:sectanchors: 5
+
+// /* 历史  {{{2 */
+== 历史
+增加用户的交互并且减少与服务器的通讯次数，客户端做更多的事情，比如用户输入表格
+的验证。两个选项：Java Applet 以及 LiveScript
+
+* Netscape: LiveScript 1995
+* Netscape 2.0: LiveScript -> JavaScript
+* IE 3.0: JScript （Javascript + IE 特有）
+* ECMAScript (European Computer Manufactures Association) ECMA-262: 进行标准化
+** ECMAScript
+** Document Object Model (DOM)
+** Browser Object Model (BOM)
+
+== 应用
+
+* Web 应用：辅以HTML5，可完成应用缓存，客户端存储，数据库。另外Chrome
+  WebKit还增加了 service workers以及浏览器push的功能
+* 服务器端代码： 如 Node.js
+* 移动应用：使用 *PhoneGap* *Titanium* 可以创建各种移动平台的应用。另
+  外 FirefoxOS 平台的应用完全使用 Javascript， HTML，和 CSS书写的。
+* 多媒体应用： 用于Flash或者Flex的 ActionScript 是基于 ECMAScript。
+* 命令行工具或者脚本：使用 *Windows Scripting Host （WSH）* 或者
+  WebKit 的 *JavascriptCore* 可以创建桌面管理工具。后者内置在所有的Mac
+  系统中。
+* 桌面应用的扩展或者插件： Dreamweaver， Photoshop，或者浏览器
+* 跨操作系统的桌面应用：使用 Mozilla 的 *XULRunner* 和 *Electron* 。
+  *Electron* 仅使用 Javascript，HTML 和 CSS 已经用于构建 Slock， Atom，
+  和 Visual Studio Code 等非常流行的桌面应用。
+* *Emscripten* 能够将使用C/C++写的代码编译成 _asm.js_ 格式， 这个文件可以在浏
+   览器内部运行。
+*  测试框架 *PhantomJS* 使用 Javascript 实现。 （该项目现在处于suspending状态）
+
+== ECMAScript 发展
+
+=== ES5（ECMAScript5）
+
+*  一个重要版本，2009年12月被正式接受，现在已经在所有主要浏览器和服务器端技术
+   中得到支持。
+*  变化包括：
+   **  几个重要的语法改变
+   **  扩展标准库
+   **  引入新的结构， 如引入新的对象以及所谓的严格模式（strict mode）
+
+
+=== ES6（ECMAScript6）
+
+*  2015年6月17 被正式接受，绝大多数新的约定已经被主要浏览器接受
+*  可以将 ES6 的程序转换成 ES5，从而可以在不支持ES6的环境下运行
+*  在语言方面做了很大改变，主要包括
+   **  已有特征的语法改变；如：classes 和 promises
+   **  新的语言特征； 如 generators
+*  语法的改进使得程序的编写更加简洁，程序更容易维护。新的特征使得语言本身支持
+   原来必须使用第三方工具才能实现的特征，这改变了使用JavaScript编码的思维方式
+*  ES6， ECMAScript6 和 ECMAScript2015 是这个版本的不同称呼
+
+=== 版本支持状况
+
+*  可以在  http://kangax.github.io/compat-table/es6/[kangax 网站] 上可以查看到不
+   同版本在主要浏览器和服务框架下的支持情况。
+*  http://babeljs.io/repl/[*Babel*] 等转换器可以将 ES6 转换成 ES5
+
+== 工具
+
+*  浏览器： 现在的浏览器都有一个控制台为开发者调试Javascript
+   **  WebKit‘s console
+     *** 用于Safari和Chrome
+     *** 选择控制台（console）tab页，运行在当前装在的页面的上下文
+     *** 支持自动完成
+     *** 支持历史命令浏览执行：使用上下箭头查询
+     *** 控制台只给一行用于输入，可以使用 *分号* 一行输入多条语句 或者使用
+         kbd:[Shift] + kbd:[Enter] 进行换行
+   **  Firefox
+     *** Tools | Web Developer | Web Console 可以调出控制台界面
+     
+*  *JavaScriptCore* on Mac
+   **  在Mac上，可以使用命令行工具 *jsc* 在终端上直接学习JavaScript代码
+   **  可以将下面的shell语句定义到 ～/.profile 文件中
++
+[source,bash]
+------
+ alias jsc='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
+------
+
+*  Node.js
+    **  Node.js 包括功能强大的命令行工具。安装完 Node.js 后，在终端上执行
+        *node* 就可以 REPL 方式执行JavaScript语句
+    **  *node* 命令后面加 JavaScript 脚本文件，将以非交互的方式执行， 如
+         `node test.js` 

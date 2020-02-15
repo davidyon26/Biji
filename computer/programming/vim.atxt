@@ -2622,6 +2622,14 @@ d. 如果 `exrc` 选项打开（默认关闭），在当前目录搜索下面三
 // /* Autocmd {{{2 */
 [[Autocmd]]
 == Autocmd
+Autocommand 机制可以让你定义在某个事件发生是对符合特定模式的文件执行相应的命令
+。比如在创建或者读入 python 文件时设置python专有的属性。使用下面的命令进一步了
+解autocommand的用法
+
+[source, vimscript]
+------
+:help au[tocmd]
+------
 
 // /* 编程 {{{2 */
 [[Programming]]
@@ -2695,12 +2703,34 @@ NOTE: 不要忘记使用 `fg` 命令恢复Vim程序，否则你的任何没有�
 
 // /* 主要插件 {{{2 */
 [[plugins]]
-[bibliography]
 == 主要插件
-- [[[1]]] https://github.com/fatih/vim-go[Offical Go 插件]
-- [[[2]]] https://github.com/nsf/gocode[Go Autocompletion]
-- [[[3]]] https://https://github.com/junegunn/vim-plug/wiki/tutorial[Vim
-  Plugin Manager]
+
+=== Go 语言
+
+- https://github.com/fatih/vim-go[Offical Go 插件]
+- https://github.com/nsf/gocode[Go Autocompletion]
+
+=== 插件管理
+管理插件的插件很多，比较老牌的是 Vundle 用的人比较多，新近出现的 vim-plug以小
+巧灵活受到更多人的欢迎。
+
+- https://github.com/junegunn/vim-plug/wiki/tutorial[vim-plug]
+- https://github.com/VundleVim/Vundle.vim[Vundle]
+
+=== 文件结构浏览
+
+- https://github.com/majutsushi/tagbar[tagbar]
+
+=== 目录浏览
+
+=== 自动完成
+YouCompleteMe 是比较老牌的自动完成框架。现在这个框架进行了重构，为
+client/Server结构，Server端只提供API，而客户端依据编辑器的不同而不同，
+YouCompleteMe是针对Vim的客户端。其它的还有针对Emacs，Atom，Sublime，Sublime
+Text 3， VSCode等的客户端
+
+- https://github.com/Shougo/deoplete.nvim[deoplete]
+- https://github.com/ycm-core/YouCompleteMe[YouCompleteMe]
 
 // /* 参考文献 {{{2 */
 [bibliography] 
