@@ -24,6 +24,7 @@ v1.0, 20202-02-14
 ** Document Object Model (DOM)
 ** Browser Object Model (BOM)
 
+// /* 应用  {{{2 */
 == 应用
 
 * Web 应用：辅以HTML5，可完成应用缓存，客户端存储，数据库。另外Chrome
@@ -43,6 +44,7 @@ v1.0, 20202-02-14
    览器内部运行。
 *  测试框架 *PhantomJS* 使用 Javascript 实现。 （该项目现在处于suspending状态）
 
+// /* 发展  {{{2 */
 == ECMAScript 发展
 
 === ES5（ECMAScript5）
@@ -72,6 +74,7 @@ v1.0, 20202-02-14
    同版本在主要浏览器和服务框架下的支持情况。
 *  http://babeljs.io/repl/[*Babel*] 等转换器可以将 ES6 转换成 ES5
 
+// /* 工具 {{{2 */
 == 工具
 
 *  浏览器： 现在的浏览器都有一个控制台为开发者调试Javascript
@@ -99,3 +102,25 @@ v1.0, 20202-02-14
         *node* 就可以 REPL 方式执行JavaScript语句
     **  *node* 命令后面加 JavaScript 脚本文件，将以非交互的方式执行， 如
          `node test.js` 
+
+== 变量
+
+
+
+[source,javascript]
+------
+var a;					// <1>
+var thisIsAVariable;			// <2>
+var _and_this_too;			// <1><3>
+var mix12tree;				// <1><3>
+var v1, v2, v3 = "hello", v4 = 4, v5;  	// <1><4>
+var $v6,       	 	          	// <1><3>
+    v$7 = 'world',
+    v8;
+var case_matters = 'lower';		// <1><2>
+var CASE_MATTERS = 'upper';		// <1><2>
+------
+<1>  使用 *var* 说明一个变量，在说明变量的时候可以赋给初始值
+<2>  变量名是大小写敏感的
+<3>  变量名由字符，数字，下划线以及$符组成，数字不能作为起始字符
+<4>  一条 *var* 语句可以定义一个或者多个变量，多个变量可以同时赋给一个相同的值
