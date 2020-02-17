@@ -124,3 +124,121 @@ var CASE_MATTERS = 'upper';		// <1><2>
 <2>  变量名是大小写敏感的
 <3>  变量名由字符，数字，下划线以及$符组成，数字不能作为起始字符
 <4>  一条 *var* 语句可以定义一个或者多个变量，多个变量可以同时赋给一个相同的值
+
+== 基本类型
+JavaScript 包括如下基本类型:
+
+-  数字
+-  字符串
+-  布尔
+-  Undefined
+-  Null
+
+除了基本外，其它的都是对象。使用操作符 typeof 可以或者一个值所属的类型。
+
+=== 数字型 （Number）
+
+-  数字型有正负之分，如 -3，3
+-  数字型有整数和浮点数， 如 3 和 3.14
+-  在表示形式上，有
+   **  十进制（decimal）： 253
+   **  十六进制（hexadecimal）：0x10 或者 0X10
+   **  八进制（octal)：0377 或者 0o377 或者 0O377。后面两种表示方法是 ES6 引入
+       的
+   **  二进制（binary）：0b111 或者 0B111。二进制的表示法是 ES6 新引入的
+   **  指数（exponent）： 1e1 或者 1E1， 2e-3
+-  Infinity 和 -Infinity：无限大和无限小。这两个值用于表示 JavaScript 无法表示
+   的数。如果超过了下面的值范围，在Javascript 的值将是 Infinity 或者
+   -Infinity。 比如 6/0， 1e309
+   **  最大的数：1.7976931348623157e+308
+   **  最小的数：5e-324
+   **  关于Infinity的表达式
+       ***  Infinity - Infinity = NaN （ 不是0）
+       ***  Infinity - 20 = Infinity
+       ***  Infinity / 20 = Infinity
+       ***  Infinity * 0  = NaN
+       ***  typeof Infinity 的值是 number
+       ***  全局方法 isFinite(Infinity) = false
+       ***  ES6 引入的 Number.isFinite(Infinity) = false。上面的全局方法在判断
+            之前需要做类型转换，但是这种方式不需要，更精确。
+-  NaN：不是数字 Not a Number
+   **  用于无法确定数字值的情况：比如 8 * "test"
+   **  关于NaN的表达式
+       ***  typeof NaN 的值是 number
+       ***  NaN 和其它任何数字的运算返回的结果是 NaN, 如 1 + 2 + NaN = NaN
+       ***  全局方法 isNaN(123) = false, isNaN("test") = true, 
+            isNaN(123/"abc") = true。isNaN需要对参数进行数字型的转换，所以对于
+            ”test“ 它的值是true。这不是很精确。
+       ***  ES6 引入的 Number.isNaN(123)=false, Number.isNaN("test") = false,
+            Number.isNaN(123/"abc")= true
+-  Number.isInteger(): ES6 新引入的方法，当参数值是有限值且不包含小数点返回true。
+
+=== 字符串
+
+*  字符串的值使用一对单引号或者双引号进行引用，如 "Hello,world" 'Go Go Go'
+*  字符串可以使用 + 操作符进行衔接
+*  除了 + ，其它数字操作符的运用于字符串时，字符串会先转换成数字，结果是数字型
++
+[source,javascript]
+------
+var s = '1';
+s = 3 * s;          
+console.log(s);         //3
+s++;
+console.log(s);         //4
+var s = "1 * 5";
+s = 10 * s;
+console.log(s);         //NaN
+var s = "1 add five";
+s = 10 * s;
+console.log(s);         //NaN
+var n = 1;
+n = "" + n;         
+console.log(n);         //'1'
+------
+
+==== 字符串模版
+ES6 引入了字符串模版用于在字符串中嵌入表达式。有两种模版方式：常规字符串模版，
+定制字符串模版
+
+===== 常规字符串模版
+
+*  模版使用一对 ` 符号扩起来的字符串
+*  表达式使用的格式为 ${ 表达式 }
+
+[source, javascript]
+-----
+var a = 10;
+var b = 10;
+console.log(`Sum is ${a + b} and Multiplication would be ${a * b}.`); <1>
+-----
+<1>  值为 Sum is 20 and Multiplication would be 100.
+
+===== 定制字符串模版 (Tagged Template Literals)
+
+-  定制字符串模版允许用户通过定义一个新的方法重新定义常规字符串模版的输出格式。
+-  语法上，定制字符串模版是在常规字符串模版加以要调用的方法名作为参数。
+
+[source, javascript]
+------
+function transform(strings, ...subst) {             //<1>
+    console.log(strings);
+    console.log(subst);
+}
+
+var fn = "James";                                   //<2>
+var ln = "Bond"                                     //<2>
+
+transform`Name is ${ln}, ${fn} ${ln}`               //<3>
+transform(["Name is ",", "," ",""],ln,fn,ln)        //<4>
+transform`${ln}Name is ${ln}${fn} ${ln}`            //<3>
+transform(["","Name is ","", " ",""],ln,ln,fn,ln)   //<4><5>
+------
+<1>  定义定制模版要调用的方法 `transform`
+<2>  定义模版变量使用的变量
+<3>  定制模版方法名后面紧跟着常规模版定义
+<4>  前面的定制模版相当于这样的方法调用，注意如果表达式在最前面或者最后面或者
+相邻，需要插入一个空的字符串。
+<5>  模版字符串的中 _转义_ 字符在通常情况下会有特殊的含义，如果希望保持字面字
+符可以使用Raw形式，如将上列中的 `strings` 改为 `strings.raw`，再如取strings的第
+一个字面值， `strings.raw[0]`
