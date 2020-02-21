@@ -103,6 +103,18 @@ v1.0, 20202-02-14
     **  *node* 命令后面加 JavaScript 脚本文件，将以非交互的方式执行， 如
          `node test.js` 
 
+== 注释
+
+[source, javascript]
+------
+// 这个一个注释行
+var a = 1;  // 这是尾部注释
+/* 多行注释写在一行 */
+/*
+   多行注释
+*/
+------
+
 == 变量
 
 
@@ -131,10 +143,10 @@ JavaScript 包括如下基本类型:
 -  数字
 -  字符串
 -  布尔
--  Undefined
--  Null
 
-除了基本外，其它的都是对象。使用操作符 typeof 可以或者一个值所属的类型。
+为了描述只说明没有定义的情况，引入了 undefined 类型，它具有唯一的值`undefined`
+。除了基本类型外，其它的都是对象。使用操作符 typeof 可以或者一个值所属的类型。
+对象类型存在一个特殊的值 null，表示没有被初始化，没分配空间。
 
 === 数字型 （Number）
 
@@ -242,3 +254,342 @@ transform(["","Name is ","", " ",""],ln,ln,fn,ln)   //<4><5>
 <5>  模版字符串的中 _转义_ 字符在通常情况下会有特殊的含义，如果希望保持字面字
 符可以使用Raw形式，如将上列中的 `strings` 改为 `strings.raw`，再如取strings的第
 一个字面值， `strings.raw[0]`
+
+=== 布尔型
+
+-  布尔型有两个值： *true* 和 *false*
+-  操作符 ! (NOT), && (AND) 和 || (OR)
+-  任何值可以转换成布尔值。除了下面值转换成 *false* 以外，其它类型的值都转换成
+   *true*
+   **  空字符串 ""
+   **  null
+   **  undefined
+   **  数字 0
+   **  数字 NaN
+   **  布尔值 false
+-  逻辑运算中可能包括非布尔表达，这时运算值的类型取决于最后能够决定值个哪个表
+   达式的类型。如下面的表达式
++
+[source, javascript]
+------
+true || "something"             //true
+true && "something"             //"something"
+true && "something" && true     //true
+var mynumber = mynumber || 10   //如果 mynumber 没有定义或者0 等于 10， 否则等于 mynumber
+------
+
+==== 比较运算符
+
+[cols="1m,5a,2a"]
+|===
+| 运算符 | 描述 | 例子
+
+| ==  | 松散比较: 在进行比较之前将操作数转换成相同的类型，如果值相等返回 _true_ m| 1 == 1;   //true +
+                                                                                                    1 == "1";   //true
+| === | 严格比较：操作数的类型相同并且相等返回 _true_                        m| 1 === 1;   //true +
+                                                                                                     1 === "1";   //false
+| !=  | 操作数的类型转换成相同类型后，如果不等返回 _true_                     m| 1 != 1      //false +
+                                                                                                      1 != "1"   //false
+| !== | 如果操作数的类型不同或者不想等返回 _true_                            m| 1 !== 1     //false +
+                                                                                                      1 !== "1"  //true
+|===
+
+其它运算符 `>` , `<` , `>=`, `<=` , 也是转换成相同的类型后进行比较。
+
+=== Undefined
+
+-  Undefined 类型只有一个值 `undefined`
+-  如果一个变量只说明没有对其赋值，它的值是 `undefined` 。
+-  只说明没定义的变量的类型是 *undefined*
+-  undefined 转换其它基本类型的值如下：
+   **  数字： NaN
+   **  布尔： false
+   **  字符串： "undefined"
+
+[source, javascript]
+------
+var somevar
+typeof somevar           // "undefined"
+somevar === undefined    // true
+1 * undefined            // NaN
+!!undefined              //false
+------
+
+=== Null
+
+-  null不是数据类型，是一个值，它的类型是 object
+-  null 转换其它基本类型时，其值如下：
+   **  数字： 0
+   **  布尔： false
+   **  字符串："null"
+   
+== 数组
+
+*   数组的索引从0开始；
+*   数组的元素可以是任何类型，可以不同；
+*   数组是变长的，如果使用大于当前数组长度的索引对数据进行赋值，数组的长度增加，
+    中间没有赋值的项的值是 *undefined*
+*   可以使用 *delete* 操作符删除一个数组中每个元素，这个元素被删除后，该值变成
+    _undefined_
+
+[source,javascript]
+------
+var a = [1 , 2, 3];
+typeof a;               // object
+a[5] = "hello";         // [1, 2, 3, undefined, undefined, "hello"]
+delete a[1];            // [1, undefined, 3, undefined, undefined, "hello"]
+var b = [[1, 2, 3], [4, 5, 6]];  // array of array
+b[1][0];                // 4
+------
+
+== 控制结构
+
+=== 条件语句
+
+==== 标准方式
+
+[source, javascript]
+------
+var a = 1;
+if (a > 2 || a < -2) {
+  result = 'a is not between -a and 2';
+} else if (a === 0 && b === 0) {
+  result = "both a and b are zeros";
+} else if (a === b) {
+  result = " a and b are equal";
+} else {
+  result = "I give up";
+}
+------
+
+==== 简介方式：
+
+[source, javascript]
+------
+var a  = 1;
+var result = (a === 1)? "a is one" : "a is not one";
+------
+
+=== Switch 语句
+
+[source, javascript]
+------
+var a = "1",
+     result = "";
+switch (a) {
+case 1:
+    result = "Number 1";
+    break;
+case "1":
+    result = "String 1";
+    break;
+default:
+    result = " I don't know";
+    break;
+}
+------
+
+=== 循环语句
+
+====  while
+
+[source, javascript]
+------
+var i = 0;
+while ( i< 10 ) {
+  i++;
+}
+------
+
+==== do while
+
+[source, javascript]
+------
+var i = 0;
+do {
+  i++;
+} whil (i < 10);
+------
+
+==== for
+
+[source, javascript]
+------
+var num = 0;
+for (var i = 0; i < 100; i++) {
+   num += i;
+}
+
+var a = ['a', 'b', 'c', 'd', 'x', 'y', 'z'];
+var result = '\n';
+
+for (var i in a) {
+    result += 'index: ' + i + ', value: ' + a[i] + '\n';
+}
+------
+
+== 函数
+
+=== 语法
+
+*  函数由关键字 *function* ，函数名， 参数 和 代码块组成
++
+[source, javascript]
+------
+function sum (a, b) {
+  var c = a + b;
+  return c;
+}
+
+var result = sum(1, 2);
+------
+
+=== 参数
+
+*  函数的实参数目可以大于形参的数目，多余的参数会自动被忽略；如果小于形参，其
+   默认值是 _undefined_
++
+[source, javascript]
+------
+sum (1, 2, 3, 4, 5);      //no error, and value is 3
+------
+
+*  每个函数存在一个特殊的内置变量 *arguments* ，它会自动被创建，它是一个类似于
+   数组的对象，用于存放所有的参数
++
+[source, javascript]
+------
+function sumAny () {
+  var i, res = 0,
+      number_of_params = arguments.length;
+  for (i=0; i < number_of_params; i++) {
+      res += arguments[i];
+  return res;
+}
+
+sumAny(1, 1, 1);      //3
+sumAny(1, 2, 3, 4);   //10
+sumAny(5);            //5
+sumAny();             //0
+------
+
+*  ES6 函数的参数可以定义默认值, 并且默认值可以是另外一个参数。
++
+[source, javascript]
+------
+function s(fog_level=10, spark_level=fog_level*10) {
+    console.log(`Fog Level: ${fog_level} and spark_level: ${spark_level}`)
+}
+
+s(10);                  // Fog Level: 10 and spark_level: 100
+s(undefined, 200);      // Fog Level: 10 and spark_level: 200
+                                  // 第一个参数因为没有定义使用默认值
+------
+
+*  ES6 引入了其余参数（rest parameter）。其余参数能够将任意多个参数以数组的形
+   式传递给函数，一个参数只能存在一个其余参数，并且其余参数位于所有形参的最后
+   一个。在语法上，其余参数前面使用 `...` 来修饰。
+*  其余参数与 *arguments* 的区别在于，其余参数是一个数组，可以使用数组的所有操
+   作
++
+[source, javascript]
+------
+function say(first, ...others) {       <1>
+    console.log(Array.isArray(others));         //true
+    console.log(Array.isArray(arguments));      //false
+    console.log(`first is ${first}, and others are ${others}`);    //first is cat, and others are dog,bee,cow,cock
+}
+say ("cat", "dog", "bee", "cow", "cock");
+------
+<1>  语法上，其余参数由三个点号 `...` 标识
+
+=== 扩展操作符
+
+*  ES6 引入了扩展操作符（spread operator），它作用于一个数组，把它分解为一系列
+   的数组元素
++
+[source, javascript]
+------
+function sumAll (a,b,c) {
+     return a+b+c;
+} 
+var numbers = [6,7,8] 
+
+/* 
+  ES5 way of passing array as an argument of a function 
+*/
+console.log(sumAll.apply(null,numbers)); //21
+
+//ES6 Spread operator 
+console.log(sumAll(...numbers))          //21  <1>
+
+var midweek = ['Wed', 'Thu'];
+var weekend = ['Sat', 'Sun'];
+var week = ['Mon', 'Tue', ...midweek, 'Fri', ...weekend];
+console.log(wee)                        // ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+------
+<1>  扩展操作法 ...
+
+=== 内置函数
+
+* parseInt() 
+* parseFloat()
+* isNaN()
+* isFinite()
+* encodeURI()
+* encodeURIComponent()
+* decodeURI()
+* decodeURIComonent()
+* eval()
+
+=== 变量作用域
+
+==== var 函数作用域
+使用 *var* 说明的变量具有函数作用域
+
+*  定义在任何函数之外的变量是 *global* 变量
+*  定义在函数中的变量作用域是这个函数
+*  定义在控制语句块中的变量作用域也是整个函数
+
+[source, javascript]
+------
+var a = 123;
+
+function f () {
+    console.log(`a is : ${a}`);      // a is : undefined <1>
+    var a = 1;
+    console.log("a is : " + a);     // a is : 1
+}
+------
+<1>  因为 a 在函数中定义，无论它在什么地方定义，都相当于它在函数的起始位置进行
+了说明。这种方式在 JavaScript 中称为变量提升
+
+==== 块作用域
+
+ES6 引入了 `let` 和 `const` 关键字用来说明变量。使用这种方式说明的变量具有块作
+用域，这有别于使用 `var` 说明的变量。
+
+*  const 用于定义一个不能被修改的量；
+*  使用这两个关键字定义的变量提升到这个块
+*  重复定义相同的块变量会报错
+*  块变量再未定义前变使用会报错
+
+[source, javascript]
+------
+var a = 1;
+var b = 1;
+{
+    let a = 2;
+    console.log(a);     // 2
+    var b = 3;
+}
+console.log(a);        // 1
+console.log(b);        // 3
+------
+
+*  可以定义匿名函数
+*  函数是 first-class 对象， 可以赋值，作为参数，返回值
+*  函数定义可以嵌套
+*  函数可以重新定义自身
+*  闭包
+*  箭头函数（lambda 表达式）
