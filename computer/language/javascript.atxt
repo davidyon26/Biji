@@ -547,9 +547,14 @@ console.log(wee)                        // ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', '
 ==== var 函数作用域
 使用 *var* 说明的变量具有函数作用域
 
-*  定义在任何函数之外的变量是 *global* 变量
+*  定义在任何函数之外的变量是 *全局变量*
+*  如果一个变量在一个函数中没有被说明而使用或者定义，则在定义这个函数的对象查
+   找这个变量，这个过程一直继续到最外层对象，如果所有的域都没有说明，则其是个
+   全局变量
 *  定义在函数中的变量作用域是这个函数
 *  定义在控制语句块中的变量作用域也是整个函数
+*  在函数中使用 *var* 定于的函数变量，在这个函数外是不可见的，而在该函数定义的
+   任何字面域中，该变量都是可见的，包括其内嵌函数
 
 [source, javascript]
 ------
@@ -587,9 +592,160 @@ console.log(a);        // 1
 console.log(b);        // 3
 ------
 
-*  可以定义匿名函数
-*  函数是 first-class 对象， 可以赋值，作为参数，返回值
-*  函数定义可以嵌套
-*  函数可以重新定义自身
-*  闭包
-*  箭头函数（lambda 表达式）
+=== First class 对象
+
+1.  函数可以作为赋值语句的右部作为值赋值给某个变量
+2.  作为右步的函数定义没有名字，也可以有名字；如果没有名字被称为 *_匿名函数_*
+3.  函数 `f1` 可以作为参数的值传给某个函数 `f` ，在函数 `f` 体中可以调用 `f1`,
+   在这种情况下， `f1` 称为 *_回调函数_*
++
+[source, javascript]
+------
+function compare(x, y, comfunc) {                           <3>
+     return comfunc(x,y);
+ };
+
+var comfunc1 = function compInt (x, y) {                    <2><1>
+    return parseInt(x) == parseInt(y);
+};
+
+compare("2*1", "1*2", comfunc1);
+compare("2*1", "1*2",
+         function(x,y) { return eval(x) == eval(y); });     <2>
+compare("2*1", "1*2",
+         function(x,y) { return x.length == y.length;});
+------
+
+4.  定义一个函数并且立即调用，这种方式称为 *_即刻函数_*。通常即刻函数以匿名函数
+   的方式定义。
+5.  函数可以作为其它函数的返回值
+6.  函数是可以嵌套的，内部的函数通常称为 *_内嵌函数_* ；函数通常返回的是内嵌函
+   数（inner function）
++
+[source, javascript]
+------
+var bean = [ ...(function(){       //匿名函数，使用扩展操作法 <4>
+                                   //对数组进行赋值
+	var myValue = 0;
+	function get () {              //内嵌函数定义           <5>
+		console.log(myValue);
+	}
+	function set (v) {              <6>
+		myValue = v;
+	}
+	return [get,set];               //返回一个数组，其元素是函数 <5>
+})() ];                             //立刻调用这个函数 即刻函数  <4>
+
+bean[0]();                          // 0  call get()
+bean[1](123);                       //    call set(123)
+bean[0]();                          // 123 call get()
+bean[1]("Hello,World");             //    call set("Hello,World")
+bean[0]();                          // "Hello,World"
+------
+
+7.  函数可以重新定义自身
++
+[source,javascript]
+------
+function next() {
+	var i = 0;
+	next = function () {            // next  函数被重新定义 <7>
+		++ i;
+		console.log(i);
+	};
+	console.log(i);
+}
+next();
+next();
+next();
+next();
+------
+
+=== 闭包 (closure)
+根据函数变量的作用域规则，函数变量在函数外是不可见的。通常，在函数被调用后，这
+些函数变量占用的空间会被释放。但是如果在一个函数 _f_ 定义了一个内部函数 _ff_
+，而这个内部函数 _ff_ 使用了函数 _f_ 的一个或者多个变量，并且 _ff_ 作为 _f_ 的
+返回值或者赋给了一个全局变量。在这种情况下， 函数 _ff_ 以及其所指引的变量形成
+了一个闭包。闭包技术使函数变量的生命周期超出了这个函数调用的时间段。这通常会带
+来内存泄露的风险，因此提供闭包的语言通常提供垃圾回收机制。
+
+.闭包1
+[source, javascript]
+------
+var add1, sub1;
+
+function number() {
+    var value;
+    add1 = function() { return ++value; };    // assign to globle variable
+    sub1 = function() { return --value; };    // assign to globle variable
+    value = 1;
+}
+console.log(number());                      //undefined
+console.log(add1());                        //2
+console.log(add1());                        //3
+console.log(sub1());                        //2
+------
+
+.闭包2
+[source,javascript]
+------
+function add(x) {
+    return function(y) { return x+y;};      // return a function binding x
+}
+
+var add10 = add(10);                       
+console.log(add10(2));                     //12
+console.log(add10(-10));                   //0
+------
+
+===  箭头函数
+ES6 引入了函数的新的语法，使其更接近于通常的lambda表达式的语法。这种新
+的表达方式称为 *箭头函数*。其使用 `=>` 作为函数定义的标志。
+
+其格式如下：
+
+*  没有参数： `() => {....}`
+*  一个参数： `a => {....}`
+*  多个参数： `(a,b) => {...}`
+
+如果只有函数体只有一条语句，大括号也可以省略。
+
+[source,javascript]
+------
+console.log((n => n*n)(8))                  //64
+const num = [1,3,9];
+console.log(num.map(n=>Math.pow(n,3)))      //1, 27, 729
+------
+
+==== 与function的不同
+
+箭头函数没有自己的 this 属性，this的值继承与封装其的作用域。而function函数有自
+己的this变量，其值是该函数被调用的对象，该对象是在该函数被调用时动态决定的。一
+个function函数被定义的时候有个字面域，而被调用的时候有个动态的调用域。
+而箭头函数的this没有动态域，只是字面域。
+
+[source, javascript]
+------
+var greeter = {
+    default: "Hello ",
+    greet: function (names) {
+      console.log(this.default + names);        // Hello John,Mary,Tom
+        names.forEach(function(name) {
+            console.log(this.default + name);      //undefined this undefinedJohn,...,undefinedTom
+        })
+    }
+}
+
+console.log(greeter.greet(['John', 'Mary', 'Tom']));
+
+var greeter1 = {
+    default: "Hello ",
+    greet: function (names) {
+        names.forEach(name=>{
+            console.log(this.default + name);     //this is the greeter1, so "Hello xxx"
+        })
+    }
+}
+
+console.log(greeter1.greet(['John', 'Mary', 'Tom']));
+------

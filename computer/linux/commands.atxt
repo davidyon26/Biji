@@ -432,7 +432,39 @@ bc支持任意精度的数学计算语言，是个用起来很方便的数学计
 bc 具有结构化程序设计语言可控制结构，可以定义变量，定义函数。提供常用的程序设计
 语言结构，以及标准函数。
 
-== 网络文件系统
+== 文件系统
+
+=== 符号链接
+
+==== ln
+符号连接包括软链接和硬链接。
+
+-  软链接：链接文件指引被链接文件的目录或者文件名，当被链接的文件被删除后，该
+   链接文件失效。
+-  硬链接：硬链接中的源文件和目标文件具有相同的地位，它们都指引文件的 *inode*，
+   当使用命令 `ls -l` 显示时，会显示有多少文件名指引该文件。删除一个文件名后，
+   该文件的指引数减1，当删除最后一个指引该文件的文件名时，该文件被删除。
+   
+[source, bash]
+------
+sun-6:iso davidyon$ ln -s  ~/Documents/Datas MySoftDatas    <1>
+sun-6:iso davidyon$ ln ~/Documents/Datas MyHardDatas        <2>
+sun-6:iso davidyon$ ls -l
+total 4194304
+-rw-r--r--@ 4 davidyon  staff  2147483648  2 25 23:10 MyHardDatas  <3>
+lrwxr-xr-x  1 davidyon  staff          31  2 26 11:10 MySoftDatas -> /Users/davidyon/Documents/Datas <4>
+------
+<1>  建立软链接
+<2>  建立硬链接
+<3>  第二列的 4 表示有四个文件名硬链接到相同的文件
+<4>  软链接指引目标文件的文件名
+
+[qanda]
+查询所有硬链接到一个文件的所有文件名::
+    `find ./ -type f -links +1 -print -exec find ~ -type f -samefile {} \; 2>/dev/null` +
+   上面的命令查找当前目录所有硬链接数目大于1的文件，然后查找用户目录下所有与之
+    硬链接到相同文件的文件名
+    
 
 === nfs
 参考如下网页<<4,设置NFS文件系统>>
