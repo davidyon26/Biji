@@ -466,7 +466,9 @@ lrwxr-xr-x  1 davidyon  staff          31  2 26 11:10 MySoftDatas -> /Users/davi
     硬链接到相同文件的文件名
     
 
-=== nfs
+=== 网络文件系统
+
+====  nfs
 参考如下网页<<4,设置NFS文件系统>>
 
 * 有可能我们需要共享多个目录，我们可以虚拟一个文件系统，具体做法是：
@@ -479,6 +481,31 @@ lrwxr-xr-x  1 davidyon  staff          31  2 26 11:10 MySoftDatas -> /Users/davi
 
 * 如果希望mount的nfs系统在苹果客户端可以修改，需要保持用户的UID在服务区端和客
   户端保持一致。
+
+==== cifs （samba）
+
+对于samba 文件共享，可以使用smbclient交互式进行文件的传输，也可以使用mount命令
+进行装载。
+
+-  smbclient: 使用如下的命令可以和windows共享文件系统进行交互
++
+[source,bash]
+------
+sudo smbclient //10.18.1.18/share -U david -W domain <1>
+------
+<1>  share 是共享名或者是service，david是用户，domain是工作组或者是域名。
+
+-  mount.cifs: 可以使用mount命令进行挂载
++
+[source,bash]
+------
+sudo mount -t cifs //10.18.1.18/share /opt -o user=david,dom=domain,vers=1.0 <1>
+------
+<1>  其中的vers=1.0是协议版本，必须指定，如果不指定，可能会出现 Host is Down
+     的报错
+
+
+
 
 == 维护
 
