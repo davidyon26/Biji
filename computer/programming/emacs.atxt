@@ -1,0 +1,74 @@
+= Emacs
+David Yon <davidyon@hotmail.com>
+v1.0, 2020-02-26
+:toc: right
+:toclevels: 4
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental0:
+:sectanchors:
+:sectnumlevels: 5
+
+
+== 插件包
+
+=== 包管理工具
+Emacs 自带了包（插件）管理工具 `package.el` 。该包定义了许多函数供包管理使用，
+其中最常用的是：
+
+*  package-install: 安装某个特定的包；
+*  package-list-packages: 列出所有库中所有可以安装的包；这个列表中也包括了包的状态；
+
+做为包管理工具的扩充，插件包 `paradox` 在列举所有包时，包括包被使用和安装的次
+数，这是十分有用的。常用的命令是：
+
+*  paradox-list-packages: 类似 package-list-package , 在包菜单中增加了受欢迎程
+   度的列;
+*  paradox-menu-mode: 在执行上面的命令后，buffer显示的内容进入
+   `paradox-menu-mode` , 在该模式下定义了许多快捷键用于包的查找，标识和管理。
+   同样，它扩展了原生的 `package-menu-mode` 比如
+   **  i: 标识被安装的包；
+   **  u: 标识要卸载的包；
+   **  v：浏览该包的网页；
+   **  x：执行所有标识的动作；
+
+=== 插件库
+Emacs 的包管理工具 `package.el` 默认从 https://elpa.gnu.org/[GnuELPA]或者 ELPA (Emacs
+Lisp Package Archive）查询和下载插件包。除了这个官方的库外，还可以增加其它的库，
+从而使用包管理工具便捷地安装插件。其中非常著名的是 https://melpa.org/[MELPA]
+(Milkypostman's ELPA)。
+
+可以把下面的代码加入到初始文件中，从而加入 MELPA 库。
+
+[source, lisp]
+------
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+------
+
+也可以使用其稳定版本，如下：
+
+[source, lisp]
+------
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/"))
+------
+
+
+== 大纲
+当一个文件的内容太多时，我们通常想有一个大纲知道该文件的概要，对于程序，我们通
+常想知道定义的类列表，方法列表等。对于文章想知道章节列表。通过下面的命令可以获
+得类似的信息。
+
+=== occur 
+使用 `M-x occur RET regexp RET` , 按照正则表达式 regexp 搜索当前缓冲区的内容，
+并列举出所有匹配的行到一个称为 *Occur* 的缓冲区。选择一行可以直接定位到该行。
+
+=== imenu
+TBD
+
+=== speedbar
+TBD

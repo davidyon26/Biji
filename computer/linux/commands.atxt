@@ -500,10 +500,13 @@ sudo smbclient //10.18.1.18/share -U david -W domain <1>
 [source,bash]
 ------
 sudo mount -t cifs //10.18.1.18/share /opt -o user=david,dom=domain,vers=1.0 <1>
+sudo mount -t cifs //10.18.1.18/share /opt -o user=david,dom=domain,vers=1.0,rw,uid=xx,gid=xx <2>
+sudo mount -t cifs //10.18.1.18/share /opt -o user=david,dom=domain,vers=1.0,rw,dir_mode=0777,file_mode=0777
 ------
 <1>  其中的vers=1.0是协议版本，必须指定，如果不指定，可能会出现 Host is Down
      的报错
-
+<2>  设置mount的文件的所有者属于用户和组
+<3>  设置mount的目录和文件任何人可读可写
 
 
 

@@ -1,0 +1,41 @@
+= Emacs Lisp
+David Yon<davidyon@hotmail.com>
+v1.0, 2020-03-10
+:toc: right
+:toclevels: 4
+:numbered:
+:icons: font
+:source-highlighter: highlightjs
+:highlightjsdir: highlight
+:experimental:
+:sectanchors:
+:sectnumlevels: 5
+
+== 简介
+Lisp 是 LISt Processing的缩写，是一个表处理语言，是由 MIT 在1950s创建的用于人
+工智能研究的程序设计语言。在 1980s Common Lisp成了Lisp语言的标准。 Gnu Emacs
+Lisp 很大程度上来源于 MIT 在 1960s 发明的 MacLisp，它也受 Common Lisp的影响。
+Emacs Lisp 比 Common Lisp简单得多。Emacs 标准发行包中包括一个可选的扩展文件
+cl.el, 这个文件将许多 Common Lisp 的特征加到 Emacs Lisp上。
+
+== 常用快捷键
+
+|=====
+| 前缀 | 含义 | 例子
+
+| kbd:[CTRL-x]
+| 执行快捷键命令
+| C-x C-s  保持文件
+
+| kbd:[CTRL-h]
+| 帮助
+| C-h t  在线辅导
+
+| kbd:[M-x]
+| 执行命令
+| M-x RET lisp-mode  设置为lisp模式
+
+| kbd:[CTRL-u]
+| 给后续命令传递参数
+| C-u 5 C-f 向前移动5个字符
+|======
