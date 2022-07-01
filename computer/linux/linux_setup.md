@@ -5,12 +5,6 @@ The following tools should be installed
 ```zsh
   sudo apt-get install zsh
 ```
-## set proxy
-```zsh
-  export http_proxy="10.79.240.103:3128"
-  export https_proxy="10.79.240.103:3128"
-  export no_proxy=172.29.0.0/16,10.0.0.0/8
-```
   
 ## install ohmyzsh
 ```zsh
