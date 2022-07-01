@@ -75,19 +75,26 @@ uncomment or add deb-src corresponding with deb in source.list of apt
 
 - show file content
   - [bat](https://github.com/sharkdp/bat)
+    
     like cat with syntax highlight
   
 - search file by name
-  - fzf
+  - [fzf](https://github.com/junegunn/fzf.vim)
 
 - search file by content
-  - [ ack ] (https://beyondgrep.com/)
+  - [ack](https://beyondgrep.com/)
+    ```zsh
     sudo apt-get install ack
-  - [ ag ] (https://geoff.greer.fm/ag/)
+    ```  
+  - [ag](https://geoff.greer.fm/ag/)
+    ```zsh
     sudo apt-get install silversearcher-ag
-  - [ ripgrep ] (https://github.com/BurntSushi/ripgrep)
+    ```
+  - [ripgrep](https://github.com/BurntSushi/ripgrep)
+    ```zsh
     sudo apt-get install ripgrep
-  - [ git-grep ] (https://git-scm.com/docs/git-grep)
-  - [ Gnu grep ] (https://www.gnu.org/software/grep/)
+    ```
+  - [git-grep](https://git-scm.com/docs/git-grep)
+  - [Gnu grep] (https://www.gnu.org/software/grep/)
   
   There is a doc on [ feature comparison ] (https://beyondgrep.com/feature-comparison/) of them
