@@ -7,8 +7,8 @@ The following tools should be installed
 ```
 ## set proxy
 ```zsh
-  export http_proxy="http://pt-proxy-prd02.infinera.com:3128"
-  export https_proxy="http://pt-proxy-prd02.infinera.com:3128"
+  export http_proxy="10.79.240.103:3128"
+  export https_proxy="10.79.240.103:3128"
 ```
   
 ## install ohmyzsh
