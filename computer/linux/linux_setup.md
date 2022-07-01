@@ -22,7 +22,7 @@ The following tools should be installed
 ```zsh    
   apt install build-essential cmake vim-nox python3-dev
   apt install mono-complete golang nodejs default-jdk npm
-```zsh
+```
 
 ### create a YCM configuration file .ycm_extra_conf.py
 ```python
@@ -95,6 +95,6 @@ uncomment or add deb-src corresponding with deb in source.list of apt
     sudo apt-get install ripgrep
     ```
   - [git-grep](https://git-scm.com/docs/git-grep)
-  - [Gnu grep] (https://www.gnu.org/software/grep/)
+  - [Gnu grep](https://www.gnu.org/software/grep/)
   
-  There is a doc on [ feature comparison ] (https://beyondgrep.com/feature-comparison/) of them
+  There is a doc on [feature comparison](https://beyondgrep.com/feature-comparison/) of them
