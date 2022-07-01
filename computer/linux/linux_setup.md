@@ -6,9 +6,10 @@ The following tools should be installed
   sudo apt-get install zsh
 
 ## set proxy
-
+```
   export http_proxy="http://pt-proxy-prd02.infinera.com:3128"
   export https_proxy="http://pt-proxy-prd02.infinera.com:3128"
+```
   
 ## install ohmyzsh
 
