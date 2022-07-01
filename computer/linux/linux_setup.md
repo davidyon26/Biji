@@ -18,22 +18,22 @@ The following tools should be installed
 
 ## set vim environment
 
-### install dep lib for vim YCM
+* install dep lib for vim YCM
 ```zsh    
   apt install build-essential cmake vim-nox python3-dev
   apt install mono-complete golang nodejs default-jdk npm
 ```
 
-### create a YCM configuration file .ycm_extra_conf.py
+* create a YCM configuration file .ycm_extra_conf.py
 ```python
   def Settings( **kwargs ):
         return {
                 'interpreter_path': '../../../pyvenv/g30p37/bin/python'
         }
 ```
-### install 'plint' in python virtual environment for syntax check used by ALE
+* install 'plint' in python virtual environment for syntax check used by ALE
 
-### install tag
+* install tag
 ```zsh
   sudo apt-get install universal-ctags
   sudo apt-get install ack
@@ -47,7 +47,7 @@ due to openssl verson is 3.0.x on 22.04 and 3.7.13 not suit for it
   tar -xf Python-3.7.13.tar.xz
   sudo mv Python3.7.{version} /opt/
 ```
-### install python dependencies
+* install python dependencies
 uncomment or add deb-src corresponding with deb in source.list of apt
 ```zsh
   sudo apt-get update
@@ -61,13 +61,13 @@ uncomment or add deb-src corresponding with deb in source.list of apt
   cd /opt/Python3.7.13/
   ./configure --enable-optimizations --enable-shared
 ```
-### the install script with do test and verify no failure
+* the install script with do test and verify no failure
 ```zsh
   make -j 6   
   sudo make altinstall
   sudo ldconfig /opt/Python3.7.13
 ```
-### verify build successfully
+* verify build successfully
 ```zsh
   python3.7 --version
 ```
