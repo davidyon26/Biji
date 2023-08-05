@@ -1838,4 +1838,4 @@ s| 属性 s| 值 s| 例 s| 注释 s| 目标文档类型
 [[BlockElement,Block element]]Block element (块元素) ::
     块元素是AsciiDoc文档的基本组成部分, 它包括一或者多行整行的正文.
 
-// vim: set syn=asciidoc fdm=marker fdl=1 tw=78 fo=tcqmB:
+// vim: set syntax=asciidoc:
